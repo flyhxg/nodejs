@@ -1,5 +1,3 @@
-'use client'
-import styles from './page.module.css'
 import styled from 'styled-components'
 import { Image } from '../views/common/Image'
 import { Images } from '../utils/images'
@@ -9,7 +7,7 @@ export default function Home() {
   return (
     <>
       <Header />
-      <main className={styles.main}>
+      <main>
         <Content>
           <Person />
           <Text />
