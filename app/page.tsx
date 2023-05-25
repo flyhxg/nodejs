@@ -1,31 +1,29 @@
 'use client'
 import styles from './page.module.css'
-import { Metadata } from 'next'
 import styled from 'styled-components'
 import { Image } from '../views/common/Image'
 import { Images } from '../utils/images'
-
-export const metadata: Metadata = {
-  title: 'Bananas - Bitcoin NFT Marketplace',
-  description: 'Bananas - Bitcoin NFT Marketplace',
-}
+import { Header } from '../views/layout/header'
 
 export default function Home() {
   return (
-    <main className={styles.main}>
-      <Content>
-        <Person />
-        <Text />
-        <BTC1 />
-        <BTC2 />
-        <BTC3 />
-      </Content>
-      <ComingSoon>
-        <Line />
-        <ComingSoonImage />
-        <Line />
-      </ComingSoon>
-    </main>
+    <>
+      <Header />
+      <main className={styles.main}>
+        <Content>
+          <Person />
+          <Text />
+          <BTC1 />
+          <BTC2 />
+          <BTC3 />
+        </Content>
+        <ComingSoon>
+          <Line />
+          <ComingSoonImage />
+          <Line />
+        </ComingSoon>
+      </main>
+    </>
   )
 }
 
