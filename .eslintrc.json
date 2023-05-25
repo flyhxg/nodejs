@@ -1,3 +1,15 @@
 {
-  "extends": "next/core-web-vitals"
+  "plugins": [
+    "prettier"
+  ],
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": "latest"
+  },
+  "rules": {
+    "prettier/prettier": "error"
+  },
+  "extends": [
+    "next/core-web-vitals"
+  ]
 }
