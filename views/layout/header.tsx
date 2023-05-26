@@ -8,10 +8,10 @@ export function Header() {
     <HeaderWrapper>
       <GlobalStyle />
       <Logo />
-      <Menus>
-        <Link href={'/market'}>MARKET</Link>
-        <Link href={'/launchpad'}>LAUNCHPAD</Link>
-      </Menus>
+      {/*<Menus>*/}
+      {/*  <Link href={'/market'}>MARKET</Link>*/}
+      {/*  <Link href={'/launchpad'}>LAUNCHPAD</Link>*/}
+      {/*</Menus>*/}
     </HeaderWrapper>
   )
 }
