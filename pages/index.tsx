@@ -10,10 +10,20 @@ export default function Home() {
       <main>
         <Content>
           <Person />
-          <Text />
           <BTC1 />
           <BTC2 />
           <BTC3 />
+          <TextWrapper>
+            <Text />
+            <Socials>
+              <a href={'https://twitter.com/bananasmarket'} target={'_blank'}>
+                <SocialItem src={Images.SOCIALS.TWITTER_PNG} />
+              </a>
+              <a href={'https://discord.gg/txAyHtWE'} target={'_blank'}>
+                <SocialItem src={Images.SOCIALS.DISCORD_PNG} />
+              </a>
+            </Socials>
+          </TextWrapper>
         </Content>
         <ComingSoon>
           <Line />
@@ -104,4 +114,31 @@ const BTC3 = styled(Image).attrs({
   height: 47px;
   bottom: 113px;
   right: 0px;
+`
+
+const TextWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+`
+
+const Socials = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  //position: absolute;
+  //left: 345px;
+  //bottom: 160px;
+  margin-top: 50px;
+  @media (max-width: 1920px) {
+    left: 18vw;
+  }
+`
+
+const SocialItem = styled(Image)`
+  width: 39px;
+  height: 39px;
+  margin-right: 17px;
+  cursor: pointer;
 `

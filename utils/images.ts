@@ -13,8 +13,15 @@ const HOME = {
   PERSON_PNG: '/images/home/person.png'
 }
       
+
+const SOCIALS = {
+  DISCORD_PNG: '/images/socials/discord.png',
+  TWITTER_PNG: '/images/socials/twitter.png'
+}
+      
 export const Images = {
   COMMON,
-  HOME
+  HOME,
+  SOCIALS
 }       
     
