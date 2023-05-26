@@ -1,4 +1,3 @@
-'use client'
 import styled, { createGlobalStyle } from 'styled-components'
 import { Images } from '../../utils/images'
 import { Image } from '../common/Image'
