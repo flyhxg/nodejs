@@ -2,10 +2,12 @@ import styled, { createGlobalStyle } from 'styled-components'
 import { Images } from '../../utils/images'
 import { Image } from '../common/Image'
 import Link from 'next/link'
+import Head from './Head'
 
 export function Header() {
   return (
     <HeaderWrapper>
+      <Head />
       <GlobalStyle />
       <Logo />
       {/*<Menus>*/}
