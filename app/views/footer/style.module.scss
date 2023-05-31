@@ -1,0 +1,71 @@
+.footer {
+  height: 192px;
+  background: #f5d802;
+  padding-left: 251px;
+  padding-right: 294px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-top: 18px;
+  position: relative;
+  img.logo {
+    width: 214px;
+    height: 80px;
+  }
+  h3.market {
+    position: absolute;
+    bottom: 20px;
+    text-align: center;
+    font-size: 14px;
+    line-height: 14px;
+    color: #0f0f0f;
+    width: 100%;
+    left: 0;
+  }
+}
+
+.menus {
+  padding-top: 49px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: row;
+  li {
+    font-size: 16px;
+    color: #0f0f0f;
+    margin-right: 80px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.social {
+  width: 200px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+  padding-top: 13px;
+  flex-direction: column;
+  p.title {
+    font-size: 16px;
+    color: #0f0f0f;
+    line-height: 24px;
+    margin-bottom: 13px;
+  }
+  div.list {
+    height: 39px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  a.item {
+    display: block;
+    width: 39px;
+    height: 39px;
+    margin-right: 8px;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+}

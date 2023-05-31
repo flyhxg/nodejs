@@ -1,0 +1,26 @@
+.headerWrapper {
+  height: 100px;
+  position: relative;
+  padding-left: 85px;
+  padding-right: 66px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  img.logo {
+    width: 214px;
+    height: 80px;
+  }
+}
+
+.menusWrapper {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  a {
+    font-size: 16px;
+    color: #efefef;
+    line-height: 16px;
+    display: inline-block;
+    margin-left: 70px;
+  }
+}
