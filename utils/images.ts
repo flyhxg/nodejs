@@ -1,12 +1,23 @@
 
 const COMMON = {
+  AUTHED_SVG: '/images/common/authed.svg',
+  ICON_MORE_SVG: '/images/common/icon_more.svg',
+  ICON_SHARE_SVG: '/images/common/icon_share.svg',
+  ICON_START_SVG: '/images/common/icon_start.svg',
+  LINK_DISCORD_PNG: '/images/common/link_discord.png',
+  LINK_SCAN_PNG: '/images/common/link_scan.png',
+  LINK_TWITTER_PNG: '/images/common/link_twitter.png',
+  LINK_WEBSITE_PNG: '/images/common/link_website.png',
   LOADING_SVG: '/images/common/loading.svg',
   LOGO_PNG: '/images/common/logo.png',
   LOGO_BLACK_SVG: '/images/common/logo_black.svg',
+  LOGO_BTC_SVG: '/images/common/logo_btc.svg',
   LOGO_WHITE_SVG: '/images/common/logo_white.svg',
+  SALE_SVG: '/images/common/sale.svg',
   STATUS_LOADING_SVG: '/images/common/status_loading.svg',
   STATUS_SUCESS_SVG: '/images/common/status_sucess.svg',
-  STATUS_WARN_SVG: '/images/common/status_warn.svg'
+  STATUS_WARN_SVG: '/images/common/status_warn.svg',
+  TRIANGLE_SVG: '/images/common/triangle.svg'
 }
       
 
@@ -26,6 +37,16 @@ const HOME = {
 }
       
 
+const LAUNCHPAD = {
+  COVER_PNG: '/images/launchpad/cover.png'
+}
+      
+
+const MY = {
+  
+}
+      
+
 const SOCIALS = {
   DISCORD_SVG: '/images/socials/discord.svg',
   TELEGRAM_SVG: '/images/socials/telegram.svg',
@@ -36,6 +57,8 @@ export const Images = {
   COMMON,
   DIALOG,
   HOME,
+  LAUNCHPAD,
+  MY,
   SOCIALS
 }       
     

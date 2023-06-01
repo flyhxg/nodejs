@@ -1,0 +1,20 @@
+.wrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 40px;
+  min-height: calc(100vh - 292px);
+  position: relative;
+}
+
+.cardList {
+  position: relative;
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 430px);
+  grid-template-rows: repeat(auto-fill, 338px);
+  grid-gap: 66px 50px;
+  width: 100%;
+  max-width: 1390px;
+}

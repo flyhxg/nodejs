@@ -3,6 +3,7 @@ import { pixelFont } from '../utils/font'
 import DialogProvider from './context/DialogContext'
 import StyledComponentsRegistry from './views/common/registry'
 import Header from './views/header/header'
+import ModalContextProvider from './context/ModalContext'
 
 export const metadata = {
   title: 'Create Next App',
@@ -14,13 +15,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={pixelFont.className}>
       <body>
-        <DialogProvider>
-          <StyledComponentsRegistry>
-            <Header />
-
-            {children}
-          </StyledComponentsRegistry>
-        </DialogProvider>
+        <StyledComponentsRegistry>
+          <DialogProvider>
+            <ModalContextProvider>
+              <Header />
+              {children}
+            </ModalContextProvider>
+          </DialogProvider>
+        </StyledComponentsRegistry>
       </body>
     </html>
   )
