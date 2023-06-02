@@ -1,6 +1,11 @@
 
 const COMMON = {
   AUTHED_SVG: '/images/common/authed.svg',
+  DISPLAY_GRID_SVG: '/images/common/display_grid.svg',
+  DISPLAY_GRID_ACTIVE_SVG: '/images/common/display_grid_active.svg',
+  DISPLAY_LIST_SVG: '/images/common/display_list.svg',
+  DISPLAY_LIST_ACTIVE_SVG: '/images/common/display_list_active.svg',
+  ICON_BUY_SVG: '/images/common/icon_buy.svg',
   ICON_MORE_SVG: '/images/common/icon_more.svg',
   ICON_SHARE_SVG: '/images/common/icon_share.svg',
   ICON_START_SVG: '/images/common/icon_start.svg',

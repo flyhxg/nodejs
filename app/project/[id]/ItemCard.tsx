@@ -2,26 +2,25 @@
 import styled from 'styled-components'
 import { commonStyles } from '../../../utils/commonStyles'
 import { Images } from '../../../utils/images'
-import { XButton } from '../common/XButton'
-import { XImage } from '../common/XImage'
-import { useModal } from '../../context/ModalContext'
-import SaleModal from '../modal/SaleModal'
+import Image from 'next/image'
+import { XButton } from '../../views/common/XButton'
+import { XImage } from '../../views/common/XImage'
 
 export default function ItemCard() {
-  const { openModal } = useModal()
   return (
     <CardWrapper>
-      <CardImage src={Images.HOME.COVER_PNG}>
-        <OnSale>On Sale</OnSale>
-      </CardImage>
+      <CardImage src={Images.HOME.COVER_PNG}></CardImage>
       <InfoWrapper>
         <InfoTitle>I`m A NFT Name</InfoTitle>
-        <InfoText>Inscription #043244</InfoText>
+        <InfoPrice>
+          <BtcIcon />
+          0.71 BTC
+        </InfoPrice>
         <SplitLine />
         <Label>Battle Of BTC</Label>
       </InfoWrapper>
       {/*@ts-ignore*/}
-      <SaleButton onClick={() => openModal(SaleModal)}>
+      <SaleButton>
         <SaleIcon /> Sale
       </SaleButton>
     </CardWrapper>
@@ -42,23 +41,10 @@ const CardImage = styled.div<{ src: string }>`
   background-size: cover;
 `
 
-const OnSale = styled.span`
-  width: 67px;
-  height: 25px;
-  background-color: #f5d802;
-  position: absolute;
-  top: 11px;
-  left: 17px;
-  color: #0f0f0f;
-  font-size: 12px;
-  line-height: 25px;
-  text-align: center;
-`
-
 const InfoWrapper = styled.div`
   height: 110px;
   position: relative;
-  padding: 24px 17px 0 17px;
+  padding: 19px 17px 0 17px;
 `
 
 const InfoTitle = styled.h3`
@@ -67,24 +53,32 @@ const InfoTitle = styled.h3`
   line-height: 16px;
 `
 
-const InfoText = styled.p`
-  font-size: 12px;
-  line-height: 12px;
-  color: #9e9e9e;
-  margin-top: 8px;
+const InfoPrice = styled(InfoTitle)`
+  margin-top: 15px;
+  ${commonStyles.flexStart}
+`
+
+const BtcIcon = styled(Image).attrs({
+  src: Images.COMMON.LOGO_BTC_SVG,
+  width: 15,
+  height: 15,
+})`
+  width: 15px;
+  height: 15px;
+  margin-right: 6px;
 `
 const SplitLine = styled.span`
   display: block;
   width: 210px;
   height: 1px;
   background-color: #3e3e3e;
-  margin-top: 15px;
+  margin-top: 7px;
 `
 const Label = styled.p`
   font-size: 12px;
   line-height: 12px;
   color: #9e9e9e;
-  margin-top: 10px;
+  margin-top: 12px;
 `
 
 const SaleButton = styled(XButton)`
@@ -95,12 +89,19 @@ const SaleButton = styled(XButton)`
   left: 0;
   justify-content: flex-start;
   padding-left: 21px;
+  transition: all 0.2s linear;
+  opacity: 0;
+  transform: translateY(37px);
+  :hover > & {
+    opacity: 1;
+    transform: translateY(0px);
+  }
 `
 
 const SaleIcon = styled(XImage).attrs({
-  src: Images.COMMON.SALE_SVG,
+  src: Images.COMMON.ICON_BUY_SVG,
 })`
-  width: 15px;
+  width: 8px;
   height: 15px;
-  margin-right: 8px;
+  margin-right: 11px;
 `

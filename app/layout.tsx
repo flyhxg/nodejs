@@ -4,6 +4,8 @@ import DialogProvider from './context/DialogContext'
 import StyledComponentsRegistry from './views/common/registry'
 import Header from './views/header/header'
 import ModalContextProvider from './context/ModalContext'
+import '../styles/nprogress.css'
+import NProgress from './views/common/NProgress'
 
 export const metadata = {
   title: 'Create Next App',
@@ -15,6 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={pixelFont.className}>
       <body>
+        {/*<NProgress />*/}
         <StyledComponentsRegistry>
           <DialogProvider>
             <ModalContextProvider>

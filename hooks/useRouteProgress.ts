@@ -1,18 +1,23 @@
-import { useRouter } from 'next/router'
+import { useParams, useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
 import NProgress from 'nprogress'
+import { isBrowser } from '../utils/env'
+
+if (isBrowser) {
+  //@ts-ignore
+  window.navigation.onnavigatesuccess = () => {
+    NProgress.done()
+  }
+  window.addEventListener('load', () => {
+    NProgress.done()
+  })
+}
 
 export default function useRouteProgress() {
-  const router = useRouter()
+  const params = useParams()
+  const searchParams = useSearchParams()
+
   useEffect(() => {
-    router.events.on('routeChangeStart', () => {
-      NProgress.start()
-    })
-    router.events.on('routeChangeComplete', () => {
-      NProgress.done()
-    })
-    router.events.on('routeChangeError', () => {
-      NProgress.done()
-    })
-  }, [])
+    NProgress.start()
+  }, [params, searchParams])
 }

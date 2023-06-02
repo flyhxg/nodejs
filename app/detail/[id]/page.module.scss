@@ -1,0 +1,23 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+  padding-top: 47px;
+  max-width: 1318px;
+  margin: 0 auto;
+  min-height: calc(100vh - 292px);
+  @media (max-width: 1400px) {
+    margin: 0 100px;
+  }
+}
+.left {
+  width: 500px;
+  margin-right: 99px;
+}
+.right {
+  width: 719px;
+}
+.image {
+  max-width: 500px;
+}

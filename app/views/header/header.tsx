@@ -17,7 +17,9 @@ export default function Header() {
   const { openDialog } = useDialog()
   return (
     <header className={s.headerWrapper}>
-      <XImage className={s.logo} src={Images.COMMON.LOGO_WHITE_SVG} />
+      <Link href={'/'}>
+        <XImage className={s.logo} src={Images.COMMON.LOGO_WHITE_SVG} />
+      </Link>
       <div className={s.menusWrapper}>
         {menus.map((menu) => (
           <Link key={menu.label} href={menu.href} target={menu.target}>
