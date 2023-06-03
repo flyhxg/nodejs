@@ -3,6 +3,9 @@ import Image from 'next/image'
 import { Images } from '../../../utils/images'
 import Link from 'next/link'
 import BuyBox from './BuyBox'
+import Tabs, { TabItem } from '../../views/common/Tabs'
+import { NoOperation } from '../../../utils'
+import TabsContent from './TabsContent'
 export default function Page() {
   return (
     <div className={s.wrapper}>
@@ -10,6 +13,7 @@ export default function Page() {
         <Image src={Images.LAUNCHPAD.COVER_PNG} alt={'nft cover'} className={s.image} width={500} height={500} />
         <TxInfoBox />
       </div>
+      <TabsContent />
     </div>
   )
 }
