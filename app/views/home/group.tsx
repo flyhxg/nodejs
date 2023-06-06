@@ -1,12 +1,19 @@
 import Image from 'next/image'
 import { Images } from '../../../utils/images'
 import s from './group.module.scss'
-export default function Group(props: { title: string }) {
+import Link from 'next/link'
+export default function Group(props: { title: string; type: string }) {
   return (
     <div className={s.groupWrapper}>
-      <Item status={Status.Live} />
-      <Item status={Status.UpComing} />
-      <Item status={Status.ComingSoon} />
+      <Link href={`/${props.type}/1`}>
+        <Item status={Status.Live} />
+      </Link>
+      <Link href={`/${props.type}/2`}>
+        <Item status={Status.UpComing} />
+      </Link>
+      <Link href={`/${props.type}/3`}>
+        <Item status={Status.ComingSoon} />
+      </Link>
       <h3 className={s.groupTitle}>{props.title}</h3>
     </div>
   )

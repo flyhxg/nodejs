@@ -6,25 +6,28 @@ import { XButton } from '../common/XButton'
 import { XImage } from '../common/XImage'
 import { useModal } from '../../context/ModalContext'
 import SaleModal from '../modal/SaleModal'
+import Link from 'next/link'
 
 export default function ItemCard() {
   const { openModal } = useModal()
   return (
-    <CardWrapper>
-      <CardImage src={Images.HOME.COVER_PNG}>
-        <OnSale>On Sale</OnSale>
-      </CardImage>
-      <InfoWrapper>
-        <InfoTitle>I`m A NFT Name</InfoTitle>
-        <InfoText>Inscription #043244</InfoText>
-        <SplitLine />
-        <Label>Battle Of BTC</Label>
-      </InfoWrapper>
-      {/*@ts-ignore*/}
-      <SaleButton onClick={() => openModal(SaleModal)}>
-        <SaleIcon /> Sale
-      </SaleButton>
-    </CardWrapper>
+    <Link href={'/detail/1'}>
+      <CardWrapper>
+        <CardImage src={Images.HOME.COVER_PNG}>
+          <OnSale>On Sale</OnSale>
+        </CardImage>
+        <InfoWrapper>
+          <InfoTitle>I`m A NFT Name</InfoTitle>
+          <InfoText>Inscription #043244</InfoText>
+          <SplitLine />
+          <Label>Battle Of BTC</Label>
+        </InfoWrapper>
+        {/*@ts-ignore*/}
+        <SaleButton onClick={() => openModal(SaleModal)}>
+          <SaleIcon /> Sale
+        </SaleButton>
+      </CardWrapper>
+    </Link>
   )
 }
 

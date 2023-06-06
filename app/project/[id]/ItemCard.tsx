@@ -5,25 +5,28 @@ import { Images } from '../../../utils/images'
 import Image from 'next/image'
 import { XButton } from '../../views/common/XButton'
 import { XImage } from '../../views/common/XImage'
+import Link from 'next/link'
 
 export default function ItemCard() {
   return (
-    <CardWrapper>
-      <CardImage src={Images.HOME.COVER_PNG}></CardImage>
-      <InfoWrapper>
-        <InfoTitle>I`m A NFT Name</InfoTitle>
-        <InfoPrice>
-          <BtcIcon />
-          0.71 BTC
-        </InfoPrice>
-        <SplitLine />
-        <Label>Battle Of BTC</Label>
-      </InfoWrapper>
-      {/*@ts-ignore*/}
-      <SaleButton>
-        <SaleIcon /> Sale
-      </SaleButton>
-    </CardWrapper>
+    <Link href={'/detail/1'}>
+      <CardWrapper>
+        <CardImage src={Images.HOME.COVER_PNG}></CardImage>
+        <InfoWrapper>
+          <InfoTitle>I`m A NFT Name</InfoTitle>
+          <InfoPrice>
+            <BtcIcon />
+            0.71 BTC
+          </InfoPrice>
+          <SplitLine />
+          <Label>Battle Of BTC</Label>
+        </InfoWrapper>
+        {/*@ts-ignore*/}
+        <SaleButton>
+          <SaleIcon /> Sale
+        </SaleButton>
+      </CardWrapper>
+    </Link>
   )
 }
 

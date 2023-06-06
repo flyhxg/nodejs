@@ -3,6 +3,7 @@ import { Images } from '../utils/images'
 import s from './page.module.scss'
 import Footer from './views/footer'
 import Group from './views/home/group'
+import { Metadata } from 'next'
 export default function Page() {
   return (
     <>
@@ -23,8 +24,8 @@ export default function Page() {
           <Image alt="btc1" src={Images.HOME.BTC_PNG} width={65} height={65} className={s.btc1} />
         </div>
         <div className={s.padsWrapper}>
-          <Group title="LAUNCHPAD" />
-          <Group title="NEW COLLECTIONS" />
+          <Group title="LAUNCHPAD" type={'launchpad'} />
+          <Group title="NEW COLLECTIONS" type={'project'} />
         </div>
       </div>
       <Footer />

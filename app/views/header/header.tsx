@@ -5,6 +5,9 @@ import { DialogType, useDialog } from '../../context/DialogContext'
 import { XButton } from '../common/XButton'
 import { XImage } from '../common/XImage'
 import s from './header.module.scss'
+import { useWallet } from '../../context/WalletContext'
+import { shortenAddress } from '../../../utils'
+import { useRouter } from 'next/navigation'
 
 const menus = [
   { label: 'RANKING', href: '/ranking' },
@@ -15,6 +18,8 @@ const menus = [
 
 export default function Header() {
   const { openDialog } = useDialog()
+  const { active, connected, account } = useWallet()
+  const router = useRouter()
   return (
     <header className={s.headerWrapper}>
       <Link href={'/'}>
@@ -29,10 +34,14 @@ export default function Header() {
       </div>
       <XButton
         onClick={() => {
-          openDialog(DialogType.Loading, { title: 'Success', desc: 'Something is ok!' })
+          if (!connected) {
+            active()
+          } else {
+            router.push('/mycollection')
+          }
         }}
       >
-        Connect Wallet
+        {connected ? <>{shortenAddress(account)}</> : <> Connect Wallet</>}
       </XButton>
     </header>
   )
