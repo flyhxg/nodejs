@@ -1,6 +1,7 @@
 import { Images } from '../../../utils/images'
 import { XImage } from '../common/XImage'
 import style from './style.module.scss'
+
 export default function Footer() {
   return (
     <footer className={style.footer}>
@@ -37,7 +38,13 @@ function Socials() {
       <p className={style.title}>Join The Community</p>
       <div className={style.list}>
         {socials.map((item) => (
-          <a key={item.icon} className={style.item} style={{ backgroundImage: `url(${item.icon})` }} href={item.href} />
+          <a
+            key={item.icon}
+            className={style.item}
+            style={{ backgroundImage: `url(${item.icon})` }}
+            target={'_blank'}
+            href={item.href}
+          />
         ))}
       </div>
     </div>

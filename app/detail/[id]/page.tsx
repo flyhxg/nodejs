@@ -5,6 +5,7 @@ import TxInfoBox from './TxInfoBox'
 import AttrInfoBox from './AttrInfoBox'
 import Activities from './Activities'
 import Footer from '../../views/footer'
+
 export default function Page() {
   return (
     <>

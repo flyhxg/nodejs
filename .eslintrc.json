@@ -8,7 +8,8 @@
   },
   "rules": {
     "prettier/prettier": "error",
-    "react/display-name": "off"
+    "react/display-name": "off",
+    "react-hooks/exhaustive-deps": "off"
   },
   "extends": [
     "next/core-web-vitals"

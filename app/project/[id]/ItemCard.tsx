@@ -65,6 +65,7 @@ const BtcIcon = styled(Image).attrs({
   src: Images.COMMON.LOGO_BTC_SVG,
   width: 15,
   height: 15,
+  alt: 'btc',
 })`
   width: 15px;
   height: 15px;
@@ -95,6 +96,7 @@ const SaleButton = styled(XButton)`
   transition: all 0.2s linear;
   opacity: 0;
   transform: translateY(37px);
+
   :hover > & {
     opacity: 1;
     transform: translateY(0px);

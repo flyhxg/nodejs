@@ -2,6 +2,7 @@ import Image from 'next/image'
 import { Images } from '../../../utils/images'
 import s from './group.module.scss'
 import Link from 'next/link'
+
 export default function Group(props: { title: string; type: string }) {
   return (
     <div className={s.groupWrapper}>

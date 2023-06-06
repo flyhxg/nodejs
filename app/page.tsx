@@ -3,7 +3,7 @@ import { Images } from '../utils/images'
 import s from './page.module.scss'
 import Footer from './views/footer'
 import Group from './views/home/group'
-import { Metadata } from 'next'
+
 export default function Page() {
   return (
     <>

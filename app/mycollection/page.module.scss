@@ -11,10 +11,11 @@
   line-height: 26px;
   color: #EFEFEF;
 }
+
 .itemsList {
   position: relative;
   display: grid;
-  grid-template-columns:repeat(auto-fill, 260px) ;
+  grid-template-columns:repeat(auto-fill, 260px);
   grid-template-rows: repeat(auto-fill, 335px);
   margin-top: 50px;
   grid-gap: 22px;

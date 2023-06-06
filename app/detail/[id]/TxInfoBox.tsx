@@ -137,6 +137,7 @@ const PriceItem = styled.div`
   height: 18px;
   ${commonStyles.flexBetween};
   margin-bottom: 25px;
+
   span.title {
     font-size: 12px;
     color: #9e9e9e;
@@ -157,6 +158,7 @@ const BtcIcon = styled(Image).attrs({
   src: Images.COMMON.LOGO_BTC_SVG,
   width: 15,
   height: 15,
+  alt: 'btc icon',
 })`
   width: 15px;
   height: 15px;
@@ -190,11 +192,13 @@ const RarityItem = styled.div`
   justify-content: space-between;
   align-items: flex-start;
   background: #1a1a1a;
+
   p {
     span.title {
       font-size: 14px;
       color: #efefef;
     }
+
     span.value {
       font-size: 12px;
       color: #9e9e9e;

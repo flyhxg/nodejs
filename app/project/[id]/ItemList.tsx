@@ -81,6 +81,7 @@ function ToolBar() {
     </BarWrapper>
   )
 }
+
 const BarWrapper = styled.div`
   ${commonStyles.flexBetween}
 `
@@ -112,6 +113,7 @@ function DisplayItem(props: { icon: string; selectedIcon: string; isSelected?: b
     </DisplayItemButton>
   )
 }
+
 const DisplayItemButton = styled(XButton)<{ isSelected?: boolean }>`
   width: 40px;
   margin-left: 10px;
@@ -136,6 +138,6 @@ const Icon = styled(Image).attrs({
 const ListWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, 260px);
-  grid-template-rows: repeat(auto-fill. 335px);
+  grid-template-rows: repeat(auto-fill.335px);
   grid-gap: 19px 15px;
 `

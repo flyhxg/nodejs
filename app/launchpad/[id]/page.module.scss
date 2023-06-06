@@ -10,21 +10,25 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+
   .infoBox {
     max-width: 577px;
     padding-top: 42px;
+
     .title {
       font-size: 24px;
       line-height: 24px;
       font-weight: normal;
       color: #EFEFEF;
     }
+
     .linksWrapper {
       height: 18px;
       display: flex;
       justify-content: flex-start;
       align-items: center;
       margin-top: 26px;
+
       .linkItem {
         display: inline-block;
         width: 18px;
@@ -32,10 +36,12 @@
         margin-right: 17px;
       }
     }
+
     .totalWrapper {
       margin-top: 26px;
       font-size: 12px;
       color: #E9E9E9;
+
       span {
         color: #FFF;
         font-size: 16px;

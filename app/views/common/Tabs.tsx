@@ -1,5 +1,5 @@
 'use client'
-import { createContext, CSSProperties, ReactNode, useContext, useEffect, useRef, useState } from 'react'
+import { createContext, CSSProperties, ReactElement, ReactNode, useContext, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { NoOperation } from '../../../utils'
 import { commonStyles } from '../../../utils/commonStyles'
@@ -20,11 +20,11 @@ export default function Tabs(props: {
   children?: ReactNode
   defaultActiveIndex?: number
 }) {
-  const names = props.children.map((x) => x.props.name)
+  const names = (props.children as ReactElement[]).map((x) => x.props.name)
   const [current, setCurrent] = useState(props.defaultActiveIndex || 0)
   const [left, setLeft] = useState(0)
   const [width, setWidth] = useState(0)
-  const ref = useRef()
+  const ref = useRef<HTMLDivElement | null>(null)
   useEffect(() => {
     //@ts-ignore
     setWidth(ref.current.children[current].clientWidth)
@@ -54,13 +54,14 @@ const TabsWrapper = styled.div`
 export function TabItem(props: { name: string; children?: ReactNode }) {
   const { current, tabNames } = useContext(TabContext)
   const index = tabNames.indexOf(props.name)
-  return index === current ? props.children : null
+  return <>{index === current ? props.children : null}</>
 }
 
 const TabTapList = styled.div<{ left: number; width: number }>`
   height: 30px;
   ${commonStyles.flexStart};
   position: relative;
+
   &::before {
     content: '';
     position: absolute;

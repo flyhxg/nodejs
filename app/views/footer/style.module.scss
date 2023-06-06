@@ -8,10 +8,12 @@
   align-items: flex-start;
   padding-top: 18px;
   position: relative;
+
   img.logo {
     width: 214px;
     height: 80px;
   }
+
   h3.market {
     position: absolute;
     bottom: 20px;
@@ -30,10 +32,12 @@
   justify-content: center;
   align-items: flex-start;
   flex-direction: row;
+
   li {
     font-size: 16px;
     color: #0f0f0f;
     margin-right: 80px;
+
     &:last-child {
       margin-right: 0;
     }
@@ -47,18 +51,21 @@
   align-items: flex-end;
   padding-top: 13px;
   flex-direction: column;
+
   p.title {
     font-size: 16px;
     color: #0f0f0f;
     line-height: 24px;
     margin-bottom: 13px;
   }
+
   div.list {
     height: 39px;
     display: flex;
     justify-content: flex-end;
     align-items: center;
   }
+
   a.item {
     display: block;
     width: 39px;

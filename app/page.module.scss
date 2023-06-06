@@ -17,6 +17,7 @@
   width: 835px;
   position: relative;
   left: -122px;
+
   .btc {
     width: 65px;
     height: 65px;
@@ -25,6 +26,7 @@
     top: 41px;
     left: 391px;
   }
+
   .btc1 {
     width: 65px;
     height: 65px;
@@ -40,9 +42,11 @@
     position: relative;
     margin-right: 76px;
   }
+
   .text {
     width: 468px;
     position: relative;
+
     h3 {
       font-size: 42px;
       color: #efefef;
@@ -52,6 +56,7 @@
       word-break: keep-all;
       font-family: var(--font-upheav);
     }
+
     p {
       font-size: 22px;
       line-height: 22px;

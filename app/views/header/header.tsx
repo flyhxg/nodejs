@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { Images } from '../../../utils/images'
-import { DialogType, useDialog } from '../../context/DialogContext'
+import { useDialog } from '../../context/DialogContext'
 import { XButton } from '../common/XButton'
 import { XImage } from '../common/XImage'
 import s from './header.module.scss'
