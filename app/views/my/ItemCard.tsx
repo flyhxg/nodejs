@@ -22,8 +22,13 @@ export default function ItemCard() {
           <SplitLine />
           <Label>Battle Of BTC</Label>
         </InfoWrapper>
-        {/*@ts-ignore*/}
-        <SaleButton onClick={() => openModal(SaleModal)}>
+        <SaleButton
+          onClick={(e) => {
+            e.stopPropagation()
+            //@ts-ignore
+            openModal(SaleModal)
+          }}
+        >
           <SaleIcon /> Sale
         </SaleButton>
       </CardWrapper>
