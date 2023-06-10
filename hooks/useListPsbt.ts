@@ -1,9 +1,12 @@
 import { useCallback } from 'react'
 import { useWallet } from '../app/context/WalletContext'
 import { IListingState, IOrdItem, SellerSigner } from '../lib/msigner'
+import { generateUnsignedListingPSBTBase64 } from '../utils/SellerSigner'
+import { Psbt } from 'bitcoinjs-lib'
+import { testnet } from 'bitcoinjs-lib/src/networks'
 
-export default function useCreateListingPSBT() {
-  const { account } = useWallet()
+export default function useListPsbt() {
+  const { account, signPsbt } = useWallet()
   const create = useCallback(
     async (price: number) => {
       if (!account) return
@@ -37,8 +40,11 @@ export default function useCreateListingPSBT() {
         },
       }
       console.log('before', listing)
-      const base64 = await SellerSigner.generateUnsignedListingPSBTBase64(listing)
-      console.log('after', base64)
+      const { listing: listing1, psbt } = await generateUnsignedListingPSBTBase64(listing)
+      console.log('base64', listing1, psbt.toHex())
+      const signedPsbt = await signPsbt(psbt.toHex())
+      console.log(signedPsbt)
+      listing.seller.signedListingPSBTBase64 = Psbt.fromHex(signedPsbt as string, { network: testnet }).toBase64()
     },
     [account]
   )

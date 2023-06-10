@@ -7,6 +7,7 @@ import ModalContextProvider from './context/ModalContext'
 import '../styles/nprogress.css'
 import WalletContextProvider from './context/WalletContext'
 import { Metadata } from 'next'
+import Script from 'next/script'
 
 export const metadata: Metadata = {
   title: 'Banana Market',
@@ -26,6 +27,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       {/*    gtag('config', 'G-XKJRE222G9');*/}
       {/*  </script>*/}
       {/*</head>*/}
+      <head>
+        <Script src={'/js/mempool.js'} />
+      </head>
       <body>
         {/*<NProgress />*/}
         <StyledComponentsRegistry>

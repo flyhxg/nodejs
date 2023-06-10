@@ -1,16 +1,24 @@
 'use client'
 import styled from 'styled-components'
-import Modal from './Modal'
+import useListPsbt from '../../../hooks/useListPsbt'
 import { commonStyles } from '../../../utils/commonStyles'
 import { XButton } from '../common/XButton'
+import Modal from './Modal'
 
 export default function SaleModal(props: { open: boolean; onClose: () => void; resolve: () => void }) {
+  const create = useListPsbt()
   return (
     <StyledModal open={props.open} onClose={props.onClose} closeOnBackdrop closeOnEscape>
       <Title>Inscription Not Listed For Sale</Title>
       <InputWrapper>
         <Input />
-        <ListButton>List Now</ListButton>
+        <ListButton
+          onClick={() => {
+            create(80000)
+          }}
+        >
+          List Now
+        </ListButton>
       </InputWrapper>
       <Tips>
         By Listing Your Item, You Acknowledge That Payment Will Be Sent Directly To Thepayment Address Informed By Your

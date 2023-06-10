@@ -2,37 +2,36 @@
 import styled from 'styled-components'
 import { commonStyles } from '../../../utils/commonStyles'
 import { Images } from '../../../utils/images'
+import { RPC } from '../../../utils/rpc'
+import { useModal } from '../../context/ModalContext'
 import { XButton } from '../common/XButton'
 import { XImage } from '../common/XImage'
-import { useModal } from '../../context/ModalContext'
 import SaleModal from '../modal/SaleModal'
-import Link from 'next/link'
 
 export default function ItemCard() {
+  console.log('rpc', RPC)
   const { openModal } = useModal()
   return (
-    <Link href={'/detail/1'}>
-      <CardWrapper>
-        <CardImage src={Images.HOME.COVER_PNG}>
-          <OnSale>On Sale</OnSale>
-        </CardImage>
-        <InfoWrapper>
-          <InfoTitle>I`m A NFT Name</InfoTitle>
-          <InfoText>Inscription #043244</InfoText>
-          <SplitLine />
-          <Label>Battle Of BTC</Label>
-        </InfoWrapper>
-        <SaleButton
-          onClick={(e) => {
-            e.stopPropagation()
-            //@ts-ignore
-            openModal(SaleModal)
-          }}
-        >
-          <SaleIcon /> Sale
-        </SaleButton>
-      </CardWrapper>
-    </Link>
+    <CardWrapper>
+      <CardImage src={Images.HOME.COVER_PNG}>
+        <OnSale>On Sale</OnSale>
+      </CardImage>
+      <InfoWrapper>
+        <InfoTitle>I`m A NFT Name</InfoTitle>
+        <InfoText>Inscription #043244</InfoText>
+        <SplitLine />
+        <Label>Battle Of BTC</Label>
+      </InfoWrapper>
+      <SaleButton
+        onClick={(e) => {
+          e.stopPropagation()
+          //@ts-ignore
+          openModal(SaleModal)
+        }}
+      >
+        <SaleIcon /> Sale
+      </SaleButton>
+    </CardWrapper>
   )
 }
 

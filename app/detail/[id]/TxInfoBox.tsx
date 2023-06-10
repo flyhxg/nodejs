@@ -4,8 +4,10 @@ import { commonStyles } from '../../../utils/commonStyles'
 import Image from 'next/image'
 import { Images } from '../../../utils/images'
 import { XButton } from '../../views/common/XButton'
+import useBuyPsbt from '../../../hooks/useBuyPsbt'
 
 export default function TxInfoBox() {
+  const buyPsbt = useBuyPsbt()
   return (
     <InfoBoxWrapper>
       <Title>BoredApeYachtClub #1080</Title>
@@ -29,7 +31,7 @@ export default function TxInfoBox() {
           </InfoPrice>
         </PriceItem>
         <ButtonsGroup>
-          <Button>Buy</Button>
+          <Button onClick={buyPsbt}>Buy</Button>
           <Button>Make Offer</Button>
         </ButtonsGroup>
       </PriceBox>
