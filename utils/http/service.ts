@@ -1,7 +1,6 @@
-import { Params, http } from './http'
+import { http, Params } from './http'
 import { Service } from 'ahooks/es/useRequest/src/types'
 import { ServerCode } from './serverCode'
-import config from 'next/config'
 
 export interface ResponseType<T> {
   code: number

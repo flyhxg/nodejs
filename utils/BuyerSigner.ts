@@ -5,15 +5,16 @@ import {
   DUMMY_UTXO_MIN_VALUE,
   DUMMY_UTXO_VALUE,
   ORDINALS_POSTAGE_VALUE,
-  PLATFORM_FEE_ADDRESS,
+  // PLATFORM_FEE_ADDRESS,
 } from '../lib/msigner/constant'
 import { mempool } from './mempool'
 import * as bitcoin from 'bitcoinjs-lib'
-import { network } from './constants'
+import { network, PLATFORM_FEE_ADDRESS } from './constants'
 import { getSellerOrdOutputValue, toXOnly } from './SellerSigner'
+import { Psbt } from 'bitcoinjs-lib'
 
-export async function selectDummyUTXOs(utxos: AddressTxsUtxo[]): Promise<AddressTxsUtxo[]> {
-  const result: AddressTxsUtxo[] = []
+export async function selectDummyUTXOs(utxos: AddressTxsUtxo[]): Promise<utxo[]> {
+  const result: utxo[] = []
   for (const utxo of utxos) {
     //  排除包含铭文的utxo
     // if (await doesUtxoContainInscription(utxo, itemProvider)) {
@@ -36,19 +37,19 @@ export async function selectPaymentUTXOs(
   voutsLength: number,
   feeRateTier: string
 ) {
-  const selectedUtxos: AddressTxsUtxo[] = []
+  const selectedUtxos: utxo[] = []
   let selectedAmount = 0
 
   // Sort descending by value, and filter out dummy utxos
   utxos = utxos.filter((x) => x.value > DUMMY_UTXO_VALUE).sort((a, b) => b.value - a.value)
-
-  for (const utxo of utxos) {
+  console.log('utxos', utxos)
+  for (const _utxo of utxos) {
     // Never spend a utxo that contains an inscription for cardinal purposes
     // if (await doesUtxoContainInscription(utxo, itemProvider)) {
     //   continue
     // }
-    selectedUtxos.push(utxo)
-    selectedAmount += utxo.value
+    selectedUtxos.push((await mapUtxos([_utxo]))[0])
+    selectedAmount += _utxo.value
 
     if (
       selectedAmount >=
@@ -141,7 +142,12 @@ async function doesUtxoContainInscription(utxo: AddressTxsUtxo): Promise<boolean
   // return foundInscription
 }
 
-export async function generateUnsignedBuyingPSBTBase64(listing: IListingState) {
+export async function generateUnsignedBuyingPSBTBase64(
+  listing: IListingState
+): Promise<{ listing: IListingState; psbt: Psbt }> {
+  const ecc = await import('tiny-secp256k1')
+  bitcoin.initEccLib(ecc)
+
   const psbt = new bitcoin.Psbt({ network })
   if (!listing.buyer || !listing.buyer.buyerAddress || !listing.buyer.buyerTokenReceiveAddress) {
     throw new InvalidArgumentError('Buyer address is not set')
@@ -194,16 +200,22 @@ export async function generateUnsignedBuyingPSBTBase64(listing: IListingState) {
       listing.buyer.buyerDummyUTXOs[1].value +
       Number(listing.seller.ordItem.location.split(':')[2]),
   })
-  // Add ordinal output
-  psbt.addOutput({
-    address: listing.buyer.buyerTokenReceiveAddress,
-    value: ORDINALS_POSTAGE_VALUE,
-  })
 
   const { sellerInput, sellerOutput } = await getSellerInputAndOutput(listing)
 
+  console.log('sellerInput', sellerInput, 'sellerOutput', sellerOutput, listing)
+  // need to delete
+  // sellerOutput.address = 'tb1qaha8rhgsq5z73nvckd53qym0t2jt4jjw3u5s55'
+  // Add ordinal output
+  psbt.addOutputs([
+    {
+      address: listing.buyer.buyerTokenReceiveAddress,
+      value: ORDINALS_POSTAGE_VALUE,
+    },
+    sellerOutput,
+  ])
   psbt.addInput(sellerInput)
-  psbt.addOutput(sellerOutput)
+  // psbt.addOutput(sellerOutput)
 
   // Add payment utxo inputs
   for (const utxo of listing.buyer.buyerPaymentUTXOs) {
@@ -288,7 +300,7 @@ Missing:    ${satToBtc(-changeValue)} BTC`
 
   listing.buyer.unsignedBuyingPSBTBase64 = psbt.toBase64()
   listing.buyer.unsignedBuyingPSBTInputSize = psbt.data.inputs.length
-  return listing
+  return { listing, psbt }
 }
 
 async function getSellerInputAndOutput(listing: IListingState) {
@@ -360,3 +372,12 @@ export async function mapUtxos(utxosFromMempool: AddressTxsUtxo[]): Promise<utxo
 }
 
 export const satToBtc = (sat: number) => sat / 100000000
+
+// async function getrawtransactionVerbose(txid: string): Promise<IGetRawTransactionVerboseResult> {
+//   const {
+//     bitcoin: { transactions },
+//   } = mempool()
+//   const txRaw = await transactions.getTxHex({ txid })
+//   const res = Transaction.fromHex(txRaw)
+//   return res
+// }

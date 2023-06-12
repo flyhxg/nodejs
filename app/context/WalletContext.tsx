@@ -5,6 +5,7 @@ import { NoOperation } from '../../utils'
 const WalletContext = createContext<{
   connected: boolean
   account?: string | null
+  publicKey?: string | null
   balance: {
     confirmed: number
     unconfirmed: number
@@ -12,10 +13,13 @@ const WalletContext = createContext<{
   }
   active: () => any
   signPsbt: (unsignedStr) => Promise<string>
+  pushPsbt: (signedStr) => Promise<any>
 }>({
   connected: false,
   account: null,
+  publicKey: null,
   signPsbt: async () => '',
+  pushPsbt: async () => {},
   balance: {
     confirmed: 0,
     unconfirmed: 0,
@@ -107,8 +111,16 @@ export default function WalletContextProvider(props: { children?: ReactNode }) {
     const data = await unisat.signPsbt(unsignedPsbt)
     return data
   }, [])
+
+  const pushPsbt = useCallback(async (signedPsbt: string) => {
+    const unisat = (window as any).unisat
+    if (!unisat) return
+    const data = await unisat.pushPsbt(signedPsbt)
+    return data
+  }, [])
+
   return (
-    <WalletContext.Provider value={{ connected, account: address, balance, active, signPsbt }}>
+    <WalletContext.Provider value={{ connected, account: address, balance, active, signPsbt, publicKey, pushPsbt }}>
       {props.children}
     </WalletContext.Provider>
   )

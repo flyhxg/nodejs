@@ -1,4 +1,4 @@
-const BASE_URL = ''
+const BASE_URL = 'https://tests.havenmarket.xyz'
 
 export interface Params {
   [key: string]: string | number
@@ -7,6 +7,7 @@ export interface Params {
 async function request<T>(_url: string, _config: RequestInit & { query?: Params; data?: Params }) {
   const url = formatURL(_url, _config.query)
   const config = formatConfig(_config)
+  console.log(config)
   const response = await fetch(url, config)
   const result = await response.json()
   return result as T
@@ -37,7 +38,7 @@ function formatQueryURL(_url: string, _query: Params) {
 }
 
 function formatConfig(_config: RequestInit & { query?: Params; data?: Params }): RequestInit {
-  const config = Object.assign(_config, { query: undefined, data: undefined })
+  const config = Object.assign({}, _config, { query: undefined, data: undefined })
   if (_config.data) {
     config.headers = Object.assign(config.headers || {}, { 'Content-Type': 'application/json' })
     config.body = JSON.stringify(_config.data)

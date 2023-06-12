@@ -14,7 +14,7 @@ export default function SaleModal(props: { open: boolean; onClose: () => void; r
         <Input />
         <ListButton
           onClick={() => {
-            create(80000)
+            create(8000)
           }}
         >
           List Now

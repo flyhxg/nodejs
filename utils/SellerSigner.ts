@@ -14,7 +14,7 @@ export async function generateUnsignedListingPSBTBase64(
     bitcoin: { transactions },
   } = mempool()
   const txHex = await transactions.getTxHex({
-    txid: '15e10745f15593a899cef391191bdd3d7c12412cc4696b7bcb669d0feadc8521',
+    txid: txId,
   })
   const tx = bitcoin.Transaction.fromHex(txHex)
 

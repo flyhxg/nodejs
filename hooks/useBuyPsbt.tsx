@@ -2,29 +2,46 @@ import { useWallet } from '../app/context/WalletContext'
 import { useCallback } from 'react'
 import { mempool } from '../utils/mempool'
 import { generateUnsignedBuyingPSBTBase64, selectDummyUTXOs, selectPaymentUTXOs } from '../utils/BuyerSigner'
-import { IListingState, IOrdItem, utxo } from '../lib/msigner'
+import { IListingState, IOrdItem } from '../lib/msigner'
+import useCreateDummyUtxos from './useCreateDummyUtxo'
+import { DUMMY_UTXO_MAX_VALUE } from '../lib/msigner/constant'
+import { Psbt } from 'bitcoinjs-lib'
+import { testnet } from 'bitcoinjs-lib/src/networks'
+import { Services } from '../utils/http/Services'
 
 const item: IOrdItem = {
-  id: '83eb8b29c11905f7d94de94cdfd56acde13a82e2da9b393b81435fa855ee7129i0',
+  id: 'c23c505ad81f3c472c1aec8b19db67001026c452f99960c9c34395fcdffe9c90i0',
   contentType: 'application/json',
-  contentURI: 'http://18.222.82.179:8081/content/83eb8b29c11905f7d94de94cdfd56acde13a82e2da9b393b81435fa855ee7129i0',
+  contentURI: 'http://3.19.120.151:8081/content/c23c505ad81f3c472c1aec8b19db67001026c452f99960c9c34395fcdffe9c90i0',
   contentPreviewURI:
-    'http://18.222.82.179:8081/preview/83eb8b29c11905f7d94de94cdfd56acde13a82e2da9b393b81435fa855ee7129i0',
+    'http://3.19.120.151:8081/preview/c23c505ad81f3c472c1aec8b19db67001026c452f99960c9c34395fcdffe9c90i0',
   sat: -1,
-  genesisTransaction: '83eb8b29c11905f7d94de94cdfd56acde13a82e2da9b393b81435fa855ee7129',
-  genesisTransactionBlockTime: '2023-06-01 10:56:35 UTC',
+  genesisTransaction: 'c23c505ad81f3c472c1aec8b19db67001026c452f99960c9c34395fcdffe9c90',
+  genesisTransactionBlockTime: '2023-06-08 11:38:19 UTC',
   inscriptionNumber: 0,
-  chain: 'btc-regtest',
-  location: '53c99793f704783ecb5c28ef56f6e53995c98341c99e4f4e48b3a4df55bd73c7:0:0',
-  output: '53c99793f704783ecb5c28ef56f6e53995c98341c99e4f4e48b3a4df55bd73c7:0',
-  outputValue: 9556,
-  owner: 'bcrt1pjlxppknmqkqt0lc2fnne6a85nh3jac7rmwtn3glzsn5cxpta3rdskququd',
+  chain: 'btc-testnet',
+  location: '6bd2340ff7caec174e7e6405d09122d0447d8f6f5ab6d109bcc3562d51b908ee:1:0',
+  output: '6bd2340ff7caec174e7e6405d09122d0447d8f6f5ab6d109bcc3562d51b908ee:1',
+  outputValue: 10000,
+  owner: 'tb1qaha8rhgsq5z73nvckd53qym0t2jt4jjw3u5s55',
   listed: false,
   satName: 'satname',
+  locationBlockHeight: 2437376,
 }
 
+const listing: IListingState = {
+  seller: {
+    makerFeeBp: 100,
+    sellerOrdAddress: 'tb1qaha8rhgsq5z73nvckd53qym0t2jt4jjw3u5s55',
+    price: 8000,
+    ordItem: item,
+    sellerReceiveAddress: 'tb1qaha8rhgsq5z73nvckd53qym0t2jt4jjw3u5s55',
+    tapInternalKey: '',
+  },
+}
 export default function useBuyPsbt() {
-  const { account } = useWallet()
+  const { account, signPsbt } = useWallet()
+  const createDummyUtxos = useCreateDummyUtxos()
   const buyPsbt = useCallback(async () => {
     if (!account) return
     const {
@@ -33,28 +50,31 @@ export default function useBuyPsbt() {
     const utxoList = await addresses.getAddressTxsUtxo({ address: account })
     const sortedUtxoList = utxoList.sort((a, b) => a.value - b.value)
     const dummyUTXOS = await selectDummyUTXOs(sortedUtxoList)
-    const paymentUTXOS = await selectPaymentUTXOs(sortedUtxoList, 800000, 4, 5, 'fastestFee')
-    const listing: IListingState = {
-      seller: {
-        makerFeeBp: 100,
-        sellerOrdAddress: 'bcrt1pjlxppknmqkqt0lc2fnne6a85nh3jac7rmwtn3glzsn5cxpta3rdskququd',
-        price: 800000,
-        ordItem: item,
-        sellerReceiveAddress: 'bcrt1pjlxppknmqkqt0lc2fnne6a85nh3jac7rmwtn3glzsn5cxpta3rdskququd',
-        tapInternalKey: '',
-      },
-      buyer: {
-        takerFeeBp: 0,
-        buyerAddress: 'bcrt1p2hsze6rsempc3d23kpn4wjyh625rzmncuzf9p00s5wg6xsmyg4sqrps2fl',
-        buyerTokenReceiveAddress: 'bcrt1p2hsze6rsempc3d23kpn4wjyh625rzmncuzf9p00s5wg6xsmyg4sqrps2fl',
-        feeRateTier: 'fastestFee',
-        buyerDummyUTXOs: dummyUTXOS as utxo[],
-        buyerPaymentUTXOs: paymentUTXOS as utxo[],
-      },
+
+    if (dummyUTXOS.length < 2) {
+      const unqualifiedUtxos = utxoList.filter((x) => x.value > DUMMY_UTXO_MAX_VALUE)
+      createDummyUtxos(unqualifiedUtxos)
+      return
     }
-    const res = await generateUnsignedBuyingPSBTBase64(listing)
-    // res.buyer?.unsignedBuyingPSBTBase64
-    // sign and commit
-  }, [account])
+    const paymentUTXOS = await selectPaymentUTXOs(sortedUtxoList, listing.seller.price, 4, 5, 'fastestFee')
+    listing.buyer = {
+      takerFeeBp: 0,
+      buyerAddress: account,
+      buyerTokenReceiveAddress: account,
+      feeRateTier: 'fastestFee',
+      buyerDummyUTXOs: dummyUTXOS,
+      buyerPaymentUTXOs: paymentUTXOS,
+    }
+    const { psbt } = await generateUnsignedBuyingPSBTBase64(listing)
+    const hex = await signPsbt(psbt.toHex())
+    const base64 = Psbt.fromHex(hex as string, { network: testnet }).toBase64()
+
+    const data = await Services.marketService.mergeOrder({
+      chain: 'btc-testnet',
+      inscriptionId: item.id,
+      output: item.output,
+      signedBuyerPSBT: base64,
+    })
+  }, [account, createDummyUtxos])
   return buyPsbt
 }
