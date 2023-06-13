@@ -3,6 +3,7 @@ import { Psbt } from 'bitcoinjs-lib'
 import { IListingState } from '../lib/msigner'
 import { mempool } from './mempool'
 import { network } from './constants'
+import { toXOnly } from './transaction'
 
 export async function generateUnsignedListingPSBTBase64(
   listing: IListingState
@@ -56,8 +57,6 @@ export async function generateUnsignedListingPSBTBase64(
   listing.seller.unsignedListingPSBTBase64 = psbt.toBase64()
   return { listing, psbt }
 }
-
-export const toXOnly = (pubKey: Buffer) => (pubKey.length === 32 ? pubKey : pubKey.subarray(1, 33))
 
 export function getSellerOrdOutputValue(price: number, makerFeeBp: number, prevUtxoValue: number): number {
   return (

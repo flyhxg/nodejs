@@ -1,11 +1,12 @@
 import { AddressTxsUtxo } from '@mempool/mempool.js/lib/interfaces'
 import * as bitcoin from 'bitcoinjs-lib'
 import { network } from '../utils/constants'
-import { calculateTxBytesFeeWithRate, getFees, isP2SHAddress, mapUtxos } from '../utils/BuyerSigner'
+import { calculateTxBytesFeeWithRate, getFees } from '../utils/BuyerSigner'
 import { InvalidArgumentError, utxo } from '../lib/msigner/interfaces'
 import { DUMMY_UTXO_MIN_VALUE, DUMMY_UTXO_VALUE } from '../lib/msigner/constant'
 import { useCallback, useEffect, useState } from 'react'
 import { useWallet } from '../app/context/WalletContext'
+import { isP2SHAddress, mapUtxos } from '../utils/transaction'
 
 export default function useCreateDummyUtxos() {
   const { account, publicKey, signPsbt, pushPsbt } = useWallet()
