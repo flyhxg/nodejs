@@ -6,24 +6,26 @@ import Image from 'next/image'
 import { XButton } from '../../views/common/XButton'
 import { XImage } from '../../views/common/XImage'
 import Link from 'next/link'
+import { OrderItem } from '../../../utils/http/Services/project'
+import { formatSat } from '../../../utils'
 
-export default function ItemCard() {
+export default function ItemCard(props: { order: OrderItem }) {
   return (
     <Link href={'/detail/1'}>
       <CardWrapper>
         <CardImage src={Images.HOME.COVER_PNG}></CardImage>
         <InfoWrapper>
-          <InfoTitle>I`m A NFT Name</InfoTitle>
+          <InfoTitle>{props.order.name}</InfoTitle>
           <InfoPrice>
             <BtcIcon />
-            0.71 BTC
+            {formatSat(props.order.price)} BTC
           </InfoPrice>
           <SplitLine />
           <Label>Battle Of BTC</Label>
         </InfoWrapper>
         {/*@ts-ignore*/}
         <SaleButton>
-          <SaleIcon /> Sale
+          <SaleIcon /> Buy
         </SaleButton>
       </CardWrapper>
     </Link>

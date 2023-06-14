@@ -4,17 +4,37 @@ import useListPsbt from '../../../hooks/useListPsbt'
 import { commonStyles } from '../../../utils/commonStyles'
 import { XButton } from '../common/XButton'
 import Modal from './Modal'
+import { useState } from 'react'
+import { DialogType, useDialog } from '../../context/DialogContext'
+import AddressLink from '../common/AddressLink'
+import { useWallet } from '../../context/WalletContext'
 
-export default function SaleModal(props: { open: boolean; onClose: () => void; resolve: () => void }) {
-  const create = useListPsbt()
+export default function SaleModal(props: {
+  open: boolean
+  onClose: () => void
+  resolve: (val: boolean) => void
+  id: string
+}) {
+  const { list, loading } = useListPsbt(props.id)
+  const [price, setPrice] = useState('')
+  const { openDialog } = useDialog()
+  const { account } = useWallet()
   return (
     <StyledModal open={props.open} onClose={props.onClose} closeOnBackdrop closeOnEscape>
       <Title>Inscription Not Listed For Sale</Title>
       <InputWrapper>
-        <Input />
+        <Input value={price} onChange={(e) => setPrice(e.target.value)} />
         <ListButton
-          onClick={() => {
-            create(8000)
+          isLoading={loading}
+          onClick={async () => {
+            if (isNaN(+price) || +price < 10000) {
+              openDialog(DialogType.Error, { title: 'Sale error.', desc: 'Invalid price, min 10000 sats!' })
+            } else {
+              const result = await list(+price)
+              if (result) {
+                props.resolve(true)
+              }
+            }
           }}
         >
           List Now
@@ -22,7 +42,10 @@ export default function SaleModal(props: { open: boolean; onClose: () => void; r
       </InputWrapper>
       <Tips>
         By Listing Your Item, You Acknowledge That Payment Will Be Sent Directly To Thepayment Address Informed By Your
-        Connected Wallet: <span>Bc1 Pz ... 3ca</span>
+        Connected Wallet:{' '}
+        <span>
+          <AddressLink addr={account || ''} shorten={10} />
+        </span>
       </Tips>
     </StyledModal>
   )

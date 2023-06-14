@@ -9,7 +9,8 @@ export async function queryTxStatus(txid: string) {
     bitcoin: { transactions },
   } = mempool()
   const tx = await transactions.getTx({ txid })
-  return tx.status
+  console.log('tx', tx)
+  return tx.status.confirmed
 }
 
 export async function waitTxConfirmed(txid: string) {

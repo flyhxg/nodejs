@@ -7,41 +7,27 @@ import Image from 'next/image'
 import { Display, Top } from '../../../utils/type'
 import { useFilterContext } from './FilterContext'
 import ItemCard from './ItemCard'
+import { LoadingFrame } from '../../views/common/Loading'
 
 export default function ItemList() {
+  const { orders, isLoading } = useFilterContext()
   return (
     <ItemListWrapper>
       <ToolBar />
       <ListWrapper>
-        <ItemCard />
-        <ItemCard />
-        <ItemCard />
-        <ItemCard />
-        <ItemCard />
-        <ItemCard />
-        <ItemCard />
-        <ItemCard />
-        <ItemCard />
-        <ItemCard />
-        <ItemCard />
-        <ItemCard />
-        <ItemCard />
-        <ItemCard />
-        <ItemCard />
-        <ItemCard />
-        <ItemCard />
-        <ItemCard />
-        <ItemCard />
-        <ItemCard />
-        <ItemCard />
-        <ItemCard />
-        <ItemCard />
-        <ItemCard />
-        <ItemCard />
+        {orders.map((order) => (
+          <ItemCard order={order} key={order.order_id} />
+        ))}
+        {isLoading && <StyledLoadingFrame size={40} />}
       </ListWrapper>
     </ItemListWrapper>
   )
 }
+
+const StyledLoadingFrame = styled(LoadingFrame)`
+  width: 260px;
+  height: 335px;
+`
 
 const ItemListWrapper = styled.div`
   margin: 70px auto 0 auto;

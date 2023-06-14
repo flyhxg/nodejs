@@ -7,31 +7,39 @@ import { useModal } from '../../context/ModalContext'
 import { XButton } from '../common/XButton'
 import { XImage } from '../common/XImage'
 import SaleModal from '../modal/SaleModal'
+import { NFTItem } from '../../../utils/http/Services/user'
+import Link from 'next/link'
 
-export default function ItemCard() {
-  console.log('rpc', RPC)
+// name: string
+// content_type: string
+// content_length: number
+// number: number
+export default function ItemCard(props: { item: NFTItem }) {
   const { openModal } = useModal()
   return (
-    <CardWrapper>
-      <CardImage src={Images.HOME.COVER_PNG}>
-        <OnSale>On Sale</OnSale>
-      </CardImage>
-      <InfoWrapper>
-        <InfoTitle>I`m A NFT Name</InfoTitle>
-        <InfoText>Inscription #043244</InfoText>
-        <SplitLine />
-        <Label>Battle Of BTC</Label>
-      </InfoWrapper>
-      <SaleButton
-        onClick={(e) => {
-          e.stopPropagation()
-          //@ts-ignore
-          openModal(SaleModal)
-        }}
-      >
-        <SaleIcon /> Sale
-      </SaleButton>
-    </CardWrapper>
+    <Link href={`/detail/${props.item.id}`}>
+      <CardWrapper>
+        <CardImage src={Images.HOME.COVER_PNG}>{props.item.listed && <OnSale>On Sale</OnSale>}</CardImage>
+        <InfoWrapper>
+          <InfoTitle>{props.item.name}</InfoTitle>
+          <InfoText>Inscription #{props.item.number}</InfoText>
+          <SplitLine />
+          <Label>Battle Of BTC</Label>
+        </InfoWrapper>
+        {!props.item.listed && (
+          <SaleButton
+            onClick={(e) => {
+              e.stopPropagation()
+              e.preventDefault()
+              //@ts-ignore
+              openModal(SaleModal, { id: props.item.id })
+            }}
+          >
+            <SaleIcon /> Sale
+          </SaleButton>
+        )}
+      </CardWrapper>
+    </Link>
   )
 }
 

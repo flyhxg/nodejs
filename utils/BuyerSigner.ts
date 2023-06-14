@@ -9,7 +9,7 @@ import {
 } from '../lib/msigner/constant'
 import { mempool } from './mempool'
 import * as bitcoin from 'bitcoinjs-lib'
-import { network, PLATFORM_FEE_ADDRESS } from './constants'
+import { makerFeeBp, network, PLATFORM_FEE_ADDRESS, takerFeeBp } from './constants'
 import { getSellerOrdOutputValue } from './SellerSigner'
 import { Psbt } from 'bitcoinjs-lib'
 import { isP2SHAddress, mapUtxos, satToBtc, toXOnly } from './transaction'
@@ -253,9 +253,7 @@ export async function generateUnsignedBuyingPSBTBase64(
   }
 
   // Create a platform fee output
-  let platformFeeValue = Math.floor(
-    (listing.seller.price * (listing.buyer.takerFeeBp + listing.seller.makerFeeBp)) / 10000
-  )
+  let platformFeeValue = Math.floor((listing.seller.price * (takerFeeBp + makerFeeBp)) / 10000)
   platformFeeValue = platformFeeValue > DUMMY_UTXO_MIN_VALUE ? platformFeeValue : 0
 
   if (platformFeeValue > 0) {

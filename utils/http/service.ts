@@ -59,7 +59,7 @@ type Method =
 
 type MethodWithBody = 'post' | 'POST' | 'put' | 'PUT'
 
-interface RequestConfig {
+export interface RequestConfig {
   next?: NextFetchRequestConfig
   cache?: RequestCache
 }
@@ -97,7 +97,7 @@ function httpServiceNoBody<R, Q extends Params>(method: Exclude<Method, MethodWi
           throw new Error(res.message)
         }
       })
-  } as Service<R, [Q, RequestConfig] | [Q] | []>
+  } as Service<R, [Q, RequestConfig | undefined] | [Q] | []>
 }
 
 export function getHttpService<R, Q extends Params = {}>(url: string) {

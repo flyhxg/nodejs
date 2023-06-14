@@ -3,8 +3,13 @@ import styled from 'styled-components'
 import { commonStyles } from '../../../utils/commonStyles'
 import Image from 'next/image'
 import { Images } from '../../../utils/images'
+import { IOrdItem } from '../../../lib/msigner'
+import InscriptionLink from '../../views/common/InscriptionLink'
+import AddressLink from '../../views/common/AddressLink'
+import TxHashLink from '../../views/common/TxHashLink'
 
-export default function AttrInfoBox() {
+export default function AttrInfoBox(props: { nftItem: IOrdItem }) {
+  const { nftItem } = props
   return (
     <BoxWrapper>
       <Title>
@@ -12,19 +17,25 @@ export default function AttrInfoBox() {
       </Title>
       <AttrItem>
         <span className={'title'}>Inscription ID</span>
-        <span className={'value'}>6a25c ... 6i0</span>
+        <span className={'value'}>
+          <InscriptionLink insId={nftItem.id} shorten={10} />
+        </span>
       </AttrItem>
       <AttrItem>
         <span className={'title'}>Inscription Number</span>
-        <span className={'value'}>411405</span>
+        <span className={'value'}>{nftItem.inscriptionNumber}</span>
       </AttrItem>
       <AttrItem>
         <span className={'title'}>Owner</span>
-        <span className={'value'}>6a25c ... 6i0</span>
+        <span className={'value'}>
+          <AddressLink addr={nftItem.owner} shorten={5} />
+        </span>
       </AttrItem>
       <AttrItem>
         <span className={'title'}>Genesis Transaction</span>
-        <span className={'value'}>6a25c ... 6i0</span>
+        <span className={'value'}>
+          <TxHashLink txid={nftItem.genesisTransaction} shorten={10} />
+        </span>
       </AttrItem>
       <AttrItem>
         <span className={'title'}>Sat Rarity</span>
@@ -32,11 +43,11 @@ export default function AttrInfoBox() {
       </AttrItem>
       <AttrItem>
         <span className={'title'}>Sat Number</span>
-        <span className={'value'}>1923304329432944</span>
+        <span className={'value'}>{nftItem.sat}</span>
       </AttrItem>{' '}
       <AttrItem>
         <span className={'title'}>Sat Name</span>
-        <span className={'value'}>afnwdqebmbb</span>
+        <span className={'value'}>{nftItem.satName}</span>
       </AttrItem>
     </BoxWrapper>
   )

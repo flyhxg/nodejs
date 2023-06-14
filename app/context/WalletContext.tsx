@@ -12,8 +12,9 @@ const WalletContext = createContext<{
     total: number
   }
   active: () => any
-  signPsbt: (unsignedStr) => Promise<string>
-  pushPsbt: (signedStr) => Promise<any>
+  signPsbt: (unsignedStr: string) => Promise<string>
+  pushPsbt: (signedStr: string) => Promise<any>
+  signMessage: (message: string) => Promise<string>
 }>({
   connected: false,
   account: null,
@@ -26,6 +27,7 @@ const WalletContext = createContext<{
     total: 0,
   },
   active: NoOperation,
+  signMessage: async () => '',
 })
 
 export default function WalletContextProvider(props: { children?: ReactNode }) {
@@ -119,8 +121,17 @@ export default function WalletContextProvider(props: { children?: ReactNode }) {
     return data
   }, [])
 
+  const signMessage = useCallback(async (text: string) => {
+    const unisat = (window as any).unisat
+    if (!unisat) return
+    const data = await unisat.signMessage(text)
+    return data
+  }, [])
+
   return (
-    <WalletContext.Provider value={{ connected, account: address, balance, active, signPsbt, publicKey, pushPsbt }}>
+    <WalletContext.Provider
+      value={{ connected, account: address, balance, active, signPsbt, publicKey, pushPsbt, signMessage }}
+    >
       {props.children}
     </WalletContext.Provider>
   )

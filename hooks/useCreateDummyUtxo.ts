@@ -4,22 +4,35 @@ import { network } from '../utils/constants'
 import { calculateTxBytesFeeWithRate, getFees } from '../utils/BuyerSigner'
 import { InvalidArgumentError, utxo } from '../lib/msigner/interfaces'
 import { DUMMY_UTXO_MIN_VALUE, DUMMY_UTXO_VALUE } from '../lib/msigner/constant'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useWallet } from '../app/context/WalletContext'
-import { isP2SHAddress, mapUtxos } from '../utils/transaction'
+import { isP2SHAddress, mapUtxos, waitTxConfirmed } from '../utils/transaction'
+import { DialogType, useDialog } from '../app/context/DialogContext'
+import { getErrorMsg, sleep } from '../utils'
 
 export default function useCreateDummyUtxos() {
   const { account, publicKey, signPsbt, pushPsbt } = useWallet()
-  const createDummyUtxos = useCallback(
+  const [loading, setLoading] = useState(false)
+  const { openDialog } = useDialog()
+  const create = useCallback(
     async (unqualifiedUtxos: AddressTxsUtxo[]) => {
-      if (!account || !publicKey) return
-      const psbtHex = await generateUnsignedCreateDummyUtxoPSBTHex(account, publicKey, unqualifiedUtxos, 'fastestFee')
-      const signedPsbt = await signPsbt(psbtHex)
-      const tx = pushPsbt(signedPsbt)
+      if (!account || !publicKey) return false
+      try {
+        setLoading(true)
+        const psbtHex = await generateUnsignedCreateDummyUtxoPSBTHex(account, publicKey, unqualifiedUtxos, 'fastestFee')
+        const signedPsbt = await signPsbt(psbtHex)
+        const tx = await pushPsbt(signedPsbt)
+        return true
+      } catch (e) {
+        openDialog(DialogType.Error, { title: 'Prepare error.', desc: getErrorMsg(e) })
+        return false
+      } finally {
+        setLoading(false)
+      }
     },
     [account, signPsbt]
   )
-  return createDummyUtxos
+  return { create, loading }
 }
 
 export async function generateUnsignedCreateDummyUtxoPSBTHex(

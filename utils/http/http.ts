@@ -1,4 +1,6 @@
-const BASE_URL = 'https://tests.havenmarket.xyz'
+import { env } from '../env'
+
+const BASE_URL = env.baseURL
 
 export interface Params {
   [key: string]: string | number
@@ -7,7 +9,6 @@ export interface Params {
 async function request<T>(_url: string, _config: RequestInit & { query?: Params; data?: Params }) {
   const url = formatURL(_url, _config.query)
   const config = formatConfig(_config)
-  console.log(config)
   const response = await fetch(url, config)
   const result = await response.json()
   return result as T
@@ -32,9 +33,10 @@ function formatQueryURL(_url: string, _query: Params) {
     Object.assign(query, baseQuery)
   }
   const targetQueryStr = Object.entries(query)
+    .filter((x) => x[1] !== undefined)
     .map((x) => `${x[0]}=${x[1]}`)
     .join('&')
-  return url + targetQueryStr
+  return url + '?=' + targetQueryStr
 }
 
 function formatConfig(_config: RequestInit & { query?: Params; data?: Params }): RequestInit {

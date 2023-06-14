@@ -1,13 +1,24 @@
 'use client'
-import styled from 'styled-components'
-import { commonStyles } from '../../../utils/commonStyles'
 import Image from 'next/image'
+import styled from 'styled-components'
+import useBuyPsbt, { BuyLoadingStage } from '../../../hooks/useBuyPsbt'
+import { commonStyles } from '../../../utils/commonStyles'
 import { Images } from '../../../utils/images'
+import { useWallet } from '../../context/WalletContext'
 import { XButton } from '../../views/common/XButton'
-import useBuyPsbt from '../../../hooks/useBuyPsbt'
+import Loading from '../../views/common/Loading'
+import TxHashLink from '../../views/common/TxHashLink'
+import { formatSat } from '../../../utils'
+import { OrderDetail } from '../../../utils/http/Services/market'
+import { takerFeeBp } from '../../../utils/constants'
+import { IOrdItem } from '../../../lib/msigner'
+import useCancelListing from '../../../hooks/useCancelListing'
 
-export default function TxInfoBox() {
-  const buyPsbt = useBuyPsbt()
+export default function TxInfoBox(props: { order: OrderDetail; nftItem: IOrdItem }) {
+  const { buyPsbt, loading, loadingTx } = useBuyPsbt()
+  const { account, active, connected } = useWallet()
+  const { cancel, loading: cancelLoading } = useCancelListing()
+
   return (
     <InfoBoxWrapper>
       <Title>BoredApeYachtClub #1080</Title>
@@ -15,99 +26,59 @@ export default function TxInfoBox() {
         <PriceItem>
           <span className={'title'}>Current Price:</span>
           <InfoPrice>
-            <BtcIcon /> 0.004 BTC
+            <BtcIcon /> {formatSat(props.order.price)} BTC
           </InfoPrice>
         </PriceItem>
         <PriceItem>
-          <span className={'title'}>Current Price:</span>
+          <span className={'title'}>Taker Fee:</span>
           <InfoPrice>
-            <BtcIcon /> 0.004 BTC
+            <BtcIcon /> {formatSat((props.order.price * takerFeeBp) / 10000)} BTC
           </InfoPrice>
         </PriceItem>
         <PriceItem>
-          <span className={'title'}>Current Price:</span>
+          <span className={'title'}>Total:</span>
           <InfoPrice>
-            <BtcIcon /> 0.004 BTC
+            <BtcIcon /> {formatSat(props.order.price + (props.order.price * takerFeeBp) / 10000)} BTC
           </InfoPrice>
         </PriceItem>
-        <ButtonsGroup>
-          <Button onClick={buyPsbt}>Buy</Button>
-          <Button>Make Offer</Button>
-        </ButtonsGroup>
+        {loading < BuyLoadingStage.WaitingConfirm && (
+          <ButtonsGroup>
+            {connected ? (
+              <NormalButton isLoading={loading > BuyLoadingStage.NotStart} onClick={buyPsbt}>
+                Buy
+              </NormalButton>
+            ) : account === props.nftItem.owner ? (
+              <NormalButton
+                isLoading={cancelLoading}
+                onClick={() => {
+                  cancel(props.nftItem.id)
+                }}
+              >
+                Cancel Listing
+              </NormalButton>
+            ) : (
+              <NormalButton onClick={active}>Connect Wallet</NormalButton>
+            )}
+          </ButtonsGroup>
+        )}
+        {loading === BuyLoadingStage.WaitingConfirm && (
+          <LoadingText>
+            <Loading size={24} style={{ marginRight: 16 }} />
+            Trading on the chain hash:
+            <TxHashLink style={{ color: 'white' }} txid={loadingTx} shorten={10} />
+          </LoadingText>
+        )}
       </PriceBox>
       <RarityListWrapper>
-        <RarityItem>
-          <p>
-            <span className={'title'}>Background</span>
-            <br />
-            <span className={'value'}>Aquamarine</span>
-          </p>
-          <p>
-            <span className={'title'}>Rarity</span>
-            <br />
-            <span className={'value'}>Yellow(12%)</span>
-          </p>
-        </RarityItem>
-        <RarityItem>
-          <p>
-            <span className={'title'}>Background</span>
-            <br />
-            <span className={'value'}>Aquamarine</span>
-          </p>
-          <p>
-            <span className={'title'}>Rarity</span>
-            <br />
-            <span className={'value'}>Yellow(12%)</span>
-          </p>
-        </RarityItem>
-        <RarityItem>
-          <p>
-            <span className={'title'}>Background</span>
-            <br />
-            <span className={'value'}>Aquamarine</span>
-          </p>
-          <p>
-            <span className={'title'}>Rarity</span>
-            <br />
-            <span className={'value'}>Yellow(12%)</span>
-          </p>
-        </RarityItem>
-        <RarityItem>
-          <p>
-            <span className={'title'}>Background</span>
-            <br />
-            <span className={'value'}>Aquamarine</span>
-          </p>
-          <p>
-            <span className={'title'}>Rarity</span>
-            <br />
-            <span className={'value'}>Yellow(12%)</span>
-          </p>
-        </RarityItem>
-        <RarityItem>
-          <p>
-            <span className={'title'}>Background</span>
-            <br />
-            <span className={'value'}>Aquamarine</span>
-          </p>
-          <p>
-            <span className={'title'}>Rarity</span>
-            <br />
-            <span className={'value'}>Yellow(12%)</span>
-          </p>
-        </RarityItem>
-        <RarityItem>
-          <p>
-            <span className={'title'}>Background</span>
-            <br />
-            <span className={'value'}>Aquamarine</span>
-          </p>
-          <p>
-            <span className={'title'}>Rarity</span>
-            <br />
-            <span className={'value'}>Yellow(12%)</span>
-          </p>
-        </RarityItem>{' '}
+        {(props.order.attributes || []).map((attr) => (
+          <RarityItem key={attr.trait_type}>
+            <p>
+              <span className={'title'}>{attr.trait_type}</span>
+              <br />
+              <span className={'value'}>{attr.value}</span>
+            </p>
+          </RarityItem>
+        ))}
       </RarityListWrapper>
     </InfoBoxWrapper>
   )
@@ -177,14 +148,14 @@ const Button = styled(XButton)`
 
 const RarityListWrapper = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 235px);
+  grid-template-columns: repeat(6, 120px);
   grid-template-rows: repeat(2, 70px);
   grid-gap: 11px 7px;
   margin-top: 44px;
 `
 
 const RarityItem = styled.div`
-  width: 235px;
+  width: 120px;
   height: 70px;
   position: relative;
   padding-top: 18px;
@@ -208,4 +179,17 @@ const RarityItem = styled.div`
       display: inline-block;
     }
   }
+`
+
+const NormalButton = styled(XButton)`
+  width: 617px;
+`
+
+const LoadingText = styled.p`
+  margin-top: 29px;
+  line-height: 24px;
+  font-size: 16px;
+  color: #fff;
+  text-align: center;
+  ${commonStyles.flexCenter}
 `

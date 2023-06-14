@@ -75,8 +75,8 @@ export default function DialogProvider({ children }: { children: any }) {
 
 export const StyledModal = styled(Modal)`
   background: #2e2e2e !important;
-  width: 306px;
-  height: 325px;
+  width: 306px !important;
+  height: 325px !important;
   padding-top: 80px;
   flex-direction: column;
   ${commonStyles.flexStart};
