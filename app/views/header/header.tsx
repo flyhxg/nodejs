@@ -8,6 +8,8 @@ import s from './header.module.scss'
 import { useWallet } from '../../context/WalletContext'
 import { shortenAddress } from '../../../utils'
 import { useRouter } from 'next/navigation'
+import UserCenter from './UserCenter'
+import styled from 'styled-components'
 
 const menus = [
   { label: 'RANKING', href: '/ranking' },
@@ -17,9 +19,7 @@ const menus = [
 ]
 
 export default function Header() {
-  const { openDialog } = useDialog()
   const { active, connected, account } = useWallet()
-  const router = useRouter()
   return (
     <header className={s.headerWrapper}>
       <Link href={'/'}>
@@ -32,17 +32,24 @@ export default function Header() {
           </Link>
         ))}
       </div>
-      <XButton
+      <StyledButton
         onClick={() => {
           if (!connected) {
             active()
           } else {
-            router.push('/mycollection')
           }
         }}
       >
         {connected ? <>{shortenAddress(account)}</> : <> Connect Wallet</>}
-      </XButton>
+      </StyledButton>
+      {connected && <UserCenter />}
     </header>
   )
 }
+
+const StyledButton = styled(XButton)`
+  &:hover + div {
+    opacity: 1;
+    visibility: visible;
+  }
+`

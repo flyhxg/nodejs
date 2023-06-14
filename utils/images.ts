@@ -42,13 +42,17 @@ const HOME = {
 }
       
 
-const LAUNCHPAD = {
-  COVER_PNG: '/images/launchpad/cover.png'
+const ICON = {
+  ICON_BTC_SVG: '/images/icon/icon_btc.svg',
+  ICON_COPY_SVG: '/images/icon/icon_copy.svg',
+  ICON_EXIT_SVG: '/images/icon/icon_exit.svg',
+  ICON_ITEM_SVG: '/images/icon/icon_item.svg',
+  ICON_REFRESH_SVG: '/images/icon/icon_refresh.svg'
 }
       
 
-const MY = {
-  
+const LAUNCHPAD = {
+  COVER_PNG: '/images/launchpad/cover.png'
 }
       
 
@@ -62,8 +66,8 @@ export const Images = {
   COMMON,
   DIALOG,
   HOME,
+  ICON,
   LAUNCHPAD,
-  MY,
   SOCIALS
 }       
     
