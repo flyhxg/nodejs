@@ -8,12 +8,10 @@ import AddressLink from '../common/AddressLink'
 import { useWallet } from '../../context/WalletContext'
 import Copy from '../common/Copy'
 import { formatSat } from '../../../utils'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
 export default function UserCenter() {
   const { account, balance } = useWallet()
-  const router = useRouter()
   return (
     <UserCenterWrapper
       onClick={(e) => {
@@ -36,11 +34,11 @@ export default function UserCenter() {
         </MenuItem>
       </Link>
 
+      {/*<MenuItem>*/}
+      {/*  <MenuIcon src={Images.ICON.ICON_REFRESH_SVG} /> Connect A Different Wallet*/}
+      {/*</MenuItem>*/}
       <MenuItem>
-        <MenuIcon src={Images.ICON.ICON_REFRESH_SVG} /> Connect A Different Wallet
-      </MenuItem>
-      <MenuItem>
-        <MenuIcon src={Images.ICON.ICON_EXIT_SVG} /> My Items
+        <MenuIcon src={Images.ICON.ICON_EXIT_SVG} /> Disconnect
       </MenuItem>
     </UserCenterWrapper>
   )

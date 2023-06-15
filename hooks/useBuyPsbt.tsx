@@ -11,49 +11,10 @@ import { DialogType, useDialog } from '../app/context/DialogContext'
 import { getErrorMsg } from '../utils'
 import { useModal } from '../app/context/ModalContext'
 import PreparWalletModal from '../app/views/modal/PreparWalletModal'
-import { makerFeeBp } from '../utils/constants'
+import { makerFeeBp, takerFeeBp } from '../utils/constants'
 import { waitTxConfirmed } from '../utils/transaction'
-
-const item: IOrdItem = {
-  id: 'c23c505ad81f3c472c1aec8b19db67001026c452f99960c9c34395fcdffe9c90i0',
-  contentType: 'application/json',
-  contentURI: 'http://3.19.120.151:8081/content/c23c505ad81f3c472c1aec8b19db67001026c452f99960c9c34395fcdffe9c90i0',
-  contentPreviewURI:
-    'http://3.19.120.151:8081/preview/c23c505ad81f3c472c1aec8b19db67001026c452f99960c9c34395fcdffe9c90i0',
-  sat: -1,
-  genesisTransaction: 'c23c505ad81f3c472c1aec8b19db67001026c452f99960c9c34395fcdffe9c90',
-  genesisTransactionBlockTime: '2023-06-08 11:38:19 UTC',
-  inscriptionNumber: 0,
-  chain: 'btc-testnet',
-  location: '801c4790c24218138c689624cf6a3983cd092bdf3b809fcb06581d96f473d516:1:0',
-  output: '801c4790c24218138c689624cf6a3983cd092bdf3b809fcb06581d96f473d516:1',
-  outputValue: 10000,
-  owner: 'tb1qf05d2yqlumhr6gk023wne2956ujcrlmw7mnzdn',
-  listed: false,
-  satName: 'satname',
-  locationBlockHeight: 2437414,
-}
-
-const listing: IListingState = {
-  seller: {
-    makerFeeBp,
-    sellerOrdAddress: 'tb1qf05d2yqlumhr6gk023wne2956ujcrlmw7mnzdn',
-    price: 18000,
-    ordItem: item,
-    sellerReceiveAddress: 'tb1qf05d2yqlumhr6gk023wne2956ujcrlmw7mnzdn',
-    tapInternalKey: '',
-  },
-}
-
-// async function getOrderData(inscriptionId: string) {
-//   const order = await Services.marketService.orderDetail(inscriptionId)
-//   const listing:IListingState = {
-//     seller: {
-//       makerFeeBp,
-//       sellerOrdAddress:
-//     }
-//   }
-// }
+import { OrderDetail } from '../utils/http/Services/market'
+import { env } from '../utils/env'
 
 export enum BuyLoadingStage {
   NotStart,
@@ -67,7 +28,7 @@ export enum BuyLoadingStage {
   Done,
 }
 
-export default function useBuyPsbt() {
+export default function useBuyPsbt(nftItem: IOrdItem, order: OrderDetail) {
   const { account, signPsbt } = useWallet()
   // const createDummyUtxos = useCreateDummyUtxos()
   const [loading, setLoading] = useState<BuyLoadingStage>(BuyLoadingStage.NotStart)
@@ -93,9 +54,20 @@ export default function useBuyPsbt() {
         const result = await openModal(PreparWalletModal, { unqualifiedUtxos })
         return
       }
+      const listing: IListingState = {
+        seller: {
+          makerFeeBp,
+          sellerOrdAddress: order.owner,
+          price: order.price,
+          ordItem: nftItem,
+          sellerReceiveAddress: order.owner,
+          tapInternalKey: '',
+        },
+      }
       const paymentUTXOS = await selectPaymentUTXOs(sortedUtxoList, listing.seller.price, 4, 5, 'fastestFee')
+
       listing.buyer = {
-        takerFeeBp: 0,
+        takerFeeBp,
         buyerAddress: account,
         buyerTokenReceiveAddress: account,
         feeRateTier: 'fastestFee',
@@ -109,9 +81,9 @@ export default function useBuyPsbt() {
       const base64 = Psbt.fromHex(hex as string, { network: testnet }).toBase64()
       setLoading(BuyLoadingStage.Merge)
       const data = await Services.marketService.mergeOrder({
-        chain: 'btc-testnet',
-        inscriptionId: item.id,
-        output: item.output,
+        chain: env.chain,
+        inscriptionId: nftItem.id,
+        output: nftItem.output,
         signedBuyerPSBT: base64,
       })
       setLoading(BuyLoadingStage.WaitingConfirm)
@@ -126,6 +98,6 @@ export default function useBuyPsbt() {
     } finally {
       setLoading(BuyLoadingStage.NotStart)
     }
-  }, [account])
+  }, [account, order, nftItem])
   return { buyPsbt, loading, loadingTx }
 }

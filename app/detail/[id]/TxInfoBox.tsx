@@ -13,11 +13,20 @@ import { OrderDetail } from '../../../utils/http/Services/market'
 import { takerFeeBp } from '../../../utils/constants'
 import { IOrdItem } from '../../../lib/msigner'
 import useCancelListing from '../../../hooks/useCancelListing'
+import { useModal } from '../../context/ModalContext'
+import SaleModal from '../../views/modal/SaleModal'
 
 export default function TxInfoBox(props: { order: OrderDetail; nftItem: IOrdItem }) {
-  const { buyPsbt, loading, loadingTx } = useBuyPsbt()
+  const { buyPsbt, loading, loadingTx } = useBuyPsbt(props.nftItem, props.order)
   const { account, active, connected } = useWallet()
   const { cancel, loading: cancelLoading } = useCancelListing()
+  console.log('props', props)
+  const isOwner = props.nftItem.owner === account
+  const showConnect = !connected
+  const showBuy = loading < BuyLoadingStage.WaitingConfirm && connected && props.nftItem.listed && !isOwner
+  const showListing = !props.nftItem.listed && isOwner
+  const showCancel = props.nftItem.listed && isOwner
+  const { openModal } = useModal()
 
   return (
     <InfoBoxWrapper>
@@ -41,26 +50,37 @@ export default function TxInfoBox(props: { order: OrderDetail; nftItem: IOrdItem
             <BtcIcon /> {formatSat(props.order.price + (props.order.price * takerFeeBp) / 10000)} BTC
           </InfoPrice>
         </PriceItem>
-        {loading < BuyLoadingStage.WaitingConfirm && (
-          <ButtonsGroup>
-            {connected ? (
-              <NormalButton isLoading={loading > BuyLoadingStage.NotStart} onClick={buyPsbt}>
-                Buy
-              </NormalButton>
-            ) : account === props.nftItem.owner ? (
-              <NormalButton
-                isLoading={cancelLoading}
-                onClick={() => {
-                  cancel(props.nftItem.id)
-                }}
-              >
-                Cancel Listing
-              </NormalButton>
-            ) : (
-              <NormalButton onClick={active}>Connect Wallet</NormalButton>
-            )}
-          </ButtonsGroup>
-        )}
+        <ButtonsGroup>
+          {showBuy && (
+            <NormalButton isLoading={loading > BuyLoadingStage.NotStart} onClick={buyPsbt}>
+              Buy
+            </NormalButton>
+          )}
+          {showConnect && <NormalButton onClick={active}>Connect Wallet</NormalButton>}
+          {showListing && (
+            <NormalButton
+              onClick={async () => {
+                //@ts-ignore
+                const result = await openModal(SaleModal, { id: props.nftItem.id })
+                if (result) {
+                  location.reload()
+                }
+              }}
+            >
+              Sale
+            </NormalButton>
+          )}
+          {showCancel && (
+            <NormalButton
+              isLoading={cancelLoading}
+              onClick={() => {
+                cancel(props.nftItem.id)
+              }}
+            >
+              Cancel Listing
+            </NormalButton>
+          )}
+        </ButtonsGroup>
         {loading === BuyLoadingStage.WaitingConfirm && (
           <LoadingText>
             <Loading size={24} style={{ marginRight: 16 }} />

@@ -7,23 +7,28 @@ import { Services } from '../../utils/http/Services'
 import { useWallet } from '../context/WalletContext'
 import { commonStyles } from '../../utils/commonStyles'
 import Loading from '../views/common/Loading'
+import Empty from '../views/common/Empty'
 
 export default function Collection() {
   const { active, account } = useWallet()
   const { data, loading, loadingMore } = useWindowInfiniteScroll(
     I(Services.userService.myNftList, {
-      currAddr: 'bc1p6a48kt60lzd3rtudetmcky2eq3qtqn9yd3myx833hngs8udeve6s0yxxky',
+      currAddr: account as string,
       limit: 10,
     }),
     {
       reloadDeps: [account],
       isNoMore: isNoMore,
+      ready: !!account,
     }
   )
 
   const list = data?.list || []
-  console.log(loading, loadingMore, list)
-  return (
+  const isLoading = loading || loadingMore
+  const isEmpty = !isLoading && list.length === 0
+  return isEmpty ? (
+    <Empty top={150} />
+  ) : (
     <CollectionWrapper>
       {list.map((x) => (
         <ItemCard item={x} key={x.id} />

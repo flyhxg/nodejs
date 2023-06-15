@@ -36,7 +36,7 @@ function formatQueryURL(_url: string, _query: Params) {
     .filter((x) => x[1] !== undefined)
     .map((x) => `${x[0]}=${x[1]}`)
     .join('&')
-  return url + '?=' + targetQueryStr
+  return url + '?' + targetQueryStr
 }
 
 function formatConfig(_config: RequestInit & { query?: Params; data?: Params }): RequestInit {

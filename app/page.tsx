@@ -2,7 +2,28 @@ import Image from 'next/image'
 import { Images } from '../utils/images'
 import s from './page.module.scss'
 import Footer from './views/footer'
-import Group from './views/home/group'
+import Group, { GroupItem, Status } from './views/home/group'
+
+const launchpad: GroupItem[] = [
+  {
+    name: 'Ordimon',
+    desc: 'View Collection',
+    status: Status.Live,
+    id: 1,
+  },
+  {
+    name: 'Ordimon',
+    desc: 'View Collection',
+    status: Status.Live,
+    id: 2,
+  },
+  {
+    name: '',
+    desc: '',
+    status: Status.ComingSoon,
+    id: 3,
+  },
+]
 
 export default function Page() {
   return (
@@ -24,8 +45,8 @@ export default function Page() {
           <Image alt="btc1" src={Images.HOME.BTC_PNG} width={65} height={65} className={s.btc1} />
         </div>
         <div className={s.padsWrapper}>
-          <Group title="LAUNCHPAD" type={'launchpad'} />
-          <Group title="NEW COLLECTIONS" type={'project'} />
+          <Group title="LAUNCHPAD" type={'launchpad'} item={launchpad} />
+          <Group title="NEW COLLECTIONS" type={'project'} item={launchpad} />
         </div>
       </div>
       <Footer />

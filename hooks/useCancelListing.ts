@@ -21,10 +21,9 @@ export default function useCancelListing() {
           address: account,
           inscriptionId: id,
           chain: env.chain,
-          signedMessage: signedText,
+          signMessage: signedText,
         }
         const res = await Services.marketService.cancelOrder(params)
-        console.log('res', res)
         return res
       } catch (e) {
         openDialog(DialogType.Error, { title: 'Cancel Error.', desc: getErrorMsg(e) })

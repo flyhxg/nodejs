@@ -63,7 +63,7 @@ export default function useListPsbt(id: string) {
         setLoading(false)
       }
     },
-    [account]
+    [account, item]
   )
   return { list, loading }
 }

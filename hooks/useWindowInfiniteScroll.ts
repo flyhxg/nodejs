@@ -7,7 +7,7 @@ import { isBrowser } from '../utils/env'
 
 const useWindowInfiniteScroll = <TData extends Data>(
   service: Service<TData>,
-  options: InfiniteScrollOptions<TData> & { target?: HTMLElement; debounceWait?: number } = {
+  options: InfiniteScrollOptions<TData> & { target?: HTMLElement; debounceWait?: number; ready?: boolean } = {
     target: (isBrowser && document.documentElement) as HTMLElement,
     debounceWait: 0,
   }
@@ -37,6 +37,7 @@ const useWindowInfiniteScroll = <TData extends Data>(
       return currentData
     },
     {
+      ready: options.ready,
       manual,
       onFinally: (_, d, e) => {
         setLoadingMore(false)

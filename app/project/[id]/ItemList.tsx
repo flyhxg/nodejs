@@ -8,18 +8,34 @@ import { Display, Top } from '../../../utils/type'
 import { useFilterContext } from './FilterContext'
 import ItemCard from './ItemCard'
 import { LoadingFrame } from '../../views/common/Loading'
+import Empty from '../../views/common/Empty'
+import Table, { TableColumn } from '../../views/table/Table'
+import { OrderItem } from '../../../utils/http/Services/project'
+import { columns } from './TableList'
 
 export default function ItemList() {
-  const { orders, isLoading } = useFilterContext()
+  const { orders, isLoading, display } = useFilterContext()
+  const isEmpty = orders.length === 0 && !isLoading
   return (
     <ItemListWrapper>
       <ToolBar />
-      <ListWrapper>
-        {orders.map((order) => (
-          <ItemCard order={order} key={order.order_id} />
-        ))}
-        {isLoading && <StyledLoadingFrame size={40} />}
-      </ListWrapper>
+      {isEmpty ? (
+        <Empty top={150} />
+      ) : isLoading ? (
+        <StyledLoadingFrame size={40} />
+      ) : (
+        <>
+          {display === Display.LIST && !isLoading && <Table data={orders} columns={columns} />}
+          {display === Display.GRID && !isLoading && (
+            <ListWrapper>
+              {orders.map((order) => (
+                <ItemCard order={order} key={order.order_id} />
+              ))}
+            </ListWrapper>
+          )}
+          {isLoading && <StyledLoadingFrame size={40} />}
+        </>
+      )}
     </ItemListWrapper>
   )
 }
@@ -124,6 +140,6 @@ const Icon = styled(Image).attrs({
 const ListWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, 260px);
-  grid-template-rows: repeat(auto-fill.335px);
+  grid-template-rows: repeat(auto-fill, 335px);
   grid-gap: 19px 15px;
 `

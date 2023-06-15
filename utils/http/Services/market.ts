@@ -30,7 +30,7 @@ export const marketService = {
       signedBuyerPSBT: string
     }
   >('/api/order/merge'),
-  cancelOrder: postHttpService<{}, { address: string; inscriptionId: string; chain: string; signedMessage: string }>(
+  cancelOrder: postHttpService<{}, { address: string; inscriptionId: string; chain: string; signMessage: string }>(
     '/api/order/cancel'
   ),
 
@@ -48,7 +48,7 @@ export const marketService = {
         chain: env.chain,
         location: res.location,
         output: res.output,
-        outputValue: res.output_value,
+        outputValue: +res.output_value,
         owner: res.owner,
         listed: res.listed,
         satName: res.sat_name,
