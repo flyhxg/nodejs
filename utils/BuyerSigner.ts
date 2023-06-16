@@ -7,7 +7,7 @@ import {
   ORDINALS_POSTAGE_VALUE,
   // PLATFORM_FEE_ADDRESS,
 } from '../lib/msigner/constant'
-import { mempool } from './mempool'
+import { getTxHex, mempool } from './mempool'
 import * as bitcoin from 'bitcoinjs-lib'
 import { makerFeeBp, network, PLATFORM_FEE_ADDRESS, takerFeeBp } from './constants'
 import { getSellerOrdOutputValue } from './SellerSigner'
@@ -303,10 +303,7 @@ Missing:    ${satToBtc(-changeValue)} BTC`
 
 async function getSellerInputAndOutput(listing: IListingState) {
   const [ordinalUtxoTxId, ordinalUtxoVout] = listing.seller.ordItem.output.split(':')
-  const {
-    bitcoin: { transactions },
-  } = mempool()
-  const tx = bitcoin.Transaction.fromHex(await transactions.getTxHex({ txid: ordinalUtxoTxId }))
+  const tx = bitcoin.Transaction.fromHex(await getTxHex(ordinalUtxoTxId))
   // No need to add this witness if the seller is using taproot
   if (!listing.seller.tapInternalKey) {
     for (let outputIndex = 0; outputIndex < tx.outs.length; outputIndex++) {

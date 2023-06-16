@@ -17,10 +17,10 @@ import { useModal } from '../../context/ModalContext'
 import SaleModal from '../../views/modal/SaleModal'
 
 export default function TxInfoBox(props: { order: OrderDetail; nftItem: IOrdItem }) {
-  const { buyPsbt, loading, loadingTx } = useBuyPsbt(props.nftItem, props.order)
+  console.log('props', props)
+  const { buyPsbt, loading, loadingTx } = useBuyPsbt(props.nftItem, props.order.price)
   const { account, active, connected } = useWallet()
   const { cancel, loading: cancelLoading } = useCancelListing()
-  console.log('props', props)
   const isOwner = props.nftItem.owner === account
   const showConnect = !connected
   const showBuy = loading < BuyLoadingStage.WaitingConfirm && connected && props.nftItem.listed && !isOwner

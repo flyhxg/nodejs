@@ -1,7 +1,7 @@
 import * as bitcoin from 'bitcoinjs-lib'
 import { Psbt } from 'bitcoinjs-lib'
 import { IListingState } from '../lib/msigner'
-import { mempool } from './mempool'
+import { getTxHex, mempool } from './mempool'
 import { network } from './constants'
 import { toXOnly } from './transaction'
 
@@ -17,9 +17,7 @@ export async function generateUnsignedListingPSBTBase64(
   const {
     bitcoin: { transactions },
   } = mempool()
-  const txHex = await transactions.getTxHex({
-    txid: txId,
-  })
+  const txHex = await getTxHex(txId)
   const tx = bitcoin.Transaction.fromHex(txHex)
 
   // No need to add this witness if the seller is using taproot

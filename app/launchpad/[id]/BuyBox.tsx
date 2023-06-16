@@ -4,27 +4,86 @@ import { commonStyles } from '../../../utils/commonStyles'
 import Image from 'next/image'
 import { XButton } from '../../views/common/XButton'
 import { Images } from '../../../utils/images'
+import { LaunchpadItem } from '../../../utils/http/Services/launchpad'
+import { formatSat } from '../../../utils'
+import { Stage, useStage } from '../../../hooks/useStage'
+import moment from 'moment'
+import { durationTime } from '../../../utils/time'
+import { useMemo } from 'react'
+import { useRequest } from 'ahooks'
+import { useWallet } from '../../context/WalletContext'
+import R from '../../../utils/http/request'
+import { Services } from '../../../utils/http/Services'
+import useBuyPsbt, { BuyLoadingStage } from '../../../hooks/useBuyPsbt'
+import useBuyLaunchpad from '../../../hooks/useBuyLaunchpad'
 
-export default function BuyBox() {
+enum BuyType {
+  Private,
+  Public,
+  None,
+}
+
+export default function BuyBox(props: { item: LaunchpadItem }) {
+  const { account } = useWallet()
+  const { data: canPrivate, refresh } = useRequest(
+    //@ts-ignore
+    R(Services.launchpadService.getWhitelist, { lanchpadId: props.item.id, address: account }),
+    {
+      refreshDeps: [account],
+      ready: !!account,
+    }
+  )
+  const { data: launchpadItem } = useRequest(R(Services.launchpadService.getRandomLaunchpadItem, props.item.id))
+  const { data: ordItem } = useRequest(R(Services.marketService.getOrdItem, launchpadItem?.inscriptionId || ''), {
+    ready: !!launchpadItem,
+  })
+  const { buyPsbt, loading, loadingTx } = useBuyLaunchpad(ordItem, launchpadItem?.price || 0)
+  const privateStage = useStage(props.item.privateStartTime, props.item.privateEndTime)
+  const publicStage = useStage(props.item.publicStartTime, props.item.publicEndTime)
+  const now = moment().unix()
+  const type = useMemo(() => {
+    if (publicStage === Stage.STARTED) return BuyType.Public
+    if (privateStage === Stage.STARTED && canPrivate) return BuyType.Private
+    return BuyType.None
+  }, [privateStage, publicStage, canPrivate])
+
   return (
     <BoxWrapper>
-      <OrderItem>
-        <Status />
+      <OrderItem active={type === BuyType.Private}>
+        <Status active={type === BuyType.Private} />
         <PriceItem>
-          <BtcIcon /> 0.004 BTC
+          <BtcIcon /> {formatSat(props.item.privatePrice)} BTC
         </PriceItem>
-        <OrderTime>End</OrderTime>
+        {privateStage === Stage.NOT_START && (
+          <OrderTime>Start In: {durationTime(props.item.privateStartTime - now)}</OrderTime>
+        )}
+        {privateStage === Stage.STARTED && (
+          <OrderTime>End In {durationTime(props.item.privateEndTime - now)}</OrderTime>
+        )}
+        {privateStage === Stage.ENDED && <OrderTime>Ended</OrderTime>}
       </OrderItem>
-      <OrderItem active>
-        <Status isPublic />
+      <OrderItem active={type === BuyType.Public}>
+        <Status isPublic active={type === BuyType.Public} />
         <PriceItem>
-          <BtcIcon /> 0.004 BTC
+          <BtcIcon /> {formatSat(props.item.publicPrice)} BTC
         </PriceItem>
-        <OrderTime>Start In: 00:00:00</OrderTime>
+        {publicStage === Stage.NOT_START && (
+          <OrderTime>Start In: {durationTime(props.item.publicStartTime - now)}</OrderTime>
+        )}
+        {publicStage === Stage.STARTED && <OrderTime>End In {durationTime(props.item.publicEndTime - now)}</OrderTime>}
+        {publicStage === Stage.ENDED && <OrderTime>Ended</OrderTime>}
       </OrderItem>
       <ButtonGroups>
-        <StyledButton>Buy</StyledButton>
-        <StyledButton>View Collection</StyledButton>
+        <StyledButton
+          isLoading={loading !== BuyLoadingStage.NotStart && loading !== BuyLoadingStage.Done}
+          disabled={type === BuyType.None}
+          onClick={async () => {
+            const result = await buyPsbt(props.item.id)
+            if (result) !!result && location.reload()
+          }}
+        >
+          Buy
+        </StyledButton>
       </ButtonGroups>
     </BoxWrapper>
   )
@@ -44,7 +103,7 @@ const OrderItem = styled.div<{ active?: boolean }>`
   position: relative;
   margin-bottom: 10px;
   transition: border-color 0.2s linear;
-  cursor: pointer;
+  //cursor: pointer;
   border: 2px solid transparent;
   ${(props) =>
     props.active
@@ -57,10 +116,10 @@ const OrderItem = styled.div<{ active?: boolean }>`
 const Status = styled.span.attrs((props) => ({
   // @ts-ignore
   children: props.isPublic ? 'Public' : 'Private',
-}))<{ isPublic?: boolean }>`
+}))<{ isPublic?: boolean; active?: boolean }>`
   height: 20px;
   padding: 0 10px;
-  background: ${(props) => (props.isPublic ? '#F5D802' : '#818181')};
+  background: ${(props) => (props.active ? '#F5D802' : '#818181')};
   text-align: center;
   line-height: 20px;
   font-size: 14px;
@@ -94,7 +153,8 @@ const ButtonGroups = styled.div`
 `
 
 const StyledButton = styled(XButton)`
-  width: 284px;
+  //width: 284px;
+  width: 100%;
 `
 
 const OrderTime = styled.span`

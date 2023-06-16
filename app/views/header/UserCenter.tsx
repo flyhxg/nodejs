@@ -11,7 +11,7 @@ import { formatSat } from '../../../utils'
 import Link from 'next/link'
 
 export default function UserCenter() {
-  const { account, balance } = useWallet()
+  const { account, balance, deActive } = useWallet()
   return (
     <UserCenterWrapper
       onClick={(e) => {
@@ -37,7 +37,7 @@ export default function UserCenter() {
       {/*<MenuItem>*/}
       {/*  <MenuIcon src={Images.ICON.ICON_REFRESH_SVG} /> Connect A Different Wallet*/}
       {/*</MenuItem>*/}
-      <MenuItem>
+      <MenuItem onClick={deActive}>
         <MenuIcon src={Images.ICON.ICON_EXIT_SVG} /> Disconnect
       </MenuItem>
     </UserCenterWrapper>

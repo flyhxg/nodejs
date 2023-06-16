@@ -4,21 +4,19 @@ import s from './page.module.scss'
 import Footer from './views/footer'
 import { CollectionGroup, GroupItem, LaunchpadGroup, Status } from './views/home/group'
 import { Services } from '../utils/http/Services'
-import { usePagination } from 'ahooks'
-import { P } from '../utils/http/pagination'
 
 const launchpad: GroupItem[] = [
   {
     name: 'Ordimon',
     desc: 'View Collection',
     status: Status.Live,
-    id: 1,
+    id: 6,
   },
   {
     name: 'Ordimon',
     desc: 'View Collection',
     status: Status.Live,
-    id: 2,
+    id: 7,
   },
   {
     name: '',

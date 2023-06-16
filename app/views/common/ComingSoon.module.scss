@@ -1,0 +1,24 @@
+.comingWrapper {
+    width: 188px;
+    height: 27px;
+    background: #828282;
+    line-height: 27px;
+    color: #0f0f0f;
+    text-align: center;
+    position: relative;
+    left: -30%;
+    visibility: visible;
+    opacity: 1;
+    transition: all .2s linear;
+    visibility: hidden;
+    opacity: 0;
+    z-index: 999;
+    a:hover > & {
+        visibility: visible;
+        opacity: 1;
+    }
+    li:hover > & {
+        visibility: visible;
+        opacity: 1;
+    }
+}

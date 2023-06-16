@@ -28,16 +28,15 @@ export enum BuyLoadingStage {
   Done,
 }
 
-export default function useBuyPsbt(nftItem: IOrdItem, order: OrderDetail) {
+export default function useBuyPsbt(nftItem?: IOrdItem, price?: number) {
   const { account, signPsbt } = useWallet()
-  // const createDummyUtxos = useCreateDummyUtxos()
   const [loading, setLoading] = useState<BuyLoadingStage>(BuyLoadingStage.NotStart)
   const { openDialog } = useDialog()
   const { openModal } = useModal()
   const [loadingTx, setLoadingTx] = useState('')
   const buyPsbt = useCallback(async () => {
     try {
-      if (!account) return
+      if (!account || !nftItem || !price) return
       const {
         bitcoin: { addresses },
       } = mempool()
@@ -57,10 +56,10 @@ export default function useBuyPsbt(nftItem: IOrdItem, order: OrderDetail) {
       const listing: IListingState = {
         seller: {
           makerFeeBp,
-          sellerOrdAddress: order.owner,
-          price: order.price,
+          sellerOrdAddress: nftItem.owner,
+          price: price,
           ordItem: nftItem,
-          sellerReceiveAddress: order.owner,
+          sellerReceiveAddress: nftItem.owner,
           tapInternalKey: '',
         },
       }
@@ -98,6 +97,6 @@ export default function useBuyPsbt(nftItem: IOrdItem, order: OrderDetail) {
     } finally {
       setLoading(BuyLoadingStage.NotStart)
     }
-  }, [account, order, nftItem])
+  }, [account, price, nftItem])
   return { buyPsbt, loading, loadingTx }
 }

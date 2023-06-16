@@ -1,4 +1,4 @@
-import { mempool } from './mempool'
+import { getTxHex, mempool } from './mempool'
 import { sleep } from './index'
 import * as bitcoin from 'bitcoinjs-lib'
 import { AddressTxsUtxo } from '@mempool/mempool.js/lib/interfaces'
@@ -9,12 +9,12 @@ export async function queryTxStatus(txid: string) {
     bitcoin: { transactions },
   } = mempool()
   const tx = await transactions.getTx({ txid })
-  console.log('tx', tx)
   return tx.status.confirmed
 }
 
 export async function waitTxConfirmed(txid: string) {
   while (true) {
+    await sleep(10000)
     const status = await queryTxStatus(txid)
     if (status) return true
     await sleep(300000)
@@ -41,7 +41,7 @@ export async function mapUtxos(utxosFromMempool: AddressTxsUtxo[]): Promise<utxo
       vout: utxoFromMempool.vout,
       value: utxoFromMempool.value,
       status: utxoFromMempool.status,
-      tx: bitcoin.Transaction.fromHex(await transactions.getTxHex({ txid: utxoFromMempool.txid })),
+      tx: bitcoin.Transaction.fromHex(await getTxHex(utxoFromMempool.txid)),
     })
   }
   return ret

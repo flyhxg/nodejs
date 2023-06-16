@@ -1,21 +1,20 @@
 'use client'
 import Link from 'next/link'
 import { Images } from '../../../utils/images'
-import { useDialog } from '../../context/DialogContext'
 import { XButton } from '../common/XButton'
 import { XImage } from '../common/XImage'
 import s from './header.module.scss'
 import { useWallet } from '../../context/WalletContext'
 import { shortenAddress } from '../../../utils'
-import { useRouter } from 'next/navigation'
 import UserCenter from './UserCenter'
 import styled from 'styled-components'
+import ComingSoon from '../common/ComingSoon'
 
 const menus = [
-  { label: 'RANKING', href: '/ranking' },
-  { label: 'LAUNCHPAD', href: '/launchpad' },
-  { label: 'INSCRIBE', href: '/inscribe' },
-  { label: 'PTS [23]', href: 'https://www.baidu.com', target: '_blank' },
+  { label: 'RANKING', href: '#', comingSoon: true },
+  // { label: 'LAUNCHPAD', href: '/launchpad', comingSoon: true },
+  { label: 'INSCRIBE', href: '#', comingSoon: true },
+  { label: 'PTS [23]', href: '#', target: '_blank', comingSoon: true },
 ]
 
 export default function Header() {
@@ -27,8 +26,18 @@ export default function Header() {
       </Link>
       <div className={s.menusWrapper}>
         {menus.map((menu) => (
-          <Link key={menu.label} href={menu.href} target={menu.target}>
+          <Link
+            key={menu.label}
+            href={menu.href}
+            target={menu.target}
+            onClick={(e) => {
+              if (menu.comingSoon) {
+                e.preventDefault()
+              }
+            }}
+          >
             {menu.label}
+            {menu.comingSoon && <ComingSoon />}
           </Link>
         ))}
       </div>

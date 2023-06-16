@@ -1,12 +1,12 @@
 .footer {
-  height: 192px;
+  height: 130px;
   background: #f5d802;
   padding-left: 251px;
   padding-right: 294px;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding-top: 18px;
+  padding-top: 10px;
   position: relative;
 
   img.logo {
@@ -37,6 +37,11 @@
     font-size: 16px;
     color: #0f0f0f;
     margin-right: 80px;
+    width: 90px;
+    cursor: pointer;
+    & > div {
+      left: -60%;
+    }
 
     &:last-child {
       margin-right: 0;

@@ -15,6 +15,7 @@ const WalletContext = createContext<{
   signPsbt: (unsignedStr: string) => Promise<string>
   pushPsbt: (signedStr: string) => Promise<any>
   signMessage: (message: string) => Promise<string>
+  deActive: () => void
 }>({
   connected: false,
   account: null,
@@ -28,6 +29,7 @@ const WalletContext = createContext<{
   },
   active: NoOperation,
   signMessage: async () => '',
+  deActive: NoOperation,
 })
 
 export default function WalletContextProvider(props: { children?: ReactNode }) {
@@ -62,6 +64,7 @@ export default function WalletContextProvider(props: { children?: ReactNode }) {
   }
   const handleAccountsChanged = (_accounts: string[]) => {
     if (self.accounts[0] === _accounts[0]) {
+      setConnected(true)
       // prevent from triggering twice
       return
     }
@@ -128,9 +131,13 @@ export default function WalletContextProvider(props: { children?: ReactNode }) {
     return data
   }, [])
 
+  const deActive = useCallback(() => {
+    setConnected(false)
+  }, [])
+
   return (
     <WalletContext.Provider
-      value={{ connected, account: address, balance, active, signPsbt, publicKey, pushPsbt, signMessage }}
+      value={{ connected, account: address, balance, active, signPsbt, publicKey, pushPsbt, signMessage, deActive }}
     >
       {props.children}
     </WalletContext.Provider>

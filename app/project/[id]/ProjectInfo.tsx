@@ -4,34 +4,36 @@ import Image from 'next/image'
 import { Images } from '../../../utils/images'
 import { commonStyles } from '../../../utils/commonStyles'
 import { XImage } from '../../views/common/XImage'
+import { CollectionItem } from '../../../utils/http/Services/project'
+import moment from 'moment'
+import Link from 'next/link'
 
-export default function ProjectInfo() {
+export default function ProjectInfo(props: { item: CollectionItem }) {
   return (
     <Wrapper>
       <InfoWrapper>
         <Logo src={Images.HOME.COVER_PNG} />
         <InfoBox>
           <Title>
-            Bored Ape Yacht Club <AuthIcon />
+            {props.item.name} <AuthIcon />
           </Title>
           <ProjectDesc>
-            The Bored Ape Yacht Club is a collection of 10,000 unique Bored Ape NFTs— unique digital collectibles living
-            on the...igital collectibles living on the...igital collectibles living on the...
+            {props.item.description}
             <More>
               More <DownIcon />
             </More>
           </ProjectDesc>
           <CreateAt>
-            Create At <span>2023.6.2</span>
+            Create At <span>{moment.unix(props.item.create_time).format('YYYY.MM.DD')}</span>
           </CreateAt>
           <Datas>
             <DataItem>
-              2,173
+              {props.item.holders}
               <br />
               <span>Holders</span>
             </DataItem>
             <DataItem>
-              3k
+              {props.item.total_supply}
               <br />
               <span>Total Supply</span>
             </DataItem>
@@ -40,12 +42,24 @@ export default function ProjectInfo() {
       </InfoWrapper>
       <SocialList>
         <SocialItem src={Images.COMMON.LINK_SCAN_PNG} />
-        <SocialItem src={Images.COMMON.LINK_WEBSITE_PNG} />
-        <SocialItem src={Images.COMMON.LINK_DISCORD_PNG} />
-        <SocialItem src={Images.COMMON.LINK_TWITTER_PNG} />
-        <SocialItem src={Images.COMMON.ICON_START_SVG} />
-        <SocialItem src={Images.COMMON.ICON_SHARE_SVG} />
-        <SocialItem src={Images.COMMON.ICON_MORE_SVG} />
+        {props.item.web_site && (
+          <Link href={props.item.web_site} target={'_blank'}>
+            <SocialItem src={Images.COMMON.LINK_WEBSITE_PNG} />
+          </Link>
+        )}
+        {props.item.discord && (
+          <Link href={props.item.discord} target={'_blank'}>
+            <SocialItem src={Images.COMMON.LINK_DISCORD_PNG} />
+          </Link>
+        )}
+        {props.item.twitter && (
+          <Link href={props.item.twitter}>
+            <SocialItem src={Images.COMMON.LINK_TWITTER_PNG} />
+          </Link>
+        )}
+        {/*<SocialItem src={Images.COMMON.ICON_START_SVG} />*/}
+        {/*<SocialItem src={Images.COMMON.ICON_SHARE_SVG} />*/}
+        {/*<SocialItem src={Images.COMMON.ICON_MORE_SVG} />*/}
       </SocialList>
     </Wrapper>
   )

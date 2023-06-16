@@ -9,13 +9,14 @@ import { useFilterContext } from './FilterContext'
 import ItemCard from './ItemCard'
 import { LoadingFrame } from '../../views/common/Loading'
 import Empty from '../../views/common/Empty'
-import Table, { TableColumn } from '../../views/table/Table'
-import { OrderItem } from '../../../utils/http/Services/project'
+import Table from '../../views/table/Table'
 import { columns } from './TableList'
+import { useRouter } from 'next/navigation'
 
 export default function ItemList() {
   const { orders, isLoading, display } = useFilterContext()
   const isEmpty = orders.length === 0 && !isLoading
+  const router = useRouter()
   return (
     <ItemListWrapper>
       <ToolBar />
@@ -25,7 +26,14 @@ export default function ItemList() {
         <StyledLoadingFrame size={40} />
       ) : (
         <>
-          {display === Display.LIST && !isLoading && <Table data={orders} columns={columns} />}
+          {display === Display.LIST && !isLoading && (
+            <Table
+              style={{ marginTop: 30 }}
+              data={orders}
+              columns={columns}
+              onRowClick={(data) => router.push(`/detail/${data.inscription_id}`)}
+            />
+          )}
           {display === Display.GRID && !isLoading && (
             <ListWrapper>
               {orders.map((order) => (
