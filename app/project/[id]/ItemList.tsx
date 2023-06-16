@@ -150,4 +150,5 @@ const ListWrapper = styled.div`
   grid-template-columns: repeat(auto-fill, 260px);
   grid-template-rows: repeat(auto-fill, 335px);
   grid-gap: 19px 15px;
+  margin-top: 50px;
 `
