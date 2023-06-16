@@ -36,7 +36,7 @@ export default function useBuyPsbt(nftItem?: IOrdItem, price?: number) {
   const [loadingTx, setLoadingTx] = useState('')
   const buyPsbt = useCallback(async () => {
     try {
-      if (!account || !nftItem || !price) return
+      if (!account || !nftItem || !price) return false
       const {
         bitcoin: { addresses },
       } = mempool()
@@ -91,9 +91,11 @@ export default function useBuyPsbt(nftItem?: IOrdItem, price?: number) {
       setLoading(BuyLoadingStage.Done)
       //waiting
       console.log('data', data)
+      return true
     } catch (e) {
       console.error(e)
       openDialog(DialogType.Error, { title: 'Buy Error.', desc: getErrorMsg(e) })
+      return false
     } finally {
       setLoading(BuyLoadingStage.NotStart)
     }

@@ -17,7 +17,6 @@ import { useModal } from '../../context/ModalContext'
 import SaleModal from '../../views/modal/SaleModal'
 
 export default function TxInfoBox(props: { order: OrderDetail; nftItem: IOrdItem }) {
-  console.log('props', props)
   const { buyPsbt, loading, loadingTx } = useBuyPsbt(props.nftItem, props.order.price)
   const { account, active, connected } = useWallet()
   const { cancel, loading: cancelLoading } = useCancelListing()
@@ -30,7 +29,7 @@ export default function TxInfoBox(props: { order: OrderDetail; nftItem: IOrdItem
 
   return (
     <InfoBoxWrapper>
-      <Title>BoredApeYachtClub #1080</Title>
+      <Title>Inscription #{props.nftItem.inscriptionNumber}</Title>
       <PriceBox>
         <PriceItem>
           <span className={'title'}>Current Price:</span>
@@ -52,7 +51,15 @@ export default function TxInfoBox(props: { order: OrderDetail; nftItem: IOrdItem
         </PriceItem>
         <ButtonsGroup>
           {showBuy && (
-            <NormalButton isLoading={loading > BuyLoadingStage.NotStart} onClick={buyPsbt}>
+            <NormalButton
+              isLoading={loading > BuyLoadingStage.NotStart}
+              onClick={async () => {
+                const result = await buyPsbt()
+                if (result) {
+                  location.reload()
+                }
+              }}
+            >
               Buy
             </NormalButton>
           )}
@@ -73,8 +80,11 @@ export default function TxInfoBox(props: { order: OrderDetail; nftItem: IOrdItem
           {showCancel && (
             <NormalButton
               isLoading={cancelLoading}
-              onClick={() => {
-                cancel(props.nftItem.id)
+              onClick={async () => {
+                const result = await cancel(props.nftItem.id)
+                if (result) {
+                  location.reload()
+                }
               }}
             >
               Cancel Listing

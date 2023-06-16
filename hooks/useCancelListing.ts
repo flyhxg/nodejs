@@ -12,7 +12,7 @@ export default function useCancelListing() {
   const { openDialog } = useDialog()
   const cancel = useCallback(
     async (id: string) => {
-      if (!account) return
+      if (!account) return false
       try {
         setLoading(true)
         const text = `cancel:${id}`
@@ -24,9 +24,10 @@ export default function useCancelListing() {
           signMessage: signedText,
         }
         const res = await Services.marketService.cancelOrder(params)
-        return res
+        return true
       } catch (e) {
         openDialog(DialogType.Error, { title: 'Cancel Error.', desc: getErrorMsg(e) })
+        return false
       } finally {
         setLoading(false)
       }
