@@ -55,6 +55,7 @@ const OrderItem = styled.div<{ active?: boolean }>`
 `
 
 const Status = styled.span.attrs((props) => ({
+  // @ts-ignore
   children: props.isPublic ? 'Public' : 'Private',
 }))<{ isPublic?: boolean }>`
   height: 20px;

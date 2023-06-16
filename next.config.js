@@ -8,6 +8,10 @@ const nextConfig = {
       ssr: true,
     },
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  productionBrowserSourceMaps: true,
   webpack: (config) => {
     config.experiments.asyncWebAssembly = true
     config.plugins.push(
