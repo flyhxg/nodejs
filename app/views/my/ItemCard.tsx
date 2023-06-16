@@ -14,7 +14,7 @@ import Link from 'next/link'
 // content_type: string
 // content_length: number
 // number: number
-export default function ItemCard(props: { item: NFTItem }) {
+export default function ItemCard(props: { item: NFTItem; onListed: () => void }) {
   const { openModal } = useModal()
   return (
     <Link href={`/detail/${props.item.id}`}>
@@ -28,11 +28,14 @@ export default function ItemCard(props: { item: NFTItem }) {
         </InfoWrapper>
         {!props.item.listed && (
           <SaleButton
-            onClick={(e) => {
+            onClick={async (e) => {
               e.stopPropagation()
               e.preventDefault()
               //@ts-ignore
-              openModal(SaleModal, { id: props.item.id })
+              const result = await openModal(SaleModal, { id: props.item.id })
+              if (result) {
+                props.onListed()
+              }
             }}
           >
             <SaleIcon /> Sale
