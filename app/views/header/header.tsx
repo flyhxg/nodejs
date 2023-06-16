@@ -43,13 +43,13 @@ export default function Header() {
       </div>
       <StyledButton
         onClick={() => {
-          if (!connected) {
+          if (!connected || !account) {
             active()
           } else {
           }
         }}
       >
-        {connected ? <>{shortenAddress(account)}</> : <> Connect Wallet</>}
+        {connected && account ? <>{shortenAddress(account)}</> : <> Connect Wallet</>}
       </StyledButton>
       {connected && <UserCenter />}
     </header>
