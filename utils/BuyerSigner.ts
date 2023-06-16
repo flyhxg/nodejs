@@ -182,6 +182,8 @@ export async function generateUnsignedBuyingPSBTBase64(
         value: dummyUtxo.value,
       } as WitnessUtxo
       p2shInputRedeemScript.redeemScript = p2sh.redeem?.output
+    } else {
+      p2shInputWitnessUTXO.witnessUtxo = dummyUtxo.tx.outs[dummyUtxo.vout]
     }
 
     psbt.addInput({
@@ -240,6 +242,8 @@ export async function generateUnsignedBuyingPSBTBase64(
         value: utxo.value,
       } as WitnessUtxo
       p2shInputRedeemScriptUn.redeemScript = p2sh.redeem?.output
+    } else {
+      p2shInputWitnessUTXOUn.witnessUtxo = utxo.tx.outs[utxo.vout]
     }
 
     psbt.addInput({

@@ -2,13 +2,13 @@ import { AddressTxsUtxo } from '@mempool/mempool.js/lib/interfaces'
 import * as bitcoin from 'bitcoinjs-lib'
 import { network } from '../utils/constants'
 import { calculateTxBytesFeeWithRate, getFees } from '../utils/BuyerSigner'
-import { InvalidArgumentError, utxo } from '../lib/msigner/interfaces'
+import { InvalidArgumentError, utxo, WitnessUtxo } from '../lib/msigner/interfaces'
 import { DUMMY_UTXO_MIN_VALUE, DUMMY_UTXO_VALUE } from '../lib/msigner/constant'
 import { useCallback, useState } from 'react'
 import { useWallet } from '../app/context/WalletContext'
-import { isP2SHAddress, mapUtxos, waitTxConfirmed } from '../utils/transaction'
+import { isP2SHAddress, mapUtxos } from '../utils/transaction'
 import { DialogType, useDialog } from '../app/context/DialogContext'
-import { getErrorMsg, sleep } from '../utils'
+import { getErrorMsg } from '../utils'
 
 export default function useCreateDummyUtxos() {
   const { account, publicKey, signPsbt, pushPsbt } = useWallet()
@@ -24,13 +24,14 @@ export default function useCreateDummyUtxos() {
         const tx = await pushPsbt(signedPsbt)
         return true
       } catch (e) {
+        console.error(e)
         openDialog(DialogType.Error, { title: 'Prepare error.', desc: getErrorMsg(e) })
         return false
       } finally {
         setLoading(false)
       }
     },
-    [account, signPsbt]
+    [account, signPsbt, publicKey]
   )
   return { create, loading }
 }
@@ -48,21 +49,15 @@ export async function generateUnsignedCreateDummyUtxoPSBTHex(
     mapUtxos(unqualifiedUtxos),
     getFees(feeRateTier),
   ])
-
   // Loop the unqualified utxos until we have enough to create a dummy utxo
   let totalValue = 0
   let paymentUtxoCount = 0
   for (const utxo of mappedUnqualifiedUtxos) {
-    // if (await doesUtxoContainInscription(utxo, itemProvider)) {
-    //   continue;
-    // }
-
     const input: any = {
       hash: utxo.txid,
       index: utxo.vout,
       nonWitnessUtxo: utxo.tx.toBuffer(),
     }
-
     if (isP2SHAddress(address, network)) {
       const redeemScript = bitcoin.payments.p2wpkh({
         pubkey: Buffer.from(buyerPublicKey!, 'hex'),
@@ -70,10 +65,9 @@ export async function generateUnsignedCreateDummyUtxoPSBTHex(
       const p2sh = bitcoin.payments.p2sh({
         redeem: { output: redeemScript },
       })
-      input.witnessUtxo = utxo.tx.outs[utxo.vout]
       input.redeemScript = p2sh.redeem?.output
     }
-
+    input.witnessUtxo = utxo.tx.outs[utxo.vout]
     psbt.addInput(input)
     totalValue += utxo.value
     paymentUtxoCount += 1
@@ -117,6 +111,5 @@ export async function generateUnsignedCreateDummyUtxoPSBTHex(
       value: changeValue,
     })
   }
-
   return psbt.toHex()
 }
