@@ -2,8 +2,66 @@ import Image from 'next/image'
 import { Images } from '../../../utils/images'
 import s from './group.module.scss'
 import Link from 'next/link'
+import { LaunchpadItem } from '../../../utils/http/Services/launchpad'
 
-export default function Group(props: { title: string; type: string; item: GroupItem[] }) {
+export function LaunchpadGroup(props: { title: string; items: LaunchpadItem[] }) {
+  const emptyPad = 3 - props.items.length
+  let empty: GroupItem[] = []
+  if (emptyPad > 0) {
+    empty = new Array(emptyPad).fill({
+      name: '',
+      desc: '',
+      status: Status.ComingSoon,
+      id: '',
+    })
+  }
+  return (
+    <div className={s.groupWrapper}>
+      {props.items.map((item, index) => (
+        <Item
+          key={index}
+          type={'launchpad'}
+          item={{
+            name: item.name,
+            desc: item.description,
+            status: Status.Live,
+            id: item.id,
+          }}
+        />
+      ))}
+      {empty.map((item, index) => (
+        <Item
+          key={index + 'i'}
+          type={'launchpad'}
+          item={{
+            name: item.name,
+            desc: item.desc,
+            status: item.status,
+            id: item.id,
+          }}
+        />
+      ))}
+      {/*<Link href={`/${props.type}/6`}>*/}
+      {/*  <Item status={Status.Live} />*/}
+      {/*</Link>*/}
+      {/*<Link href={`/${props.type}/2`}>*/}
+      {/*  <Item status={Status.UpComing} />*/}
+      {/*</Link>*/}
+      {/*<Link href={`/${props.type}/3`}>*/}
+      {/*  <Item status={Status.ComingSoon} />*/}
+      {/*</Link>*/}
+      {/*<Item status={Status.ComingSoon} />*/}
+
+      {/*<Item status={Status.ComingSoon} />*/}
+
+      {/*<Item status={Status.ComingSoon} />*/}
+
+      <h3 className={s.groupTitle}>{props.title}</h3>
+    </div>
+  )
+}
+
+export function CollectionGroup(props: { title: string; type: string; item: GroupItem[] }) {
   return (
     <div className={s.groupWrapper}>
       {props.item.map((item, index) => (

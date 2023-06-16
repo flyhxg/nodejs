@@ -2,7 +2,10 @@ import Image from 'next/image'
 import { Images } from '../utils/images'
 import s from './page.module.scss'
 import Footer from './views/footer'
-import Group, { GroupItem, Status } from './views/home/group'
+import { CollectionGroup, GroupItem, LaunchpadGroup, Status } from './views/home/group'
+import { Services } from '../utils/http/Services'
+import { usePagination } from 'ahooks'
+import { P } from '../utils/http/pagination'
 
 const launchpad: GroupItem[] = [
   {
@@ -25,7 +28,8 @@ const launchpad: GroupItem[] = [
   },
 ]
 
-export default function Page() {
+export default async function Page() {
+  const { items } = await Services.launchpadService.getLaunchpadList({ pageNo: 1, pageSize: 10 })
   return (
     <>
       <div className={s.pageWrapper}>
@@ -45,8 +49,8 @@ export default function Page() {
           <Image alt="btc1" src={Images.HOME.BTC_PNG} width={65} height={65} className={s.btc1} />
         </div>
         <div className={s.padsWrapper}>
-          <Group title="LAUNCHPAD" type={'launchpad'} item={launchpad} />
-          <Group title="NEW COLLECTIONS" type={'project'} item={launchpad} />
+          <LaunchpadGroup title="LAUNCHPAD" items={items} />
+          <CollectionGroup title="NEW COLLECTIONS" type={'project'} item={launchpad} />
         </div>
       </div>
       <Footer />

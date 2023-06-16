@@ -43,7 +43,6 @@ export async function selectPaymentUTXOs(
 
   // Sort descending by value, and filter out dummy utxos
   utxos = utxos.filter((x) => x.value > DUMMY_UTXO_VALUE).sort((a, b) => b.value - a.value)
-  console.log('utxos', utxos)
   for (const _utxo of utxos) {
     // Never spend a utxo that contains an inscription for cardinal purposes
     // if (await doesUtxoContainInscription(utxo, itemProvider)) {

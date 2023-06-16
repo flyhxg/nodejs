@@ -8,9 +8,12 @@ import { toXOnly } from './transaction'
 export async function generateUnsignedListingPSBTBase64(
   listing: IListingState
 ): Promise<{ listing: IListingState; psbt: Psbt }> {
+  const ecc = await import('tiny-secp256k1')
+  bitcoin.initEccLib(ecc)
   const psbt = new bitcoin.Psbt({ network })
   const [ordinalUtxoTxId, ordinalUtxoVout] = listing.seller.ordItem.output.split(':')
   const txId = listing.seller.ordItem.output.split(':')[0]
+
   const {
     bitcoin: { transactions },
   } = mempool()
