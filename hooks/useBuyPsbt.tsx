@@ -13,7 +13,6 @@ import { useModal } from '../app/context/ModalContext'
 import PreparWalletModal from '../app/views/modal/PreparWalletModal'
 import { makerFeeBp, takerFeeBp } from '../utils/constants'
 import { waitTxConfirmed } from '../utils/transaction'
-import { OrderDetail } from '../utils/http/Services/market'
 import { env } from '../utils/env'
 
 export enum BuyLoadingStage {
