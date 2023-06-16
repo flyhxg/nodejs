@@ -51,7 +51,7 @@ export default function Header() {
       >
         {connected && account ? <>{shortenAddress(account)}</> : <> Connect Wallet</>}
       </StyledButton>
-      {connected && <UserCenter />}
+      {connected && account && <UserCenter />}
     </header>
   )
 }
