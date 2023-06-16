@@ -41,6 +41,8 @@ export async function generateUnsignedCreateDummyUtxoPSBTHex(
   unqualifiedUtxos: AddressTxsUtxo[],
   feeRateTier: string
 ): Promise<string> {
+  const ecc = await import('tiny-secp256k1')
+  bitcoin.initEccLib(ecc)
   const psbt = new bitcoin.Psbt({ network })
   const [mappedUnqualifiedUtxos, recommendedFee]: [utxo[], number] = await Promise.all([
     mapUtxos(unqualifiedUtxos),
