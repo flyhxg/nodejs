@@ -15,9 +15,10 @@ export async function queryTxStatus(txid: string) {
 export async function waitTxConfirmed(txid: string) {
   while (true) {
     await sleep(10000)
-    const status = await queryTxStatus(txid)
-    if (status) return true
-    await sleep(300000)
+    // const status = await queryTxStatus(txid)
+    // if (status) return true
+    // await sleep(300000)
+    return true
   }
 }
 
