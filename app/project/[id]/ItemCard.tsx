@@ -10,9 +10,11 @@ import { OrderItem } from '../../../utils/http/Services/project'
 import { formatSat } from '../../../utils'
 import { useFilterContext } from './FilterContext'
 import { Display } from '../../../utils/type'
+import { useWallet } from '../../context/WalletContext'
 
 export default function ItemCard(props: { order: OrderItem }) {
-  const { display } = useFilterContext()
+  // const { display } = useFilterContext()
+  const { account } = useWallet()
   return (
     <Link href={`/detail/${props.order.inscription_id}`}>
       <CardWrapper>
@@ -27,9 +29,11 @@ export default function ItemCard(props: { order: OrderItem }) {
         <SplitLine />
         <Label>Last Sale: 0.622</Label>
         {/*@ts-ignore*/}
-        <SaleButton>
-          <SaleIcon /> Buy
-        </SaleButton>
+        {account !== props.order.owner && (
+          <SaleButton>
+            <SaleIcon /> Buy
+          </SaleButton>
+        )}
       </CardWrapper>
     </Link>
   )
