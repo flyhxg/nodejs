@@ -27,7 +27,7 @@ export default function ItemCard(props: { order: OrderItem }) {
           {formatSat(props.order.price)} BTC
         </InfoPrice>
         <SplitLine />
-        <Label>Last Sale: 0.622</Label>
+        <Label>Last Sale: {formatSat(props.order.last_sale_price)}</Label>
         {/*@ts-ignore*/}
         {account !== props.order.owner && (
           <SaleButton>
