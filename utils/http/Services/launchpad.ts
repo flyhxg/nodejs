@@ -8,7 +8,14 @@ export const launchpadService = {
   launchpadDetail: (id: number, config?: RequestConfig) =>
     getHttpService<LaunchpadItem, {}>(`/api/launchpad/${id}`)({}, config),
   getWhitelist: (props: { lanchpadId: number; address: string }, config: RequestConfig) =>
-    getHttpService<boolean, {}>(`/api/launchpad/${props.lanchpadId}/whitelist/${props.address}`)({}, config),
+    getHttpService<
+      {
+        hasWhiteList: boolean
+        isUsed: boolean
+        isUnconfirmed: boolean
+      },
+      {}
+    >(`/api/launchpad/${props.lanchpadId}/whitelist/${props.address}`)({}, config),
   getRandomLaunchpadItem: (launchpadId: number, config?: RequestConfig) =>
     getHttpService<RandomLaunchpadItem, {}>(`/api/launchpad/${launchpadId}/item`)({}, config),
   buyLaunchpad: (

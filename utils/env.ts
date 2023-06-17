@@ -22,7 +22,7 @@ const prod: EnvParams = {
 const test: EnvParams = {
   network: 'testnet',
   mempoolAddress: 'https://mempool.space/testnet',
-  mempoolHost: 'mempool.space',
+  mempoolHost: 'blockstream.info',
   baseURL: 'https://tests.havenmarket.xyz',
   chain: 'btc-testnet',
   explorer: 'http://3.19.120.151:8081',

@@ -8,6 +8,7 @@ import { useState } from 'react'
 import { DialogType, useDialog } from '../../context/DialogContext'
 import AddressLink from '../common/AddressLink'
 import { useWallet } from '../../context/WalletContext'
+import { parseSat } from '../../../utils'
 
 export default function SaleModal(props: {
   open: boolean
@@ -27,10 +28,11 @@ export default function SaleModal(props: {
         <ListButton
           isLoading={loading}
           onClick={async () => {
-            if (isNaN(+price) || +price < 10000) {
+            const sats = parseSat(price)
+            if (sats < 10000) {
               openDialog(DialogType.Error, { title: 'Sale error.', desc: 'Invalid price, min 10000 sats!' })
             } else {
-              const result = await list(+price)
+              const result = await list(sats)
               if (result) {
                 props.resolve(true)
               }

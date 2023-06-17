@@ -27,8 +27,13 @@ export function getPreviewUrl(id: string) {
   return `${env.explorer}/preview/${id}`
 }
 
-const ONE_BTC = new BigNumber('1000000000')
+const ONE_BTC = new BigNumber('100000000')
 export function formatSat(num: number) {
   const bigNum = new BigNumber(Math.floor(num)).div(ONE_BTC)
   return +bigNum.toFormat(9)
+}
+
+export function parseSat(_amount: number | string) {
+  if (isNaN(+_amount)) return 0
+  return ONE_BTC.times(+_amount).toNumber()
 }

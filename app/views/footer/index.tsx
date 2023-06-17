@@ -13,9 +13,9 @@ export default function Footer() {
 
           <ComingSoon />
         </li>
-        <li>
-          <>LAUNCHPAD</> <ComingSoon />
-        </li>
+        {/*<li>*/}
+        {/*  <>LAUNCHPAD</> <ComingSoon />*/}
+        {/*</li>*/}
         <li>
           <>INSCRIBE</>
           <ComingSoon />

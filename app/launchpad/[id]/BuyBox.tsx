@@ -14,7 +14,7 @@ import { useRequest } from 'ahooks'
 import { useWallet } from '../../context/WalletContext'
 import R from '../../../utils/http/request'
 import { Services } from '../../../utils/http/Services'
-import useBuyPsbt, { BuyLoadingStage } from '../../../hooks/useBuyPsbt'
+import { BuyLoadingStage } from '../../../hooks/useBuyPsbt'
 import useBuyLaunchpad from '../../../hooks/useBuyLaunchpad'
 
 enum BuyType {
@@ -25,7 +25,7 @@ enum BuyType {
 
 export default function BuyBox(props: { item: LaunchpadItem }) {
   const { account } = useWallet()
-  const { data: canPrivate, refresh } = useRequest(
+  const { data: whitelist, refresh } = useRequest(
     //@ts-ignore
     R(Services.launchpadService.getWhitelist, { lanchpadId: props.item.id, address: account }),
     {
@@ -37,6 +37,7 @@ export default function BuyBox(props: { item: LaunchpadItem }) {
   const { data: ordItem } = useRequest(R(Services.marketService.getOrdItem, launchpadItem?.inscriptionId || ''), {
     ready: !!launchpadItem,
   })
+  const canPrivate = whitelist?.hasWhiteList && !whitelist.isUsed && !whitelist.isUnconfirmed
   const { buyPsbt, loading, loadingTx } = useBuyLaunchpad(ordItem, launchpadItem?.price || 0)
   const privateStage = useStage(props.item.privateStartTime, props.item.privateEndTime)
   const publicStage = useStage(props.item.publicStartTime, props.item.publicEndTime)
