@@ -8,9 +8,9 @@ import { XImage } from '../../views/common/XImage'
 import Link from 'next/link'
 import { OrderItem } from '../../../utils/http/Services/project'
 import { formatSat } from '../../../utils'
-import { useFilterContext } from './FilterContext'
 import { Display } from '../../../utils/type'
 import { useWallet } from '../../context/WalletContext'
+import Loading from '../../views/common/Loading'
 
 export default function ItemCard(props: { order: OrderItem }) {
   // const { display } = useFilterContext()
@@ -21,6 +21,9 @@ export default function ItemCard(props: { order: OrderItem }) {
         <CardWithName>
           <CardImage src={Images.HOME.COVER_PNG} />
           <Name>{props.order.name}</Name>
+          <LoadingCard>
+            <Loading size={20} />
+          </LoadingCard>
         </CardWithName>
         <InfoPrice>
           <BtcIcon />
@@ -45,6 +48,18 @@ const CardWrapper = styled.div`
   position: relative;
   background: #2e2e2e;
   overflow: hidden;
+`
+const LoadingCard = styled.div`
+  height: 225px;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: 10px;
 `
 
 const CardWithName = styled.div`

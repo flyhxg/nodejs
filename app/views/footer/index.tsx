@@ -18,7 +18,7 @@ export default function Footer() {
         {/*</li>*/}
         <li>
           <>INSCRIBE</>
-          <ComingSoon />
+          <ComingSoon style={{ left: -70 }} />
         </li>
       </ul>
       <Socials />

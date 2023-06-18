@@ -33,7 +33,7 @@ export default function useBuyLaunchpad(nftItem?: IOrdItem, price?: number) {
   const { openModal } = useModal()
   const [loadingTx, setLoadingTx] = useState('')
   const buyPsbt = useCallback(
-    async (launchpadId: number) => {
+    async (launchpadId: number, isPrivate?: boolean) => {
       try {
         if (!account || !nftItem || !price) return false
         const {
@@ -82,6 +82,8 @@ export default function useBuyLaunchpad(nftItem?: IOrdItem, price?: number) {
           launchpadId: launchpadId,
           inscriptionId: nftItem.id,
           signedBuyerPSBT: base64,
+          isPrivate: !!isPrivate,
+          buyerAddress: account,
         })
         setLoading(BuyLoadingStage.WaitingConfirm)
         setLoadingTx(data)

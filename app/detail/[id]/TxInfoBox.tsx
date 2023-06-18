@@ -17,7 +17,6 @@ import { useModal } from '../../context/ModalContext'
 import SaleModal from '../../views/modal/SaleModal'
 
 export default function TxInfoBox(props: { order: OrderDetail; nftItem: IOrdItem }) {
-  console.log(props)
   const { buyPsbt, loading, loadingTx } = useBuyPsbt(props.nftItem, props.order.price)
   const { account, active, connected } = useWallet()
   const { cancel, loading: cancelLoading } = useCancelListing()

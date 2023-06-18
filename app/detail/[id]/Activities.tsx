@@ -17,6 +17,7 @@ const Wrapper = styled.div`
   background: #1a1a1a;
   ${commonStyles.flexCenter};
   margin-top: 63px;
+  position: relative;
 `
 
 const ComingSoon = styled.span`

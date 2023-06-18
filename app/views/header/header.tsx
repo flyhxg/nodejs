@@ -37,7 +37,7 @@ export default function Header() {
             }}
           >
             {menu.label}
-            {menu.comingSoon && <ComingSoon />}
+            {menu.comingSoon && <ComingSoon style={{ left: -65 }} />}
           </Link>
         ))}
       </div>

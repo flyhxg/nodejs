@@ -3,7 +3,7 @@ import { env } from '../env'
 const BASE_URL = env.baseURL
 
 export interface Params {
-  [key: string]: string | number
+  [key: string]: string | number | boolean
 }
 
 async function request<T>(_url: string, _config: RequestInit & { query?: Params; data?: Params }) {

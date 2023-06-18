@@ -6,6 +6,7 @@ import { Images } from '../../../utils/images'
 import { formatSat } from '../../../utils'
 import { commonStyles } from '../../../utils/commonStyles'
 import Image from 'next/image'
+import Loading from '../../views/common/Loading'
 
 export const columns: TableColumn<OrderItem>[] = [
   {
@@ -14,6 +15,7 @@ export const columns: TableColumn<OrderItem>[] = [
       <>
         <ImageIcon src={Images.HOME.COVER_PNG} />
         <Name>{data.name}</Name>
+        <StyledLoading />
       </>
     ),
   },
@@ -86,4 +88,12 @@ const BtcIcon = styled(Image).attrs({
   width: 15px;
   height: 15px;
   margin-right: 6px;
+`
+
+const StyledLoading = styled(Loading).attrs({
+  size: 20,
+})`
+  position: absolute;
+  left: 30px;
+  top: 5px;
 `

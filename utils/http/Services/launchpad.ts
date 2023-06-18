@@ -7,26 +7,37 @@ export const launchpadService = {
   ),
   launchpadDetail: (id: number, config?: RequestConfig) =>
     getHttpService<LaunchpadItem, {}>(`/api/launchpad/${id}`)({}, config),
-  getWhitelist: (props: { lanchpadId: number; address: string }, config: RequestConfig) =>
+  getLaunchpadStatus: (props: { lanchpadId: number; address: string }, config: RequestConfig) =>
     getHttpService<
       {
         hasWhiteList: boolean
-        isUsed: boolean
-        isUnconfirmed: boolean
+        whiteListValid: boolean
+        publicValid: boolean
+        privatePendings: string
+        publicPendings: string
       },
       {}
-    >(`/api/launchpad/${props.lanchpadId}/whitelist/${props.address}`)({}, config),
+    >(`/api/launchpad/${props.lanchpadId}/status/${props.address}`)({}, config),
   getRandomLaunchpadItem: (launchpadId: number, config?: RequestConfig) =>
     getHttpService<RandomLaunchpadItem, {}>(`/api/launchpad/${launchpadId}/item`)({}, config),
   buyLaunchpad: (
-    props: { launchpadId: number; inscriptionId: string; signedBuyerPSBT: string },
+    props: {
+      launchpadId: number
+      inscriptionId: string
+      signedBuyerPSBT: string
+      isPrivate: boolean
+      buyerAddress: string
+    },
     config?: RequestConfig
   ) =>
-    postHttpService<string, { inscriptionId: string; signedBuyerPSBT: string }>(
-      `/api/launchpad/${props.launchpadId}/buy`
-    )({
+    postHttpService<
+      string,
+      { inscriptionId: string; signedBuyerPSBT: string; isPrivate: boolean; buyerAddress: string }
+    >(`/api/launchpad/${props.launchpadId}/buy`)({
       inscriptionId: props.inscriptionId,
       signedBuyerPSBT: props.signedBuyerPSBT,
+      isPrivate: props.isPrivate,
+      buyerAddress: props.buyerAddress,
     }),
 }
 
@@ -47,9 +58,13 @@ export interface LaunchpadItem {
   privatePrice: number
   privateStartTime: number
   privateEndTime: number
+  privateLimit: number
+  publicLimit: number
+  isPrivateEnd: boolean
   publicPrice: number
   publicStartTime: number
   publicEndTime: number
+  isPublicEnd: boolean
 }
 
 export interface RandomLaunchpadItem {

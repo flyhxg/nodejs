@@ -9,7 +9,7 @@ import { formatSat } from '../../../utils'
 import { Stage, useStage } from '../../../hooks/useStage'
 import moment from 'moment'
 import { durationTime } from '../../../utils/time'
-import { useMemo } from 'react'
+import { useState } from 'react'
 import { useRequest } from 'ahooks'
 import { useWallet } from '../../context/WalletContext'
 import R from '../../../utils/http/request'
@@ -25,9 +25,9 @@ enum BuyType {
 
 export default function BuyBox(props: { item: LaunchpadItem }) {
   const { account } = useWallet()
-  const { data: whitelist, refresh } = useRequest(
+  const { data: launchpadStatus, refresh } = useRequest(
     //@ts-ignore
-    R(Services.launchpadService.getWhitelist, { lanchpadId: props.item.id, address: account }),
+    R(Services.launchpadService.getLaunchpadStatus, { lanchpadId: props.item.id, address: account }),
     {
       refreshDeps: [account],
       ready: !!account,
@@ -37,20 +37,27 @@ export default function BuyBox(props: { item: LaunchpadItem }) {
   const { data: ordItem } = useRequest(R(Services.marketService.getOrdItem, launchpadItem?.inscriptionId || ''), {
     ready: !!launchpadItem,
   })
-  const canPrivate = whitelist?.hasWhiteList && !whitelist.isUsed && !whitelist.isUnconfirmed
+
   const { buyPsbt, loading, loadingTx } = useBuyLaunchpad(ordItem, launchpadItem?.price || 0)
   const privateStage = useStage(props.item.privateStartTime, props.item.privateEndTime)
   const publicStage = useStage(props.item.publicStartTime, props.item.publicEndTime)
+  const canPrivate =
+    launchpadStatus?.hasWhiteList &&
+    launchpadStatus.whiteListValid &&
+    !launchpadStatus.privatePendings &&
+    privateStage === Stage.STARTED
+  const canPublic = launchpadStatus?.publicValid && !launchpadStatus.publicPendings && publicStage === Stage.STARTED
   const now = moment().unix()
-  const type = useMemo(() => {
-    if (publicStage === Stage.STARTED) return BuyType.Public
-    if (privateStage === Stage.STARTED && canPrivate) return BuyType.Private
-    return BuyType.None
-  }, [privateStage, publicStage, canPrivate])
+  const [type, setType] = useState(privateStage === Stage.STARTED ? BuyType.Private : BuyType.Public)
+  // const type = useMemo(() => {
+  //   if (publicStage === Stage.STARTED) return BuyType.Public
+  //   if (privateStage === Stage.STARTED && canPrivate) return BuyType.Private
+  //   return BuyType.None
+  // }, [privateStage, publicStage, canPrivate])
 
   return (
     <BoxWrapper>
-      <OrderItem active={type === BuyType.Private}>
+      <OrderItem active={type === BuyType.Private} onClick={() => setType(BuyType.Private)}>
         <Status active={type === BuyType.Private} />
         <PriceItem>
           <BtcIcon /> {formatSat(props.item.privatePrice)} BTC
@@ -63,7 +70,7 @@ export default function BuyBox(props: { item: LaunchpadItem }) {
         )}
         {privateStage === Stage.ENDED && <OrderTime>Ended</OrderTime>}
       </OrderItem>
-      <OrderItem active={type === BuyType.Public}>
+      <OrderItem active={type === BuyType.Public} onClick={() => setType(BuyType.Public)}>
         <Status isPublic active={type === BuyType.Public} />
         <PriceItem>
           <BtcIcon /> {formatSat(props.item.publicPrice)} BTC
@@ -76,8 +83,16 @@ export default function BuyBox(props: { item: LaunchpadItem }) {
       </OrderItem>
       <ButtonGroups>
         <StyledButton
-          isLoading={loading !== BuyLoadingStage.NotStart && loading !== BuyLoadingStage.Done}
-          disabled={type === BuyType.None}
+          isLoading={
+            (loading !== BuyLoadingStage.NotStart && loading !== BuyLoadingStage.Done) ||
+            (type === BuyType.Private && !!launchpadStatus?.privatePendings) ||
+            (type === BuyType.Public && !!launchpadStatus?.publicPendings)
+          }
+          disabled={
+            type === BuyType.None ||
+            (type === BuyType.Private && !canPrivate) ||
+            (type === BuyType.Public && !canPublic)
+          }
           onClick={async () => {
             const result = await buyPsbt(props.item.id)
             if (result) !!result && location.reload()
@@ -104,7 +119,7 @@ const OrderItem = styled.div<{ active?: boolean }>`
   position: relative;
   margin-bottom: 10px;
   transition: border-color 0.2s linear;
-  //cursor: pointer;
+  cursor: pointer;
   border: 2px solid transparent;
   ${(props) =>
     props.active
