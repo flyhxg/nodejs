@@ -5,10 +5,20 @@ import { CSSProperties } from 'react'
 import { Keyframes } from '../../../utils/keyframes'
 import { commonStyles } from '../../../utils/commonStyles'
 
-export default function Loading(props: { size: number; className?: string; style?: CSSProperties }) {
+export default function Loading(props: {
+  size: number
+  className?: string
+  style?: CSSProperties
+  type?: 'white' | 'black'
+}) {
   const size = props.size || 24
   return (
-    <LoadingIcon size={size} src={Images.COMMON.STATUS_LOADING_SVG} className={props.className} style={props.style} />
+    <LoadingIcon
+      size={size}
+      src={props.type === 'black' ? Images.COMMON.LOADING_SVG : Images.COMMON.STATUS_LOADING_SVG}
+      className={props.className}
+      style={props.style}
+    />
   )
 }
 

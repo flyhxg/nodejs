@@ -13,14 +13,15 @@ import { makerFeeBp, network, PLATFORM_FEE_ADDRESS, takerFeeBp } from './constan
 import { getSellerOrdOutputValue } from './SellerSigner'
 import { Psbt } from 'bitcoinjs-lib'
 import { isP2SHAddress, mapUtxos, satToBtc, toXOnly } from './transaction'
+import { Services } from './http/Services'
 
 export async function selectDummyUTXOs(utxos: AddressTxsUtxo[]): Promise<utxo[]> {
   const result: utxo[] = []
   for (const utxo of utxos) {
     //  排除包含铭文的utxo
-    // if (await doesUtxoContainInscription(utxo, itemProvider)) {
-    //   continue
-    // }
+    if (await doesUtxoContainInscription(utxo)) {
+      continue
+    }
     //只留下对应范围聪的utxo
     if (utxo.value >= DUMMY_UTXO_MIN_VALUE && utxo.value <= DUMMY_UTXO_MAX_VALUE) {
       result.push((await mapUtxos([utxo]))[0])
@@ -45,9 +46,9 @@ export async function selectPaymentUTXOs(
   utxos = utxos.filter((x) => x.value > DUMMY_UTXO_VALUE).sort((a, b) => b.value - a.value)
   for (const _utxo of utxos) {
     // Never spend a utxo that contains an inscription for cardinal purposes
-    // if (await doesUtxoContainInscription(utxo, itemProvider)) {
-    //   continue
-    // }
+    if (await doesUtxoContainInscription(_utxo)) {
+      continue
+    }
     selectedUtxos.push((await mapUtxos([_utxo]))[0])
     selectedAmount += _utxo.value
 
@@ -111,8 +112,9 @@ export function calculateTxBytesFeeWithRate(
 }
 
 async function doesUtxoContainInscription(utxo: AddressTxsUtxo): Promise<boolean> {
+  return await Services.marketService.isInscriptionExist({ tx_id: utxo.txid, vout: utxo.vout })
   // If it's confirmed, we check the indexing db for that output
-  return false
+  // return false
   // if (utxo.status.confirmed) {
   //   try {
   //     return (await itemProvider.getTokenByOutput(`${utxo.txid}:${utxo.vout}`)) !== null

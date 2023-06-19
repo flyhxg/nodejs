@@ -10,6 +10,8 @@ export interface NFTItem {
   name: string
   content_type: string
   content_length: number
+  content_uri: string
   number: number
   listed: boolean
+  order_status: number
 }

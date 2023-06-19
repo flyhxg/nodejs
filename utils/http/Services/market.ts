@@ -58,6 +58,7 @@ export const marketService = {
     }),
   orderDetail: (id: string, config?: RequestConfig) =>
     getHttpService<OrderDetail, {}>(`/api/order/detail/${id}`)({}, config),
+  isInscriptionExist: getHttpService<boolean, { tx_id: string; vout: number }>('/api/inscription/exist'),
 }
 
 export interface OrderDetail {

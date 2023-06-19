@@ -2,20 +2,18 @@
 import styled from 'styled-components'
 import { commonStyles } from '../../../utils/commonStyles'
 import { Images } from '../../../utils/images'
-import { RPC } from '../../../utils/rpc'
 import { useModal } from '../../context/ModalContext'
 import { XButton } from '../common/XButton'
 import { XImage } from '../common/XImage'
 import SaleModal from '../modal/SaleModal'
 import { NFTItem } from '../../../utils/http/Services/user'
 import Link from 'next/link'
+import Loading from '../common/Loading'
+import { OrderStatus } from '../../../utils/type'
 
-// name: string
-// content_type: string
-// content_length: number
-// number: number
 export default function ItemCard(props: { item: NFTItem; onListed: () => void }) {
   const { openModal } = useModal()
+  const isPending = props.item.order_status === OrderStatus.Pending
   return (
     <Link href={`/detail/${props.item.id}`}>
       <CardWrapper>
@@ -24,9 +22,10 @@ export default function ItemCard(props: { item: NFTItem; onListed: () => void })
           <InfoTitle>{props.item.name}</InfoTitle>
           <InfoText>Inscription #{props.item.number}</InfoText>
           <SplitLine />
+          do
           <Label>Battle Of BTC</Label>
         </InfoWrapper>
-        {!props.item.listed && (
+        {!props.item.listed && !isPending && (
           <SaleButton
             onClick={async (e) => {
               e.stopPropagation()
@@ -41,6 +40,7 @@ export default function ItemCard(props: { item: NFTItem; onListed: () => void })
             <SaleIcon /> Sale
           </SaleButton>
         )}
+        {isPending && <StyledLoading />}
       </CardWrapper>
     </Link>
   )
@@ -121,4 +121,12 @@ const SaleIcon = styled(XImage).attrs({
   width: 15px;
   height: 15px;
   margin-right: 8px;
+`
+
+const StyledLoading = styled(Loading).attrs({
+  size: 24,
+})`
+  position: absolute;
+  top: 12px;
+  right: 14px;
 `
