@@ -11,18 +11,21 @@ const launchpad: GroupItem[] = [
     desc: 'View Collection',
     status: Status.Live,
     id: 6,
+    logo: '',
   },
   {
     name: 'Ordimon',
     desc: 'View Collection',
     status: Status.Live,
     id: 7,
+    logo: '',
   },
   {
     name: '',
     desc: '',
     status: Status.ComingSoon,
     id: 3,
+    logo: '',
   },
 ]
 

@@ -7,20 +7,20 @@ import Footer from '../../views/footer'
 import { Services } from '../../../utils/http/Services'
 import { LaunchpadItem } from '../../../utils/http/Services/launchpad'
 import BuyBox from './BuyBox'
+import { XImage } from '../../views/common/XImage'
 
 // const BuyBox = dynamic(() => import('./BuyBox'), { ssr: false })
 
 export default async function Page(props: { params: { id: string } }) {
   const data = await Services.launchpadService.launchpadDetail(+props.params.id, { cache: 'no-store' })
-
   return (
     <>
       <div className={s.wrapper}>
         <div className={s.txInfoWrapper}>
-          <Image src={Images.LAUNCHPAD.COVER_PNG} alt={'nft cover'} className={s.image} width={500} height={500} />
+          <XImage src={data.logo} alt={'nft cover'} className={s.image} style={{ width: 500, height: 500 }} />
           <TxInfoBox item={data} />
         </div>
-        <TabsContent />
+        <TabsContent desc={data.description} />
       </div>
       <Footer />
     </>

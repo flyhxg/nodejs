@@ -3,6 +3,7 @@ import { Images } from '../../../utils/images'
 import s from './group.module.scss'
 import Link from 'next/link'
 import { LaunchpadItem } from '../../../utils/http/Services/launchpad'
+import { XImage } from '../common/XImage'
 
 export function LaunchpadGroup(props: { title: string; items: LaunchpadItem[] }) {
   console.log('props', props)
@@ -27,6 +28,7 @@ export function LaunchpadGroup(props: { title: string; items: LaunchpadItem[] })
             desc: item.description,
             status: Status.Live,
             id: item.id,
+            logo: item.logo,
           }}
         />
       ))}
@@ -39,6 +41,7 @@ export function LaunchpadGroup(props: { title: string; items: LaunchpadItem[] })
             desc: item.desc,
             status: item.status,
             id: item.id,
+            logo: '',
           }}
         />
       ))}
@@ -93,6 +96,7 @@ export interface GroupItem {
   desc: string
   status: Status
   id: number
+  logo: string
 }
 
 export enum Status {
@@ -106,14 +110,14 @@ function Item(props: { item: GroupItem; type: string }) {
     <div className={s.itemCard}>
       <div className={s.imageWrapper}>
         {props.item.status === Status.ComingSoon ? (
-          <Image alt="Coming soon" src={Images.HOME.COOMING_SOON_SVG} width={100} height={34} />
+          <XImage alt="Coming soon" src={Images.HOME.COOMING_SOON_SVG} />
         ) : (
-          <Image alt="cover" src={Images.HOME.COVER_PNG} fill />
+          <XImage className={s.image} alt="cover" src={props.item.logo} />
         )}
       </div>
       <div className={s.infoWrapper}>
         <h3>{props.item.name}</h3>
-        <p>{props.item.desc}</p>
+        {props.type !== 'launchpad' && <p>{props.item.desc}</p>}
       </div>
       {props.item.status === Status.Live && <span className={s.status}>Live</span>}
       {props.item.status === Status.UpComing && <span className={s.status}>Up Coming</span>}

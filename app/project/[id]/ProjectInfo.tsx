@@ -12,7 +12,7 @@ export default function ProjectInfo(props: { item: CollectionItem }) {
   return (
     <Wrapper>
       <InfoWrapper>
-        <Logo src={Images.HOME.COVER_PNG} />
+        <Logo src={props.item.logo} />
         <InfoBox>
           <Title>
             {props.item.name} <AuthIcon />
@@ -79,7 +79,7 @@ const InfoWrapper = styled.div`
   position: relative;
 `
 
-const Logo = styled(Image).attrs({
+const Logo = styled(XImage).attrs({
   width: 165,
   height: 165,
   alt: 'Logo',
