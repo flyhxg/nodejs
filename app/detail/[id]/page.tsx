@@ -9,10 +9,8 @@ import { Services } from '../../../utils/http/Services'
 
 export default async function Page(props: { params: { id: string } }) {
   const id = props.params.id
-  const [order, nftItem] = await Promise.all([
-    Services.marketService.orderDetail(id, { cache: 'no-store' }),
-    Services.marketService.getOrdItem(id, { cache: 'no-store' }),
-  ])
+  const nftItem = await Services.marketService.getOrdItem(id, { cache: 'no-store' })
+
   return (
     <>
       <div className={s.wrapper}>
@@ -21,7 +19,7 @@ export default async function Page(props: { params: { id: string } }) {
           <AttrInfoBox nftItem={nftItem} />
         </div>
         <div className={s.right}>
-          <TxInfoBox order={order} nftItem={nftItem} />
+          <TxInfoBox nftItem={nftItem} />
           <Activities />
         </div>
       </div>

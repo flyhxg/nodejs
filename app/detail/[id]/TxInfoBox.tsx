@@ -9,45 +9,56 @@ import { XButton } from '../../views/common/XButton'
 import Loading from '../../views/common/Loading'
 import TxHashLink from '../../views/common/TxHashLink'
 import { formatSat } from '../../../utils'
-import { OrderDetail } from '../../../utils/http/Services/market'
 import { takerFeeBp } from '../../../utils/constants'
 import { IOrdItem } from '../../../lib/msigner'
 import useCancelListing from '../../../hooks/useCancelListing'
 import { useModal } from '../../context/ModalContext'
 import SaleModal from '../../views/modal/SaleModal'
+import { useRequest } from 'ahooks'
+import R from '../../../utils/http/request'
+import { Services } from '../../../utils/http/Services'
 
-export default function TxInfoBox(props: { order: OrderDetail; nftItem: IOrdItem }) {
-  const { buyPsbt, loading, loadingTx } = useBuyPsbt(props.nftItem, props.order.price)
+export default function TxInfoBox(props: { nftItem: IOrdItem }) {
   const { account, active, connected } = useWallet()
+
+  const { data: order } = useRequest(
+    R(Services.marketService.orderDetail, { buyer_address: account as string, inscription_id: props.nftItem.id }),
+    {
+      ready: !!account,
+      refreshDeps: [account],
+    }
+  )
+  const price = order?.price || 0
+  const { buyPsbt, loading, loadingTx } = useBuyPsbt(props.nftItem, price)
   const { cancel, loading: cancelLoading } = useCancelListing()
   const isOwner = props.nftItem.owner === account
   const showConnect = !connected
-  const showBuy = loading < BuyLoadingStage.WaitingConfirm && connected && props.nftItem.listed && !isOwner
+  const showBuy =
+    loading < BuyLoadingStage.WaitingConfirm && connected && props.nftItem.listed && !isOwner && !order?.padding_tx_hash
   const showListing = !props.nftItem.listed && isOwner
   const showCancel = props.nftItem.listed && isOwner
   const { openModal } = useModal()
-  console.log('props', props)
 
   return (
     <InfoBoxWrapper>
-      <Title>Inscription #{props.nftItem.inscriptionNumber}</Title>
+      s<Title>Inscription #{props.nftItem.inscriptionNumber}</Title>
       <PriceBox>
         <PriceItem>
           <span className={'title'}>Current Price:</span>
           <InfoPrice>
-            <BtcIcon /> {formatSat(props.order.price)} BTC
+            <BtcIcon /> {formatSat(price)} BTC
           </InfoPrice>
         </PriceItem>
         <PriceItem>
           <span className={'title'}>Taker Fee:</span>
           <InfoPrice>
-            <BtcIcon /> {formatSat((props.order.price * takerFeeBp) / 10000)} BTC
+            <BtcIcon /> {formatSat((price * takerFeeBp) / 10000)} BTC
           </InfoPrice>
         </PriceItem>
         <PriceItem>
           <span className={'title'}>Total:</span>
           <InfoPrice>
-            <BtcIcon /> {formatSat(props.order.price + (props.order.price * takerFeeBp) / 10000)} BTC
+            <BtcIcon /> {formatSat(price + (price * takerFeeBp) / 10000)} BTC
           </InfoPrice>
         </PriceItem>
         <ButtonsGroup>
@@ -101,7 +112,7 @@ export default function TxInfoBox(props: { order: OrderDetail; nftItem: IOrdItem
         )}
       </PriceBox>
       <RarityListWrapper>
-        {(props.order.attributes || []).map((attr) => (
+        {(order?.attributes || []).map((attr) => (
           <RarityItem key={attr.trait_type}>
             <p>
               <span className={'title'}>{attr.trait_type}</span>

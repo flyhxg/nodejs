@@ -2,6 +2,7 @@ import { getHttpService, postHttpService, RequestConfig } from '../service'
 import { IOrdItem } from '../../../lib/msigner/interfaces'
 import { env } from '../../env'
 import { getContentUrl, getPreviewUrl } from '../../index'
+import { OrderStatus } from '../../type'
 
 export const marketService = {
   listOrder: postHttpService<
@@ -56,8 +57,7 @@ export const marketService = {
       }
       return ordItem
     }),
-  orderDetail: (id: string, config?: RequestConfig) =>
-    getHttpService<OrderDetail, {}>(`/api/order/detail/${id}`)({}, config),
+  orderDetail: getHttpService<OrderDetail, { inscription_id: string; buyer_address: string }>(`/api/order/detail`),
   isInscriptionExist: getHttpService<boolean, { tx_id: string; vout: number }>('/api/inscription/exist'),
 }
 
@@ -72,11 +72,14 @@ export interface OrderDetail {
   owner: string
   genesis_tx: string
   listing_tx: string
-  rarity: number
-  top: number
+  sat_rarity: number
+  sat_number: number
+  sat_name: string
   price: number
   taker_fee: number
-  attributes: { trait_type: string; value: string; status: string; percent: string }[]
+  attributes: { trait_type: string; value: string; status: string; percent: string }[] | null
+  status: OrderStatus
+  padding_tx_hash: string
 }
 
 interface OrdServerItem {

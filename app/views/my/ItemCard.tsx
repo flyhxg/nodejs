@@ -22,7 +22,6 @@ export default function ItemCard(props: { item: NFTItem; onListed: () => void })
           <InfoTitle>{props.item.name}</InfoTitle>
           <InfoText>Inscription #{props.item.number}</InfoText>
           <SplitLine />
-          do
           <Label>Battle Of BTC</Label>
         </InfoWrapper>
         {!props.item.listed && !isPending && (
