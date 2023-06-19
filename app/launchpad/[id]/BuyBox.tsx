@@ -17,6 +17,8 @@ import { Services } from '../../../utils/http/Services'
 import { BuyLoadingStage } from '../../../hooks/useBuyPsbt'
 import useBuyLaunchpad from '../../../hooks/useBuyLaunchpad'
 import { OrderStatus } from '../../../utils/type'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 enum BuyType {
   Private,
@@ -43,11 +45,14 @@ export default function BuyBox(props: { item: LaunchpadItem }) {
   const publicStage = useStage(props.item.publicStartTime, props.item.publicEndTime)
   const privatePending = (launchpadStatus?.privatePendings || [])[0]?.status === OrderStatus.Pending
   const publicPending = (launchpadStatus?.publicPendings || [])[0]?.status === OrderStatus.Pending
+  const privateBuyed = (launchpadStatus?.privatePendings || [])[0]?.status === OrderStatus.Success
+  const publicBuyed = (launchpadStatus?.publicPendings || [])[0]?.status === OrderStatus.Success
   const canPrivate =
     launchpadStatus?.hasWhiteList && launchpadStatus.whiteListValid && !privatePending && privateStage === Stage.STARTED
   const canPublic = launchpadStatus?.publicValid && !publicPending && publicStage === Stage.STARTED
 
   const [type, setType] = useState(privateStage === Stage.STARTED ? BuyType.Private : BuyType.Public)
+  const showCheck = (type === BuyType.Private && privateBuyed) || (type === BuyType.Public && publicBuyed)
 
   const { buyPsbt, loading, loadingTx } = useBuyLaunchpad(
     ordItem,
@@ -55,6 +60,7 @@ export default function BuyBox(props: { item: LaunchpadItem }) {
   )
 
   const now = moment().unix()
+  const router = useRouter()
 
   return (
     <BoxWrapper>
@@ -83,24 +89,34 @@ export default function BuyBox(props: { item: LaunchpadItem }) {
         {publicStage === Stage.ENDED && <OrderTime>Ended</OrderTime>}
       </OrderItem>
       <ButtonGroups>
-        <StyledButton
-          isLoading={
-            (loading !== BuyLoadingStage.NotStart && loading !== BuyLoadingStage.Done) ||
-            (type === BuyType.Private && privatePending) ||
-            (type === BuyType.Public && publicPending)
-          }
-          disabled={
-            type === BuyType.None ||
-            (type === BuyType.Private && !canPrivate) ||
-            (type === BuyType.Public && !canPublic)
-          }
-          onClick={async () => {
-            const result = await buyPsbt(props.item.id, type === BuyType.Private)
-            if (result) !!result && location.reload()
-          }}
-        >
-          Buy
-        </StyledButton>
+        {showCheck ? (
+          <StyledButton
+            onClick={() => {
+              router.push('/mycollection')
+            }}
+          >
+            Check NFT
+          </StyledButton>
+        ) : (
+          <StyledButton
+            isLoading={
+              (loading !== BuyLoadingStage.NotStart && loading !== BuyLoadingStage.Done) ||
+              (type === BuyType.Private && privatePending) ||
+              (type === BuyType.Public && publicPending)
+            }
+            disabled={
+              type === BuyType.None ||
+              (type === BuyType.Private && !canPrivate) ||
+              (type === BuyType.Public && !canPublic)
+            }
+            onClick={async () => {
+              const result = await buyPsbt(props.item.id, type === BuyType.Private)
+              if (result) !!result && location.reload()
+            }}
+          >
+            Buy
+          </StyledButton>
+        )}
       </ButtonGroups>
     </BoxWrapper>
   )
@@ -170,7 +186,7 @@ const ButtonGroups = styled.div`
 `
 
 const StyledButton = styled(XButton)`
-  //width: 284px;
+  width: 284px;
   width: 100%;
 `
 

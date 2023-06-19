@@ -102,7 +102,7 @@ const Label = styled.p`
   font-size: 12px;
   line-height: 12px;
   color: #9e9e9e;
-  margin-top: 10px;
+  margin-top: 15px;
 `
 
 const SaleButton = styled(XButton)`
