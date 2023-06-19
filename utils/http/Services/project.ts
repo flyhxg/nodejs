@@ -1,4 +1,5 @@
 import { getHttpService, PaginationData, PaginationParams, RequestConfig } from '../service'
+import { OrderStatus } from '../../type'
 
 export const projectService = {
   // @ts-ignore
@@ -11,9 +12,10 @@ export const projectService = {
 
 export interface OrderItem {
   order_id: number
+  order_status: OrderStatus
   inscription_id: string
   name: string
-  content_url: string
+  content_uri: string
   content_type: string
   owner: string
   number: number

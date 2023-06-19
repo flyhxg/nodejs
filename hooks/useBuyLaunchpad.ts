@@ -26,7 +26,7 @@ export enum BuyLoadingStage {
   Done,
 }
 
-export default function useBuyLaunchpad(nftItem?: IOrdItem, price?: number) {
+export default function useBuyLaunchpad(nftItem?: IOrdItem, _price?: number) {
   const { account, signPsbt } = useWallet()
   const [loading, setLoading] = useState<BuyLoadingStage>(BuyLoadingStage.NotStart)
   const { openDialog } = useDialog()
@@ -35,7 +35,8 @@ export default function useBuyLaunchpad(nftItem?: IOrdItem, price?: number) {
   const buyPsbt = useCallback(
     async (launchpadId: number, isPrivate?: boolean) => {
       try {
-        if (!account || !nftItem || !price) return false
+        if (!account || !nftItem) return false
+        const price = _price || 0
         const {
           bitcoin: { addresses },
         } = mempool()
@@ -100,7 +101,7 @@ export default function useBuyLaunchpad(nftItem?: IOrdItem, price?: number) {
         setLoading(BuyLoadingStage.NotStart)
       }
     },
-    [account, price, nftItem]
+    [account, _price, nftItem]
   )
   return { buyPsbt, loading, loadingTx }
 }

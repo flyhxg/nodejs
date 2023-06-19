@@ -26,6 +26,7 @@ export default function TxInfoBox(props: { order: OrderDetail; nftItem: IOrdItem
   const showListing = !props.nftItem.listed && isOwner
   const showCancel = props.nftItem.listed && isOwner
   const { openModal } = useModal()
+  console.log('props', props)
 
   return (
     <InfoBoxWrapper>

@@ -8,3 +8,9 @@ export enum Display {
   GRID,
   LIST,
 }
+
+export enum OrderStatus {
+  Pending = -1,
+  Success = 1,
+  Failed = 0,
+}
