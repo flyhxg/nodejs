@@ -38,7 +38,6 @@ export default function BuyBox(props: { item: LaunchpadItem }) {
     ready: !!launchpadItem,
   })
 
-  const { buyPsbt, loading, loadingTx } = useBuyLaunchpad(ordItem, launchpadItem?.price || 0)
   const privateStage = useStage(props.item.privateStartTime, props.item.privateEndTime)
   const publicStage = useStage(props.item.publicStartTime, props.item.publicEndTime)
   const canPrivate =
@@ -46,14 +45,15 @@ export default function BuyBox(props: { item: LaunchpadItem }) {
     launchpadStatus.whiteListValid &&
     !launchpadStatus.privatePendings &&
     privateStage === Stage.STARTED
+  const [type, setType] = useState(privateStage === Stage.STARTED ? BuyType.Private : BuyType.Public)
+
+  const { buyPsbt, loading, loadingTx } = useBuyLaunchpad(
+    ordItem,
+    type === BuyType.Private ? props.item.privatePrice : props.item.publicPrice
+  )
+
   const canPublic = launchpadStatus?.publicValid && !launchpadStatus.publicPendings && publicStage === Stage.STARTED
   const now = moment().unix()
-  const [type, setType] = useState(privateStage === Stage.STARTED ? BuyType.Private : BuyType.Public)
-  // const type = useMemo(() => {
-  //   if (publicStage === Stage.STARTED) return BuyType.Public
-  //   if (privateStage === Stage.STARTED && canPrivate) return BuyType.Private
-  //   return BuyType.None
-  // }, [privateStage, publicStage, canPrivate])
 
   return (
     <BoxWrapper>
@@ -94,7 +94,7 @@ export default function BuyBox(props: { item: LaunchpadItem }) {
             (type === BuyType.Public && !canPublic)
           }
           onClick={async () => {
-            const result = await buyPsbt(props.item.id)
+            const result = await buyPsbt(props.item.id, type === BuyType.Private)
             if (result) !!result && location.reload()
           }}
         >

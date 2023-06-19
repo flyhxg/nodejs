@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { LaunchpadItem } from '../../../utils/http/Services/launchpad'
 
 export function LaunchpadGroup(props: { title: string; items: LaunchpadItem[] }) {
+  console.log('props', props)
   const emptyPad = 3 - props.items.length
   let empty: GroupItem[] = []
   if (emptyPad > 0) {

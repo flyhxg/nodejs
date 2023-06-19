@@ -4,7 +4,6 @@ import s from './page.module.scss'
 import Footer from './views/footer'
 import { CollectionGroup, GroupItem, LaunchpadGroup, Status } from './views/home/group'
 import { Services } from '../utils/http/Services'
-import { parseSat } from '../utils'
 
 const launchpad: GroupItem[] = [
   {
@@ -28,7 +27,7 @@ const launchpad: GroupItem[] = [
 ]
 
 export default async function Page() {
-  const { items } = await Services.launchpadService.getLaunchpadList({ pageNo: 1, pageSize: 10 })
+  const { items } = await Services.launchpadService.getLaunchpadList({ pageNo: 1, pageSize: 10 }, { cache: 'no-store' })
   return (
     <>
       <div className={s.pageWrapper}>

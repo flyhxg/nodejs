@@ -7,12 +7,11 @@ import { Images } from '../../../utils/images'
 import AddressLink from '../common/AddressLink'
 import { useWallet } from '../../context/WalletContext'
 import Copy from '../common/Copy'
-import { formatSat, parseSat } from '../../../utils'
+import { formatSat } from '../../../utils'
 import Link from 'next/link'
 
 export default function UserCenter() {
   const { account, balance, deActive } = useWallet()
-  console.log({ formatSat, parseSat })
   return (
     <UserCenterWrapper
       onClick={(e) => {
