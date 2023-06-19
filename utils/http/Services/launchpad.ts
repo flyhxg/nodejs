@@ -1,4 +1,5 @@
 import { getHttpService, PaginationData, PaginationParams, postHttpService, RequestConfig } from '../service'
+import { OrderStatus } from '../../type'
 
 export const launchpadService = {
   // @ts-ignore
@@ -13,8 +14,8 @@ export const launchpadService = {
         hasWhiteList: boolean
         whiteListValid: boolean
         publicValid: boolean
-        privatePendings: string
-        publicPendings: string
+        privatePendings: PendingItem[] | null
+        publicPendings: PendingItem[] | null
       },
       {}
     >(`/api/launchpad/${props.lanchpadId}/status/${props.address}`)({}, config),
@@ -78,4 +79,14 @@ export interface RandomLaunchpadItem {
   price: number
   contentType: string
   contentURI: string
+}
+
+export interface PendingItem {
+  buyerAddress: string
+  inscriptionId: string
+  launchpadId: number
+  orderId: number
+  status: OrderStatus
+  txHash: string
+  whiteListId: number
 }

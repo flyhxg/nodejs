@@ -16,6 +16,7 @@ import R from '../../../utils/http/request'
 import { Services } from '../../../utils/http/Services'
 import { BuyLoadingStage } from '../../../hooks/useBuyPsbt'
 import useBuyLaunchpad from '../../../hooks/useBuyLaunchpad'
+import { OrderStatus } from '../../../utils/type'
 
 enum BuyType {
   Private,
@@ -40,11 +41,12 @@ export default function BuyBox(props: { item: LaunchpadItem }) {
 
   const privateStage = useStage(props.item.privateStartTime, props.item.privateEndTime)
   const publicStage = useStage(props.item.publicStartTime, props.item.publicEndTime)
+  const privatePending = (launchpadStatus?.privatePendings || [])[0]?.status === OrderStatus.Pending
+  const publicPending = (launchpadStatus?.publicPendings || [])[0]?.status === OrderStatus.Pending
   const canPrivate =
-    launchpadStatus?.hasWhiteList &&
-    launchpadStatus.whiteListValid &&
-    !launchpadStatus.privatePendings &&
-    privateStage === Stage.STARTED
+    launchpadStatus?.hasWhiteList && launchpadStatus.whiteListValid && !privatePending && privateStage === Stage.STARTED
+  const canPublic = launchpadStatus?.publicValid && !publicPending && publicStage === Stage.STARTED
+
   const [type, setType] = useState(privateStage === Stage.STARTED ? BuyType.Private : BuyType.Public)
 
   const { buyPsbt, loading, loadingTx } = useBuyLaunchpad(
@@ -52,7 +54,6 @@ export default function BuyBox(props: { item: LaunchpadItem }) {
     type === BuyType.Private ? props.item.privatePrice : props.item.publicPrice
   )
 
-  const canPublic = launchpadStatus?.publicValid && !launchpadStatus.publicPendings && publicStage === Stage.STARTED
   const now = moment().unix()
 
   return (
@@ -85,8 +86,8 @@ export default function BuyBox(props: { item: LaunchpadItem }) {
         <StyledButton
           isLoading={
             (loading !== BuyLoadingStage.NotStart && loading !== BuyLoadingStage.Done) ||
-            (type === BuyType.Private && !!launchpadStatus?.privatePendings) ||
-            (type === BuyType.Public && !!launchpadStatus?.publicPendings)
+            (type === BuyType.Private && privatePending) ||
+            (type === BuyType.Public && publicPending)
           }
           disabled={
             type === BuyType.None ||
