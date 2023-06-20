@@ -3,6 +3,9 @@ import Modal from './Modal'
 import { XButton } from '../common/XButton'
 import useCreateDummyUtxos from '../../../hooks/useCreateDummyUtxo'
 import { AddressTxsUtxo } from '@mempool/mempool.js/lib/interfaces'
+import { sleep } from '../../../utils'
+import { mempool } from '../../../utils/mempool'
+import { BuyLoadingStage } from '../../../hooks/useBuyLaunchpad'
 
 export default function PreparWalletModal(props: {
   open: boolean

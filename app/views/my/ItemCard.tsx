@@ -10,6 +10,7 @@ import { NFTItem } from '../../../utils/http/Services/user'
 import Link from 'next/link'
 import Loading from '../common/Loading'
 import { OrderStatus } from '../../../utils/type'
+import { getImageUri } from '../../../utils'
 
 export default function ItemCard(props: { item: NFTItem; onListed: () => void }) {
   const { openModal } = useModal()
@@ -17,7 +18,7 @@ export default function ItemCard(props: { item: NFTItem; onListed: () => void })
   return (
     <Link href={`/detail/${props.item.id}`}>
       <CardWrapper>
-        <CardImage src={Images.HOME.COVER_PNG}>{props.item.listed && <OnSale>On Sale</OnSale>}</CardImage>
+        <CardImage src={getImageUri(props.item.content_uri)}>{props.item.listed && <OnSale>On Sale</OnSale>}</CardImage>
         <InfoWrapper>
           <InfoTitle>{props.item.name}</InfoTitle>
           <InfoText>Inscription #{props.item.number}</InfoText>

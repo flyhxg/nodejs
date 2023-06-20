@@ -66,6 +66,8 @@ export interface LaunchpadItem {
   publicStartTime: number
   publicEndTime: number
   isPublicEnd: boolean
+  whitelist_rule: string
+  about: string
 }
 
 export interface RandomLaunchpadItem {

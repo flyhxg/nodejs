@@ -8,7 +8,8 @@ import { useCallback, useState } from 'react'
 import { useWallet } from '../app/context/WalletContext'
 import { isP2SHAddress, mapUtxos } from '../utils/transaction'
 import { DialogType, useDialog } from '../app/context/DialogContext'
-import { getErrorMsg } from '../utils'
+import { getErrorMsg, sleep } from '../utils'
+import { mempool } from '../utils/mempool'
 
 export default function useCreateDummyUtxos() {
   const { account, publicKey, signPsbt, pushPsbt } = useWallet()
@@ -22,6 +23,17 @@ export default function useCreateDummyUtxos() {
         const psbtHex = await generateUnsignedCreateDummyUtxoPSBTHex(account, publicKey, unqualifiedUtxos, 'fastestFee')
         const signedPsbt = await signPsbt(psbtHex)
         const tx = await pushPsbt(signedPsbt)
+        let retry = 0
+        try {
+          while (true) {
+            const rst = await isCreated(tx, account)
+            if (rst) return true
+            await sleep(3000)
+          }
+        } catch (e) {
+          retry++
+          if (retry === 3) return false
+        }
         return true
       } catch (e) {
         console.error(e)
@@ -34,6 +46,15 @@ export default function useCreateDummyUtxos() {
     [account, signPsbt, publicKey]
   )
   return { create, loading }
+}
+
+async function isCreated(txid: string, account: string) {
+  const {
+    bitcoin: { addresses },
+  } = mempool()
+  const utxoList = await addresses.getAddressTxsUtxo({ address: account })
+  const result = utxoList.some((x) => x.txid === txid)
+  return result
 }
 
 export async function generateUnsignedCreateDummyUtxoPSBTHex(

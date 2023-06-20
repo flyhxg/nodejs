@@ -27,7 +27,7 @@ export default async function Page(props: { params: { id: string } }) {
           />
           <TxInfoBox item={data} />
         </div>
-        <TabsContent desc={data.description} />
+        <TabsContent about={data.about} rule={data.whitelist_rule} />
       </div>
       <Footer />
     </>
