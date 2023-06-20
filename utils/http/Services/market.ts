@@ -20,6 +20,7 @@ export const marketService = {
       makerFeeBp: number
       address: string
       signedListingPSBT: string
+      orderType: string
     }
   >('/api/order'),
   mergeOrder: postHttpService<

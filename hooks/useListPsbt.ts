@@ -53,6 +53,7 @@ export default function useListPsbt(id: string) {
           makerFeeBp,
           address: account,
           signedListingPSBT: psbtBase64,
+          orderType: 'order',
         })
         openDialog(DialogType.Success, { title: 'Listing success.', desc: 'You successfully listed an inscription.' })
         return true
