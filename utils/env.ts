@@ -17,7 +17,7 @@ const prod: EnvParams = {
   mempoolHost: 'mempool.space',
   baseURL: 'https://tests.havenmarket.xyz',
   chain: 'btc-livenet',
-  explorer: 'http://3.19.120.151:8081',
+  explorer: 'https://ordinals.com',
 }
 const test: EnvParams = {
   network: 'testnet',
