@@ -22,7 +22,7 @@ export default function useCancelListing() {
           inscriptionId: id,
           chain: env.chain,
           signMessage: signedText,
-          publicKey,
+          // publicKey,
         }
         const res = await Services.marketService.cancelOrder(params)
         return true
