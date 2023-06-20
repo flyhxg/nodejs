@@ -71,6 +71,7 @@ function ToolBar() {
   const { top, onTopChange, display, onDisplayChange, sort, setSort } = useFilterContext()
   return (
     <BarWrapper>
+      <StyledTitle>Rarity</StyledTitle>
       <TopSelector>
         <SelectorItem isSelected={top === Top.Top_1} onClick={() => onTopChange(Top.Top_1)}>
           Top 1%
@@ -103,6 +104,15 @@ function ToolBar() {
 
 const BarWrapper = styled.div`
   ${commonStyles.flexBetween}
+`
+
+const StyledTitle = styled.h3`
+  font-size: 26px;
+  line-height: 26px;
+  color: #efefef;
+  position: absolute;
+  left: 0;
+  top: -43px;
 `
 
 const TopSelector = styled.div`
