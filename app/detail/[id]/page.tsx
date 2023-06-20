@@ -6,6 +6,8 @@ import AttrInfoBox from './AttrInfoBox'
 import Activities from './Activities'
 import Footer from '../../views/footer'
 import { Services } from '../../../utils/http/Services'
+import { getImageUri } from '../../../utils'
+import { XImage } from '../../views/common/XImage'
 
 export default async function Page(props: { params: { id: string } }) {
   const id = props.params.id
@@ -18,7 +20,7 @@ export default async function Page(props: { params: { id: string } }) {
     <>
       <div className={s.wrapper}>
         <div className={s.left}>
-          <Image src={Images.LAUNCHPAD.COVER_PNG} alt={'cover'} width={500} height={500} />
+          <XImage src={getImageUri(nftItem.contentURI, 500)} alt={'cover'} style={{ width: 500, height: 500 }} />
           <AttrInfoBox nftItem={nftItem} order={order} />
         </div>
         <div className={s.right}>
