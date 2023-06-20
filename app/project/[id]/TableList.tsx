@@ -9,6 +9,7 @@ import Image from 'next/image'
 import Loading from '../../views/common/Loading'
 import { OrderStatus } from '../../../utils/type'
 import AddressLink from '../../views/common/AddressLink'
+import moment from 'moment'
 
 export const columns: TableColumn<OrderItem>[] = [
   {
@@ -49,7 +50,7 @@ export const columns: TableColumn<OrderItem>[] = [
   },
   {
     name: 'Listed',
-    render: () => <>44m Ago</>,
+    render: (data) => <>{moment.unix(data.listing_time).fromNow()}</>,
   },
 ]
 
