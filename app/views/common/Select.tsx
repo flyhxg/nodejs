@@ -16,7 +16,11 @@ export function Select<T>(props: {
       <span>{target?.label || props.placeHolder || 'Select ...'}</span>
       <SelectItemsWrapper>
         {props.selections.map((selection) => (
-          <SelectItem selected={selection.value === props.value} onClick={() => props.onChange(selection.value)}>
+          <SelectItem
+            key={selection.label}
+            selected={selection.value === props.value}
+            onClick={() => props.onChange(selection.value)}
+          >
             {selection.label}
           </SelectItem>
         ))}
