@@ -11,10 +11,12 @@ import { OrderDetail } from '../../../utils/http/Services/market'
 import { useRequest } from 'ahooks'
 import { Services } from '../../../utils/http/Services'
 import R from '../../../utils/http/request'
+import { OrdinalSatoshi } from '../../../utils/SatoshiRarity'
 
 export default function AttrInfoBox(props: { nftItem: IOrdItem; order: OrderDetail }) {
   const { nftItem } = props
   const { data } = useRequest(R(Services.marketService.getInscriptionInfo, props.nftItem.id), {})
+  const ordinal = new OrdinalSatoshi(+(data?.sat_ordinal || 0))
   return (
     <BoxWrapper>
       <Title>
@@ -44,15 +46,15 @@ export default function AttrInfoBox(props: { nftItem: IOrdItem; order: OrderDeta
       </AttrItem>
       <AttrItem>
         <span className={'title'}>Sat Rarity</span>
-        <span className={'value'}>{data?.sat_rarity}</span>
+        <span className={'value'}>{ordinal.rarity}</span>
       </AttrItem>
       <AttrItem>
         <span className={'title'}>Sat Number</span>
-        <span className={'value'}>{data?.sat_ordinal}</span>
+        <span className={'value'}>{ordinal.ordinal}</span>
       </AttrItem>{' '}
       <AttrItem>
         <span className={'title'}>Sat Name</span>
-        <span className={'value'}>{nftItem.satName}</span>
+        <span className={'value'}>{ordinal.name}</span>
       </AttrItem>
     </BoxWrapper>
   )
