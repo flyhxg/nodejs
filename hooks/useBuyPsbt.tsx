@@ -83,6 +83,7 @@ export default function useBuyPsbt(nftItem?: IOrdItem, price?: number) {
         inscriptionId: nftItem.id,
         output: nftItem.output,
         signedBuyerPSBT: base64,
+        buyerAddress: account,
       })
       setLoading(BuyLoadingStage.WaitingConfirm)
       setLoadingTx(data)

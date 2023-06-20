@@ -29,6 +29,7 @@ export const marketService = {
       inscriptionId: string
       output: string
       signedBuyerPSBT: string
+      buyerAddress: string
     }
   >('/api/order/merge'),
   cancelOrder: postHttpService<{}, { address: string; inscriptionId: string; chain: string; signMessage: string }>(
