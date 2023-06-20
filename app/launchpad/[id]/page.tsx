@@ -8,6 +8,7 @@ import { Services } from '../../../utils/http/Services'
 import { LaunchpadItem } from '../../../utils/http/Services/launchpad'
 import BuyBox from './BuyBox'
 import { XImage } from '../../views/common/XImage'
+import { getImageUri } from '../../../utils'
 
 // const BuyBox = dynamic(() => import('./BuyBox'), { ssr: false })
 
@@ -17,7 +18,12 @@ export default async function Page(props: { params: { id: string } }) {
     <>
       <div className={s.wrapper}>
         <div className={s.txInfoWrapper}>
-          <XImage src={data.logo} alt={'nft cover'} className={s.image} style={{ width: 500, height: 500 }} />
+          <XImage
+            src={getImageUri(data.logo, 500)}
+            alt={'nft cover'}
+            className={s.image}
+            style={{ width: 500, height: 500 }}
+          />
           <TxInfoBox item={data} />
         </div>
         <TabsContent desc={data.description} />

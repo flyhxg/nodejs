@@ -7,13 +7,14 @@ import { IOrdItem } from '../../../lib/msigner'
 import InscriptionLink from '../../views/common/InscriptionLink'
 import AddressLink from '../../views/common/AddressLink'
 import TxHashLink from '../../views/common/TxHashLink'
+import { OrderDetail } from '../../../utils/http/Services/market'
 
-export default function AttrInfoBox(props: { nftItem: IOrdItem }) {
+export default function AttrInfoBox(props: { nftItem: IOrdItem; order: OrderDetail }) {
   const { nftItem } = props
   return (
     <BoxWrapper>
       <Title>
-        Bored Ape Tacht Club <AuthIcon />
+        {props.order.collection_name} <AuthIcon />
       </Title>
       <AttrItem>
         <span className={'title'}>Inscription ID</span>
@@ -37,13 +38,13 @@ export default function AttrInfoBox(props: { nftItem: IOrdItem }) {
           <TxHashLink txid={nftItem.genesisTransaction} shorten={10} />
         </span>
       </AttrItem>
-      <AttrItem>
-        <span className={'title'}>Sat Rarity</span>
-        <span className={'value'}>COMMON</span>
-      </AttrItem>
+      {/*<AttrItem>*/}
+      {/*  <span className={'title'}>Sat Rarity</span>*/}
+      {/*  <span className={'value'}>COMMON</span>*/}
+      {/*</AttrItem>*/}
       <AttrItem>
         <span className={'title'}>Sat Number</span>
-        <span className={'value'}>{nftItem.sat}</span>
+        <span className={'value'}>{props.order.sat_number}</span>
       </AttrItem>{' '}
       <AttrItem>
         <span className={'title'}>Sat Name</span>

@@ -37,3 +37,9 @@ export function parseSat(_amount: number | string) {
   if (isNaN(+_amount)) return 0
   return ONE_BTC.times(+_amount).toNumber()
 }
+
+export function getImageUri(_url: string, _size?: number) {
+  const size = _size || 256
+  const url = `https://bananas.market/v1/img-compress?uri=${_url}&w=${size}&h=${size}`
+  return url
+}

@@ -58,7 +58,7 @@ export const marketService = {
       }
       return ordItem
     }),
-  orderDetail: getHttpService<OrderDetail, { inscription_id: string; buyer_address: string }>(`/api/order/detail`),
+  orderDetail: getHttpService<OrderDetail, { inscription_id: string; buyer_address?: string }>(`/api/order/detail`),
   isInscriptionExist: getHttpService<boolean, { tx_id: string; vout: number }>('/api/inscription/exist'),
 }
 

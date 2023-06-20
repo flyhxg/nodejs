@@ -7,12 +7,13 @@ import { XImage } from '../../views/common/XImage'
 import { CollectionItem } from '../../../utils/http/Services/project'
 import moment from 'moment'
 import Link from 'next/link'
+import { getImageUri } from '../../../utils'
 
 export default function ProjectInfo(props: { item: CollectionItem }) {
   return (
     <Wrapper>
       <InfoWrapper>
-        <Logo src={props.item.logo} />
+        <Logo src={getImageUri(props.item.logo, 200)} />
         <InfoBox>
           <Title>
             {props.item.name} <AuthIcon />

@@ -24,7 +24,7 @@ export default function TxInfoBox(props: { nftItem: IOrdItem }) {
   const { data: order } = useRequest(
     R(Services.marketService.orderDetail, { buyer_address: account as string, inscription_id: props.nftItem.id }),
     {
-      ready: !!account,
+      // ready: !!account,
       refreshDeps: [account],
     }
   )

@@ -7,7 +7,7 @@ import { XButton } from '../../views/common/XButton'
 import { XImage } from '../../views/common/XImage'
 import Link from 'next/link'
 import { OrderItem } from '../../../utils/http/Services/project'
-import { formatSat } from '../../../utils'
+import { formatSat, getImageUri } from '../../../utils'
 import { Display, OrderStatus } from '../../../utils/type'
 import { useWallet } from '../../context/WalletContext'
 import Loading from '../../views/common/Loading'
@@ -19,7 +19,7 @@ export default function ItemCard(props: { order: OrderItem }) {
     <Link href={`/detail/${props.order.inscription_id}`}>
       <CardWrapper>
         <CardWithName>
-          <CardImage src={props.order.content_uri} />
+          <CardImage src={getImageUri(props.order.content_uri)} />
           <Name>{props.order.name}</Name>
           {props.order.order_status === OrderStatus.Pending && (
             <LoadingCard>

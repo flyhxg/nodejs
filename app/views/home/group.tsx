@@ -4,9 +4,9 @@ import s from './group.module.scss'
 import Link from 'next/link'
 import { LaunchpadItem } from '../../../utils/http/Services/launchpad'
 import { XImage } from '../common/XImage'
+import { getImageUri } from '../../../utils'
 
 export function LaunchpadGroup(props: { title: string; items: LaunchpadItem[] }) {
-  console.log('props', props)
   const emptyPad = 3 - props.items.length
   let empty: GroupItem[] = []
   if (emptyPad > 0) {
@@ -28,7 +28,7 @@ export function LaunchpadGroup(props: { title: string; items: LaunchpadItem[] })
             desc: item.description,
             status: Status.Live,
             id: item.id,
-            logo: item.logo,
+            logo: getImageUri(item.logo),
           }}
         />
       ))}
