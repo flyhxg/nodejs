@@ -14,6 +14,7 @@ import { getImageUri } from '../../../utils'
 
 export default async function Page(props: { params: { id: string } }) {
   const data = await Services.launchpadService.launchpadDetail(+props.params.id, { cache: 'no-store' })
+  console.log('data', data)
   return (
     <>
       <div className={s.wrapper}>

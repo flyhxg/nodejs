@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import { Images } from '../../../utils/images'
 import s from './group.module.scss'
 import Link from 'next/link'

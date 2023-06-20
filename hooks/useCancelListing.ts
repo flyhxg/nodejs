@@ -7,12 +7,12 @@ import { DialogType, useDialog } from '../app/context/DialogContext'
 import { getErrorMsg } from '../utils'
 
 export default function useCancelListing() {
-  const { account, signMessage } = useWallet()
+  const { account, signMessage, publicKey } = useWallet()
   const [loading, setLoading] = useState(false)
   const { openDialog } = useDialog()
   const cancel = useCallback(
     async (id: string) => {
-      if (!account) return false
+      if (!account || !publicKey) return false
       try {
         setLoading(true)
         const text = `cancel:${id}`
@@ -22,6 +22,7 @@ export default function useCancelListing() {
           inscriptionId: id,
           chain: env.chain,
           signMessage: signedText,
+          publicKey,
         }
         const res = await Services.marketService.cancelOrder(params)
         return true
@@ -32,7 +33,7 @@ export default function useCancelListing() {
         setLoading(false)
       }
     },
-    [account]
+    [account, publicKey]
   )
   return { cancel, loading }
 }

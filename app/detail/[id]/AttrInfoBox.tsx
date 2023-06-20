@@ -8,9 +8,13 @@ import InscriptionLink from '../../views/common/InscriptionLink'
 import AddressLink from '../../views/common/AddressLink'
 import TxHashLink from '../../views/common/TxHashLink'
 import { OrderDetail } from '../../../utils/http/Services/market'
+import { useRequest } from 'ahooks'
+import { Services } from '../../../utils/http/Services'
+import R from '../../../utils/http/request'
 
 export default function AttrInfoBox(props: { nftItem: IOrdItem; order: OrderDetail }) {
   const { nftItem } = props
+  const { data } = useRequest(R(Services.marketService.getInscriptionInfo, props.nftItem.id), {})
   return (
     <BoxWrapper>
       <Title>
@@ -38,13 +42,13 @@ export default function AttrInfoBox(props: { nftItem: IOrdItem; order: OrderDeta
           <TxHashLink txid={nftItem.genesisTransaction} shorten={10} />
         </span>
       </AttrItem>
-      {/*<AttrItem>*/}
-      {/*  <span className={'title'}>Sat Rarity</span>*/}
-      {/*  <span className={'value'}>COMMON</span>*/}
-      {/*</AttrItem>*/}
+      <AttrItem>
+        <span className={'title'}>Sat Rarity</span>
+        <span className={'value'}>{data?.sat_rarity}</span>
+      </AttrItem>
       <AttrItem>
         <span className={'title'}>Sat Number</span>
-        <span className={'value'}>{props.order.sat_number}</span>
+        <span className={'value'}>{data?.sat_ordinal}</span>
       </AttrItem>{' '}
       <AttrItem>
         <span className={'title'}>Sat Name</span>

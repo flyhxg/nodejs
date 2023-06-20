@@ -17,7 +17,6 @@ import { Services } from '../../../utils/http/Services'
 import { BuyLoadingStage } from '../../../hooks/useBuyPsbt'
 import useBuyLaunchpad from '../../../hooks/useBuyLaunchpad'
 import { OrderStatus } from '../../../utils/type'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
 enum BuyType {

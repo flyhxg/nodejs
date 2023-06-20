@@ -33,9 +33,10 @@ export const marketService = {
       buyerAddress: string
     }
   >('/api/order/merge'),
-  cancelOrder: postHttpService<{}, { address: string; inscriptionId: string; chain: string; signMessage: string }>(
-    '/api/order/cancel'
-  ),
+  cancelOrder: postHttpService<
+    {},
+    { address: string; inscriptionId: string; chain: string; signMessage: string; publicKey: string }
+  >('/api/order/cancel'),
 
   getOrdItem: (id: string, config?: RequestConfig) =>
     getHttpService<OrdServerItem, {}>('/api/inscription/info/' + id)({}, config).then((res) => {
