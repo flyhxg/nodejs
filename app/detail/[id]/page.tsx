@@ -20,7 +20,11 @@ export default async function Page(props: { params: { id: string } }) {
     <>
       <div className={s.wrapper}>
         <div className={s.left}>
-          <XImage src={getImageUri(nftItem.contentURI, 500)} alt={'cover'} style={{ width: 500, height: 500 }} />
+          <XImage
+            src={getImageUri(nftItem.contentURI, 500)}
+            alt={'cover'}
+            style={{ width: 500, height: 500, display: 'inline-block' }}
+          />
           <AttrInfoBox nftItem={nftItem} order={order} />
         </div>
         <div className={s.right}>

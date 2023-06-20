@@ -191,14 +191,14 @@ const Button = styled(XButton)`
 const RarityListWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(6, 120px);
-  grid-template-rows: repeat(2, 70px);
+  grid-template-rows: repeat(2, auto);
   grid-gap: 11px 7px;
   margin-top: 44px;
 `
 
 const RarityItem = styled.div`
   width: 120px;
-  height: 70px;
+  min-height: 70px;
   position: relative;
   padding-top: 18px;
   padding-left: 22px;
