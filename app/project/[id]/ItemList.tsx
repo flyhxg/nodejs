@@ -12,6 +12,8 @@ import Empty from '../../views/common/Empty'
 import Table from '../../views/table/Table'
 import { columns } from './TableList'
 import { useRouter } from 'next/navigation'
+import { Select, SelectionItem } from '../../views/common/Select'
+import { Sort } from '../../../utils/http/Services/project'
 
 export default function ItemList() {
   const { orders, isLoading, display } = useFilterContext()
@@ -59,8 +61,13 @@ const ItemListWrapper = styled.div`
   position: relative;
 `
 
+const priceSelection: SelectionItem<Sort>[] = [
+  { value: Sort.PriceDesc, label: 'Price High To Low' },
+  { value: Sort.PriceAsc, label: 'Price: Low To High' },
+]
+
 function ToolBar() {
-  const { top, onTopChange, display, onDisplayChange } = useFilterContext()
+  const { top, onTopChange, display, onDisplayChange, sort, setSort } = useFilterContext()
   return (
     <BarWrapper>
       <TopSelector>
@@ -75,6 +82,7 @@ function ToolBar() {
         </SelectorItem>
       </TopSelector>
       <DisplaySelector>
+        <Select selections={priceSelection} value={sort} onChange={setSort} />
         <DisplayItem
           onClick={() => onDisplayChange(Display.GRID)}
           isSelected={display === Display.GRID}

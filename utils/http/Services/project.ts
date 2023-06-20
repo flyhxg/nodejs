@@ -1,11 +1,17 @@
 import { getHttpService, PaginationData, PaginationParams, RequestConfig } from '../service'
 import { OrderStatus } from '../../type'
 
+export enum Sort {
+  PriceAsc = 'price',
+  PriceDesc = '-price',
+}
+
 export const projectService = {
   // @ts-ignore
-  orderList: getHttpService<PaginationData<OrderItem>, PaginationParams & { top: number; collection_id: number }>(
-    '/api/order/list'
-  ),
+  orderList: getHttpService<
+    PaginationData<OrderItem>,
+    PaginationParams & { top: number; collection_id: number; sort: Sort }
+  >('/api/order/list'),
   getCollectionDetail: (id: number, config?: RequestConfig) =>
     getHttpService<CollectionItem, {}>(`/api/collection/detail/${id}`)({}, config),
   getCollectionList: getHttpService<PaginationData<CollectionDisplayItem>, PaginationParams>('/api/collection/list'),

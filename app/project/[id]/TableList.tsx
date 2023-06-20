@@ -7,6 +7,7 @@ import { formatSat } from '../../../utils'
 import { commonStyles } from '../../../utils/commonStyles'
 import Image from 'next/image'
 import Loading from '../../views/common/Loading'
+import { OrderStatus } from '../../../utils/type'
 
 export const columns: TableColumn<OrderItem>[] = [
   {
@@ -15,7 +16,7 @@ export const columns: TableColumn<OrderItem>[] = [
       <>
         <ImageIcon src={Images.HOME.COVER_PNG} />
         <Name>{data.name}</Name>
-        <StyledLoading />
+        {data.order_status === OrderStatus.Pending && <StyledLoading />}
       </>
     ),
   },

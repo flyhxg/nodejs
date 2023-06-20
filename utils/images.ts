@@ -1,6 +1,7 @@
 
 const COMMON = {
   NOTFOUND_SVG: '/images/common/NotFound.svg',
+  ARROW_DOWN_SVG: '/images/common/arrow_down.svg',
   AUTHED_SVG: '/images/common/authed.svg',
   DISPLAY_GRID_SVG: '/images/common/display_grid.svg',
   DISPLAY_GRID_ACTIVE_SVG: '/images/common/display_grid_active.svg',
