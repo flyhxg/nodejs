@@ -24,7 +24,7 @@ export interface PaginationEventData<T> {
   total: number
 }
 
-export interface PaginationParams {
+export interface PaginationParams extends Params {
   page: number
   limit: number
 }

@@ -8,6 +8,7 @@ export const projectService = {
   ),
   getCollectionDetail: (id: number, config?: RequestConfig) =>
     getHttpService<CollectionItem, {}>(`/api/collection/detail/${id}`)({}, config),
+  getCollectionList: getHttpService<PaginationData<CollectionDisplayItem>, PaginationParams>('/api/collection/list'),
 }
 
 export interface OrderItem {
@@ -40,4 +41,11 @@ export interface CollectionItem {
   telegram: string
   twitter: string
   create_time: number
+}
+
+export interface CollectionDisplayItem {
+  Id: number
+  Name: string
+  Logo: string
+  TotalSupply: number
 }

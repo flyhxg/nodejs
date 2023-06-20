@@ -61,6 +61,10 @@ export const marketService = {
     }),
   orderDetail: getHttpService<OrderDetail, { inscription_id: string; buyer_address?: string }>(`/api/order/detail`),
   isInscriptionExist: getHttpService<boolean, { tx_id: string; vout: number }>('/api/inscription/exist'),
+  getInscriptionInfo: (id: string, config?: RequestConfig) =>
+    fetch(`https://api.hiro.so/ordinals/v1/inscriptions/${id}`, config).then((res) =>
+      res.json()
+    ) as Promise<InscriptionItem>,
 }
 
 export interface OrderDetail {
@@ -98,4 +102,28 @@ interface OrdServerItem {
   listed: boolean
   sat_name: string
   location_block_height: number
+}
+
+export interface InscriptionItem {
+  id: string
+  number: number
+  address: string
+  genesis_address: string
+  genesis_block_height: number
+  genesis_block_hash: string
+  genesis_tx_id: string
+  genesis_fee: string
+  genesis_timestamp: number
+  tx_id: string
+  location: string
+  output: string
+  value: string
+  offset: string
+  sat_ordinal: string
+  sat_rarity: string
+  sat_coinbase_height: number
+  mime_type: string
+  content_type: string
+  content_length: number
+  timestamp: number
 }

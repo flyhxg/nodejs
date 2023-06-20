@@ -65,26 +65,36 @@ export function LaunchpadGroup(props: { title: string; items: LaunchpadItem[] })
   )
 }
 
-export function CollectionGroup(props: { title: string; type: string; item: GroupItem[] }) {
+export function CollectionGroup(props: { title: string; type: string; items: GroupItem[] }) {
+  const emptyPad = 3 - props.items.length
+  let empty: GroupItem[] = []
+  if (emptyPad > 0) {
+    empty = new Array(emptyPad).fill({
+      name: '',
+      desc: '',
+      status: Status.ComingSoon,
+      id: 3,
+      logo: '',
+    })
+  }
   return (
     <div className={s.groupWrapper}>
-      {props.item.map((item, index) => (
+      {props.items.map((item, index) => (
         <Item key={index} type={props.type} item={item} />
       ))}
-      {/*<Link href={`/${props.type}/6`}>*/}
-      {/*  <Item status={Status.Live} />*/}
-      {/*</Link>*/}
-      {/*<Link href={`/${props.type}/2`}>*/}
-      {/*  <Item status={Status.UpComing} />*/}
-      {/*</Link>*/}
-      {/*<Link href={`/${props.type}/3`}>*/}
-      {/*  <Item status={Status.ComingSoon} />*/}
-      {/*</Link>*/}
-      {/*<Item status={Status.ComingSoon} />*/}
-
-      {/*<Item status={Status.ComingSoon} />*/}
-
-      {/*<Item status={Status.ComingSoon} />*/}
+      {empty.map((item, index) => (
+        <Item
+          key={index + 'i'}
+          type={props.type}
+          item={{
+            name: item.name,
+            desc: item.desc,
+            status: item.status,
+            id: item.id,
+            logo: '',
+          }}
+        />
+      ))}
 
       <h3 className={s.groupTitle}>{props.title}</h3>
     </div>

@@ -30,7 +30,10 @@ const launchpad: GroupItem[] = [
 ]
 
 export default async function Page() {
-  const { items } = await Services.launchpadService.getLaunchpadList({ pageNo: 1, pageSize: 10 }, { cache: 'no-store' })
+  const [{ items }, { items: collectionItems }] = await Promise.all([
+    Services.launchpadService.getLaunchpadList({ pageNo: 1, pageSize: 10 }, { cache: 'no-store' }),
+    Services.projectService.getCollectionList({ page: 1, limit: 10 }, { cache: 'no-cache' }),
+  ])
   return (
     <>
       <div className={s.pageWrapper}>
@@ -51,7 +54,17 @@ export default async function Page() {
         </div>
         <div className={s.padsWrapper}>
           <LaunchpadGroup title="LAUNCHPAD" items={items} />
-          <CollectionGroup title="NEW COLLECTIONS" type={'project'} item={launchpad} />
+          <CollectionGroup
+            title="NEW COLLECTIONS"
+            type={'project'}
+            items={collectionItems.map((x) => ({
+              name: x.Name,
+              logo: x.Logo,
+              id: x.Id,
+              status: Status.Live,
+              desc: 'View Collection',
+            }))}
+          />
         </div>
       </div>
       <Footer />
