@@ -2,37 +2,13 @@ import Image from 'next/image'
 import { Images } from '../utils/images'
 import s from './page.module.scss'
 import Footer from './views/footer'
-import { CollectionGroup, GroupItem, LaunchpadGroup, Status } from './views/home/group'
+import { CollectionGroup, LaunchpadGroup, Status } from './views/home/group'
 import { Services } from '../utils/http/Services'
-
-const launchpad: GroupItem[] = [
-  {
-    name: 'Ordimon',
-    desc: 'View Collection',
-    status: Status.Live,
-    id: 6,
-    logo: '',
-  },
-  {
-    name: 'Ordimon',
-    desc: 'View Collection',
-    status: Status.Live,
-    id: 7,
-    logo: '',
-  },
-  {
-    name: '',
-    desc: '',
-    status: Status.ComingSoon,
-    id: 3,
-    logo: '',
-  },
-]
 
 export default async function Page() {
   const [{ items }, { items: collectionItems }] = await Promise.all([
-    Services.launchpadService.getLaunchpadList({ pageNo: 1, pageSize: 10 }, { cache: 'no-store' }),
-    Services.projectService.getCollectionList({ page: 1, limit: 10 }, { cache: 'no-cache' }),
+    Services.launchpadService.getLaunchpadList({ pageNo: 1, pageSize: 10 }, { next: { revalidate: 30 } }),
+    Services.projectService.getCollectionList({ page: 1, limit: 10 }, { next: { revalidate: 30 } }),
   ])
   return (
     <>

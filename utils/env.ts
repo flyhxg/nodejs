@@ -1,4 +1,4 @@
-export const isServer = undefined === typeof window
+export const isServer = 'undefined' === typeof window
 export const isBrowser = !isServer
 export const isTest = process.env.NEXT_PUBLIC_ENV === 'test'
 

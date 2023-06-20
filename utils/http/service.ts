@@ -1,6 +1,7 @@
 import { http, Params } from './http'
 import { Service } from 'ahooks/es/useRequest/src/types'
 import { ServerCode } from './serverCode'
+import { isServer } from '../env'
 
 export interface ResponseType<T> {
   code: number
@@ -94,7 +95,10 @@ function httpServiceNoBody<R, Q extends Params>(method: Exclude<Method, MethodWi
         if (res.code === 0 || res.code === 200) {
           return res.data
         } else {
-          throw new Error(res.message)
+          if (!isServer) {
+            throw new Error(res.message)
+          }
+          return null
         }
       })
   } as Service<R, [Q, RequestConfig | undefined] | [Q] | []>

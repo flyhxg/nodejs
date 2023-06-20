@@ -20,9 +20,9 @@ export default function ProjectInfo(props: { item: CollectionItem }) {
           </Title>
           <ProjectDesc>
             {props.item.description}
-            <More>
-              More <DownIcon />
-            </More>
+            {/*<More>*/}
+            {/*  More <DownIcon />*/}
+            {/*</More>*/}
           </ProjectDesc>
           <CreateAt>
             Create At <span>{moment.unix(props.item.create_time).format('YYYY.MM.DD')}</span>
@@ -42,7 +42,7 @@ export default function ProjectInfo(props: { item: CollectionItem }) {
         </InfoBox>
       </InfoWrapper>
       <SocialList>
-        <SocialItem src={Images.COMMON.LINK_SCAN_PNG} />
+        {/*<SocialItem src={Images.COMMON.LINK_SCAN_PNG} />*/}
         {props.item.web_site && (
           <Link href={props.item.web_site} target={'_blank'}>
             <SocialItem src={Images.COMMON.LINK_WEBSITE_PNG} />

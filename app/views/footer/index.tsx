@@ -13,9 +13,6 @@ export default function Footer() {
 
           <ComingSoon />
         </li>
-        {/*<li>*/}
-        {/*  <>LAUNCHPAD</> <ComingSoon />*/}
-        {/*</li>*/}
         <li>
           <>INSCRIBE</>
           <ComingSoon style={{ left: -70 }} />

@@ -9,12 +9,15 @@ import { LaunchpadItem } from '../../../utils/http/Services/launchpad'
 import BuyBox from './BuyBox'
 import { XImage } from '../../views/common/XImage'
 import { getImageUri } from '../../../utils'
+import { notFound } from 'next/navigation'
 
 // const BuyBox = dynamic(() => import('./BuyBox'), { ssr: false })
 
 export default async function Page(props: { params: { id: string } }) {
   const data = await Services.launchpadService.launchpadDetail(+props.params.id, { cache: 'no-store' })
-  console.log('data', data)
+  if (!data) {
+    notFound()
+  }
   return (
     <>
       <div className={s.wrapper}>
