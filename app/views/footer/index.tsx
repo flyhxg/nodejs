@@ -36,10 +36,10 @@ const socials = [
     icon: Images.SOCIALS.DISCORD_SVG,
     href: 'https://discord.gg/txAyHtWE',
   },
-  {
-    icon: Images.SOCIALS.TELEGRAM_SVG,
-    href: '',
-  },
+  // {
+  //   icon: Images.SOCIALS.TELEGRAM_SVG,
+  //   href: '',
+  // },
 ]
 
 function Socials() {
