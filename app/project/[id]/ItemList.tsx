@@ -59,6 +59,7 @@ const ItemListWrapper = styled.div`
   margin: 70px auto 0 auto;
   max-width: 1640px;
   position: relative;
+  padding-bottom: 100px;
 `
 
 const priceSelection: SelectionItem<Sort>[] = [

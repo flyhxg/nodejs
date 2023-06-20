@@ -14,7 +14,12 @@ export default function AddressLink(props: {
     : props.addr
 
   return (
-    <StyledLink target={'_blank'} href={`${env.mempoolAddress}/address/${props.addr}`} className={props.className}>
+    <StyledLink
+      target={'_blank'}
+      href={`${env.mempoolAddress}/address/${props.addr}`}
+      className={props.className}
+      style={props.style}
+    >
       {addr}
     </StyledLink>
   )

@@ -8,6 +8,7 @@ import { commonStyles } from '../../../utils/commonStyles'
 import Image from 'next/image'
 import Loading from '../../views/common/Loading'
 import { OrderStatus } from '../../../utils/type'
+import AddressLink from '../../views/common/AddressLink'
 
 export const columns: TableColumn<OrderItem>[] = [
   {
@@ -44,12 +45,7 @@ export const columns: TableColumn<OrderItem>[] = [
   },
   {
     name: 'Owner',
-    render: (data) => (
-      <InfoPrice>
-        <BtcIcon />
-        {formatSat(data.last_sale_price)} BTC
-      </InfoPrice>
-    ),
+    render: (data) => <AddressLink style={{ color: '#FFF' }} addr={data.owner} shorten={10} />,
   },
   {
     name: 'Listed',
