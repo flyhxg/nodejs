@@ -6,7 +6,7 @@ import Tabs, { TabItem } from '../../views/common/Tabs'
 export default function TabsContent(props: { desc: string }) {
   return (
     <StyledTab>
-      <TabItem name={'About Golen Egg'}>
+      <TabItem name={'About'}>
         <About>
           <AboutText>{props.desc}</AboutText>
         </About>

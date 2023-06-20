@@ -8,7 +8,7 @@ import { XImage } from '../../views/common/XImage'
 import Link from 'next/link'
 import { OrderItem } from '../../../utils/http/Services/project'
 import { formatSat } from '../../../utils'
-import { Display } from '../../../utils/type'
+import { Display, OrderStatus } from '../../../utils/type'
 import { useWallet } from '../../context/WalletContext'
 import Loading from '../../views/common/Loading'
 
@@ -19,11 +19,13 @@ export default function ItemCard(props: { order: OrderItem }) {
     <Link href={`/detail/${props.order.inscription_id}`}>
       <CardWrapper>
         <CardWithName>
-          <CardImage src={Images.HOME.COVER_PNG} />
+          <CardImage src={props.order.content_uri} />
           <Name>{props.order.name}</Name>
-          <LoadingCard>
-            <Loading size={20} />
-          </LoadingCard>
+          {props.order.order_status === OrderStatus.Pending && (
+            <LoadingCard>
+              <Loading size={20} />
+            </LoadingCard>
+          )}
         </CardWithName>
         <InfoPrice>
           <BtcIcon />
