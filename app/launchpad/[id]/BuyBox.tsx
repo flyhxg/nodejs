@@ -46,6 +46,7 @@ export default function BuyBox(props: { item: LaunchpadItem }) {
   const publicPending = (launchpadStatus?.publicPendings || [])[0]?.status === OrderStatus.Pending
   const privateBuyed = (launchpadStatus?.privatePendings || [])[0]?.status === OrderStatus.Success
   const publicBuyed = (launchpadStatus?.publicPendings || [])[0]?.status === OrderStatus.Success
+
   const canPrivate =
     launchpadStatus?.hasWhiteList && launchpadStatus.whiteListValid && !privatePending && privateStage === Stage.STARTED
   const canPublic = launchpadStatus?.publicValid && !publicPending && publicStage === Stage.STARTED

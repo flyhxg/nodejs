@@ -17,8 +17,10 @@ import SaleModal from '../../views/modal/SaleModal'
 import { useRequest } from 'ahooks'
 import R from '../../../utils/http/request'
 import { Services } from '../../../utils/http/Services'
+import { OrderStatus } from '../../../utils/type'
 
 export default function TxInfoBox(props: { nftItem: IOrdItem }) {
+  console.log('props', props)
   const { account, active, connected } = useWallet()
 
   const { data: order } = useRequest(
@@ -35,8 +37,12 @@ export default function TxInfoBox(props: { nftItem: IOrdItem }) {
   const showConnect = !connected
   const showBuy =
     loading < BuyLoadingStage.WaitingConfirm && connected && props.nftItem.listed && !isOwner && !order?.padding_tx_hash
-  const showListing = !props.nftItem.listed && isOwner
-  const showCancel = props.nftItem.listed && isOwner
+  const showListing = !props.nftItem.listed && isOwner && connected
+  const showTxLoading =
+    loading === BuyLoadingStage.WaitingConfirm || (!!order?.padding_tx_hash && order?.status === OrderStatus.Pending)
+  const showCancel = props.nftItem.listed && isOwner && connected && !showTxLoading
+  const loadingHash = loadingTx || order?.padding_tx_hash || ''
+
   const { openModal } = useModal()
 
   return (
@@ -103,11 +109,11 @@ export default function TxInfoBox(props: { nftItem: IOrdItem }) {
             </NormalButton>
           )}
         </ButtonsGroup>
-        {loading === BuyLoadingStage.WaitingConfirm && (
+        {showTxLoading && (
           <LoadingText>
             <Loading size={24} style={{ marginRight: 16 }} />
             Trading on the chain hash:
-            <TxHashLink style={{ color: 'white' }} txid={loadingTx} shorten={10} />
+            <TxHashLink style={{ color: 'white' }} txid={loadingHash} shorten={10} />
           </LoadingText>
         )}
       </PriceBox>
