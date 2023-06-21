@@ -30,7 +30,7 @@ export const FilterContext = createContext<{
 
 export function FilterContextProvider(props: { children: ReactNode }) {
   const params = useParams()
-  const [top, setTop] = useState<Top>(Top.Top_1)
+  const [top, setTop] = useState<Top>(Top.ALL)
   const [display, setDisplay] = useState<Display>(Display.GRID)
   const [sort, setSort] = useState<Sort>(Sort.PriceAsc)
   const { data, loadingMore, loading } = useWindowInfiniteScroll(

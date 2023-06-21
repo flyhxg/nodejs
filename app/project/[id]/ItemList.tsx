@@ -73,6 +73,9 @@ function ToolBar() {
     <BarWrapper>
       <StyledTitle>Rarity</StyledTitle>
       <TopSelector>
+        <SelectorItem isSelected={top === Top.ALL} onClick={() => onTopChange(Top.ALL)}>
+          ALL
+        </SelectorItem>
         <SelectorItem isSelected={top === Top.Top_1} onClick={() => onTopChange(Top.Top_1)}>
           Top 1%
         </SelectorItem>
@@ -81,9 +84,6 @@ function ToolBar() {
         </SelectorItem>
         <SelectorItem isSelected={top === Top.TOP_25} onClick={() => onTopChange(Top.TOP_25)}>
           Top 25%
-        </SelectorItem>
-        <SelectorItem isSelected={top === Top.ALL} onClick={() => onTopChange(Top.ALL)}>
-          ALL
         </SelectorItem>
       </TopSelector>
       <DisplaySelector>
