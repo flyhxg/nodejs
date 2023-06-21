@@ -1,5 +1,6 @@
 export enum Top {
-  Top_1 = 0,
+  ALL = 0,
+  Top_1 = 1,
   TOP_10 = 10,
   TOP_25 = 25,
 }

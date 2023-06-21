@@ -82,6 +82,9 @@ function ToolBar() {
         <SelectorItem isSelected={top === Top.TOP_25} onClick={() => onTopChange(Top.TOP_25)}>
           Top 25%
         </SelectorItem>
+        <SelectorItem isSelected={top === Top.ALL} onClick={() => onTopChange(Top.ALL)}>
+          ALL
+        </SelectorItem>
       </TopSelector>
       <DisplaySelector>
         <Select selections={priceSelection} value={sort} onChange={setSort} />
