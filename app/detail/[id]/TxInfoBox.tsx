@@ -47,7 +47,9 @@ export default function TxInfoBox(props: { nftItem: IOrdItem }) {
 
   return (
     <InfoBoxWrapper>
-      s<Title>Inscription #{props.nftItem.inscriptionNumber}</Title>
+      <Title>
+        {order?.name} (Inscription #{props.nftItem.inscriptionNumber})
+      </Title>
       <PriceBox>
         <PriceItem>
           <span className={'title'}>Current Price:</span>
