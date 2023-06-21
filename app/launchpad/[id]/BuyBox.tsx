@@ -50,9 +50,8 @@ export default function BuyBox(props: { item: LaunchpadItem }) {
   const isPrivateEnd = privateStage === Stage.ENDED || props.item.privateLimit <= 0
   const isPublicEnd = publicStage === Stage.ENDED || props.item.publicLimit <= 0
 
-  const canPrivate =
-    launchpadStatus?.hasWhiteList && launchpadStatus.whiteListValid && !privatePending && privateStage === Stage.STARTED
-  const canPublic = launchpadStatus?.publicValid && !publicPending && publicStage === Stage.STARTED
+  const canPrivate = launchpadStatus?.hasWhiteList && launchpadStatus.whiteListValid && !privatePending && !isPrivateEnd
+  const canPublic = launchpadStatus?.publicValid && !publicPending && !isPublicEnd
 
   const [type, setType] = useState(privateStage === Stage.STARTED ? BuyType.Private : BuyType.Public)
   const showCheck = (type === BuyType.Private && privateBuyed) || (type === BuyType.Public && publicBuyed)
