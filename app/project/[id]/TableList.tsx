@@ -3,7 +3,7 @@ import { OrderItem } from '../../../utils/http/Services/project'
 import styled from 'styled-components'
 import { XImage } from '../../views/common/XImage'
 import { Images } from '../../../utils/images'
-import { formatSat } from '../../../utils'
+import { formatSat, getImageUri } from '../../../utils'
 import { commonStyles } from '../../../utils/commonStyles'
 import Image from 'next/image'
 import Loading from '../../views/common/Loading'
@@ -16,7 +16,7 @@ export const columns: TableColumn<OrderItem>[] = [
     name: 'Item',
     render: (data) => (
       <>
-        <ImageIcon src={Images.HOME.COVER_PNG} />
+        <ImageIcon src={getImageUri(data.content_uri)} />
         <Name>{data.name}</Name>
         {data.order_status === OrderStatus.Pending && <StyledLoading />}
       </>
