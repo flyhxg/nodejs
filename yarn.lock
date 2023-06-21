@@ -2589,6 +2589,13 @@ neo-async@^2.6.2:
   resolved "https://registry.npmmirror.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
+next-nprogress-bar@^1.2.5:
+  version "1.2.5"
+  resolved "https://registry.npmmirror.com/next-nprogress-bar/-/next-nprogress-bar-1.2.5.tgz#f9bb65a218252b53e14303bd6d2ba15db409d6b9"
+  integrity sha512-4RWXRss28QS7/lRgrMZqUxDJdgAuWR2KL13dBOBaHyxiFUaNXjWRNZbJDkMa/5NCHSadsQD/49bHpSfjGlTVcQ==
+  dependencies:
+    nprogress "^0.2.0"
+
 next@13.4.3:
   version "13.4.3"
   resolved "https://registry.yarnpkg.com/next/-/next-13.4.3.tgz#7f417dec9fa2731d8c1d1819a1c7d0919ad6fc75"

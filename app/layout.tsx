@@ -8,6 +8,7 @@ import '../styles/nprogress.css'
 import WalletContextProvider from './context/WalletContext'
 import { Metadata } from 'next'
 import Script from 'next/script'
+import NProgressBar from './views/common/NProgressBar'
 
 export const metadata: Metadata = {
   title: 'Banana Market',
@@ -31,7 +32,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Script src={'/js/mempool.js'} />
       </head>
       <body>
-        {/*<NProgress />*/}
         <StyledComponentsRegistry>
           <WalletContextProvider>
             <DialogProvider>
@@ -42,6 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </DialogProvider>
           </WalletContextProvider>
         </StyledComponentsRegistry>
+        <NProgressBar />
       </body>
     </html>
   )
