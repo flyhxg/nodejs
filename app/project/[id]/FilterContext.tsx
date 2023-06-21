@@ -32,7 +32,7 @@ export function FilterContextProvider(props: { children: ReactNode }) {
   const params = useParams()
   const [top, setTop] = useState<Top>(Top.Top_1)
   const [display, setDisplay] = useState<Display>(Display.GRID)
-  const [sort, setSort] = useState<Sort>(Sort.PriceDesc)
+  const [sort, setSort] = useState<Sort>(Sort.PriceAsc)
   const { data, loadingMore, loading } = useWindowInfiniteScroll(
     I(Services.projectService.orderList, { limit: 20, top, collection_id: +params.id, sort }),
     {

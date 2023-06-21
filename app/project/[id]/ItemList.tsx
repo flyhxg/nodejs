@@ -63,8 +63,8 @@ const ItemListWrapper = styled.div`
 `
 
 const priceSelection: SelectionItem<Sort>[] = [
-  { value: Sort.PriceDesc, label: 'Price High To Low' },
   { value: Sort.PriceAsc, label: 'Price: Low To High' },
+  { value: Sort.PriceDesc, label: 'Price High To Low' },
 ]
 
 function ToolBar() {
