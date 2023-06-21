@@ -166,7 +166,7 @@ const PriceBox = styled.div`
   height: 216px;
   background: #1a1a1a;
   position: relative;
-  padding: 28px 74px 0 38px;
+  padding: 20px 74px 20px 38px;
   margin-top: 43px;
   ${commonStyles.flexBetween};
   flex-direction: column;
