@@ -290,9 +290,13 @@ export async function generateUnsignedBuyingPSBTBase64(
 
   if (changeValue < 0) {
     throw `Your wallet address doesn't have enough funds to buy this inscription.
-Price:      ${satToBtc(listing.seller.price)} BTC
-Required:   ${satToBtc(totalOutput + fee)} BTC
-Missing:    ${satToBtc(-changeValue)} BTC`
+Price:            ${satToBtc(listing.seller.price)} BTC
+totalInput:       ${satToBtc(totalInput)} BTC
+totalOutput:      ${satToBtc(totalOutput)} BTC
+fee:              ${satToBtc(fee)} BTC
+platformFee:      ${satToBtc(fee)} BTC
+Required:         ${satToBtc(totalOutput + fee)} BTC
+Missing:          ${satToBtc(-changeValue)} BTC`
   }
 
   // Change utxo
