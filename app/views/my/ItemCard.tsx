@@ -11,38 +11,44 @@ import Link from 'next/link'
 import Loading from '../common/Loading'
 import { OrderStatus } from '../../../utils/type'
 import { getImageUri } from '../../../utils'
+import { useRouter } from 'next/navigation'
 
 export default function ItemCard(props: { item: NFTItem; onListed: () => void }) {
   const { openModal } = useModal()
   const isPending = props.item.order_status === OrderStatus.Pending
+  const router = useRouter()
   return (
-    <Link href={`/detail/${props.item.id}`} prefetch={false}>
-      <CardWrapper>
-        <CardImage src={getImageUri(props.item.content_uri)}>{props.item.listed && <OnSale>On Sale</OnSale>}</CardImage>
-        <InfoWrapper>
-          <InfoTitle>{props.item.name}</InfoTitle>
-          <InfoText>Inscription #{props.item.number}</InfoText>
-          <SplitLine />
-          <Label>Battle Of BTC</Label>
-        </InfoWrapper>
-        {!props.item.listed && !isPending && (
-          <SaleButton
-            onClick={async (e) => {
-              e.stopPropagation()
-              e.preventDefault()
-              //@ts-ignore
-              const result = await openModal(SaleModal, { id: props.item.id })
-              if (result) {
-                props.onListed()
-              }
-            }}
-          >
-            <SaleIcon /> Sale
-          </SaleButton>
-        )}
-        {isPending && <StyledLoading />}
-      </CardWrapper>
-    </Link>
+    // <Link href={`/detail/${props.item.id}`} prefetch={false}>
+    <CardWrapper
+      onClick={() => {
+        router.push(`/detail/${props.item.id}`)
+      }}
+    >
+      <CardImage src={getImageUri(props.item.content_uri)}>{props.item.listed && <OnSale>On Sale</OnSale>}</CardImage>
+      <InfoWrapper>
+        <InfoTitle>{props.item.name}</InfoTitle>
+        <InfoText>Inscription #{props.item.number}</InfoText>
+        <SplitLine />
+        <Label>Battle Of BTC</Label>
+      </InfoWrapper>
+      {!props.item.listed && !isPending && (
+        <SaleButton
+          onClick={async (e) => {
+            e.stopPropagation()
+            e.preventDefault()
+            //@ts-ignore
+            const result = await openModal(SaleModal, { id: props.item.id })
+            if (result) {
+              props.onListed()
+            }
+          }}
+        >
+          <SaleIcon /> Sale
+        </SaleButton>
+      )}
+      {isPending && <StyledLoading />}
+    </CardWrapper>
+    // </Link>
   )
 }
 
