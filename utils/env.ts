@@ -30,3 +30,6 @@ const test: EnvParams = {
 }
 
 export const env = isTest ? test : prod
+export const PLATFORM_FEE_ADDRESS = isTest
+  ? 'tb1qf05d2yqlumhr6gk023wne2956ujcrlmw7mnzdn'
+  : 'bc1p7h8ylrulx4ezsuyy2wpp6mwxppgzh6230y6q4xq056hgjawjl0eq7c65kc'

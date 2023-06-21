@@ -9,7 +9,7 @@ import { XButton } from '../../views/common/XButton'
 import Loading from '../../views/common/Loading'
 import TxHashLink from '../../views/common/TxHashLink'
 import { formatSat } from '../../../utils'
-import { takerFeeBp } from '../../../utils/constants'
+import { makerFeeBp, minFee, takerFeeBp } from '../../../utils/constants'
 import { IOrdItem } from '../../../lib/msigner'
 import useCancelListing from '../../../hooks/useCancelListing'
 import { useModal } from '../../context/ModalContext'
@@ -44,6 +44,10 @@ export default function TxInfoBox(props: { nftItem: IOrdItem }) {
   const loadingHash = loadingTx || order?.padding_tx_hash || ''
 
   const { openModal } = useModal()
+  const _takerFee = (price * takerFeeBp) / 10000
+  const _makerFee = (price * makerFeeBp) / 10000
+  const takerFee = _takerFee >= minFee ? _takerFee : 0
+  const makerFee = _makerFee >= minFee ? _makerFee : 0
 
   return (
     <InfoBoxWrapper>
@@ -57,12 +61,22 @@ export default function TxInfoBox(props: { nftItem: IOrdItem }) {
             <BtcIcon /> {formatSat(price)} BTC
           </InfoPrice>
         </PriceItem>
-        <PriceItem>
-          <span className={'title'}>Taker Fee:</span>
-          <InfoPrice>
-            <BtcIcon /> {formatSat((price * takerFeeBp) / 10000)} BTC
-          </InfoPrice>
-        </PriceItem>
+        {takerFee > 0 && (
+          <PriceItem>
+            <span className={'title'}>Taker Fee:</span>
+            <InfoPrice>
+              <BtcIcon /> {formatSat(takerFee)} BTC
+            </InfoPrice>
+          </PriceItem>
+        )}
+        {makerFee > 0 && (
+          <PriceItem>
+            <span className={'title'}>Maker Fee:</span>
+            <InfoPrice>
+              <BtcIcon /> {formatSat(makerFee)} BTC
+            </InfoPrice>
+          </PriceItem>
+        )}
         <PriceItem>
           <span className={'title'}>Total:</span>
           <InfoPrice>
@@ -154,12 +168,15 @@ const PriceBox = styled.div`
   position: relative;
   padding: 28px 74px 0 38px;
   margin-top: 43px;
+  ${commonStyles.flexBetween};
+  flex-direction: column;
 `
 
 const PriceItem = styled.div`
   height: 18px;
   ${commonStyles.flexBetween};
-  margin-bottom: 25px;
+  //margin-bottom: 25px;
+  width: 100%;
 
   span.title {
     font-size: 12px;

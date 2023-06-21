@@ -9,11 +9,12 @@ import {
 } from '../lib/msigner/constant'
 import { getTxHex, mempool } from './mempool'
 import * as bitcoin from 'bitcoinjs-lib'
-import { makerFeeBp, network, PLATFORM_FEE_ADDRESS, takerFeeBp } from './constants'
+import { makerFeeBp, minFee, network, takerFeeBp } from './constants'
 import { getSellerOrdOutputValue } from './SellerSigner'
 import { Psbt } from 'bitcoinjs-lib'
 import { isP2SHAddress, mapUtxos, satToBtc, toXOnly } from './transaction'
 import { Services } from './http/Services'
+import { PLATFORM_FEE_ADDRESS } from './env'
 
 export async function selectDummyUTXOs(utxos: AddressTxsUtxo[]): Promise<utxo[]> {
   const result: utxo[] = []
@@ -259,7 +260,7 @@ export async function generateUnsignedBuyingPSBTBase64(
 
   // Create a platform fee output
   let platformFeeValue = Math.floor((listing.seller.price * (takerFeeBp + makerFeeBp)) / 10000)
-  platformFeeValue = platformFeeValue > DUMMY_UTXO_MIN_VALUE ? platformFeeValue : 0
+  platformFeeValue = platformFeeValue >= minFee ? platformFeeValue : 0
 
   if (platformFeeValue > 0) {
     psbt.addOutput({
