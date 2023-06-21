@@ -15,13 +15,14 @@ import Loading from '../../views/common/Loading'
 export default function ItemCard(props: { order: OrderItem }) {
   // const { display } = useFilterContext()
   const { account } = useWallet()
+  const isPending = props.order.order_status === OrderStatus.Pending
   return (
     <Link href={`/detail/${props.order.inscription_id}`}>
       <CardWrapper>
         <CardWithName>
           <CardImage src={getImageUri(props.order.content_uri)} />
           <Name>{props.order.name}</Name>
-          {props.order.order_status === OrderStatus.Pending && (
+          {isPending && (
             <LoadingCard>
               <Loading size={20} />
             </LoadingCard>
@@ -34,7 +35,7 @@ export default function ItemCard(props: { order: OrderItem }) {
         <SplitLine />
         <Label>Last Sale: {formatSat(props.order.last_sale_price)}</Label>
         {/*@ts-ignore*/}
-        {account !== props.order.owner && (
+        {account !== props.order.owner && !isPending && (
           <SaleButton>
             <SaleIcon /> Buy
           </SaleButton>

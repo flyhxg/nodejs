@@ -3,9 +3,6 @@ import Modal from './Modal'
 import { XButton } from '../common/XButton'
 import useCreateDummyUtxos from '../../../hooks/useCreateDummyUtxo'
 import { AddressTxsUtxo } from '@mempool/mempool.js/lib/interfaces'
-import { sleep } from '../../../utils'
-import { mempool } from '../../../utils/mempool'
-import { BuyLoadingStage } from '../../../hooks/useBuyLaunchpad'
 
 export default function PreparWalletModal(props: {
   open: boolean
@@ -23,6 +20,7 @@ export default function PreparWalletModal(props: {
       showClose
     >
       <Title>Preparing your wallet for trading</Title>
+      <Desc>The first purchase requires an initialization transaction.</Desc>
       <PrepareButton
         isLoading={loading}
         onClick={async () => {
@@ -38,7 +36,7 @@ export default function PreparWalletModal(props: {
 
 const StyledModal = styled(Modal)`
   width: 680px;
-  height: 500px;
+  height: 250px;
   background: #000;
   padding: 37px 50px 0 50px;
   position: relative;
@@ -55,4 +53,9 @@ const Title = styled.h3`
 const PrepareButton = styled(XButton)`
   width: 100%;
   margin-top: 50px;
+`
+
+const Desc = styled.p`
+  color: #efefef;
+  margin-top: 20px;
 `

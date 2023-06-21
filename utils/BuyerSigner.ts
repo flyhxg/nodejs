@@ -45,6 +45,7 @@ export async function selectPaymentUTXOs(
 
   // Sort descending by value, and filter out dummy utxos
   utxos = utxos.filter((x) => x.value > DUMMY_UTXO_VALUE).sort((a, b) => b.value - a.value)
+  const takerFee = Math.floor((amount * takerFeeBp) / 10000)
   for (const _utxo of utxos) {
     // Never spend a utxo that contains an inscription for cardinal purposes
     if (await doesUtxoContainInscription(_utxo)) {
@@ -52,16 +53,15 @@ export async function selectPaymentUTXOs(
     }
     selectedUtxos.push((await mapUtxos([_utxo]))[0])
     selectedAmount += _utxo.value
-    const takerFee = Math.floor((amount * takerFeeBp) / 10000)
     if (
       selectedAmount >=
-      amount + (await calculateTxBytesFee(vinsLength + selectedUtxos.length, voutsLength, feeRateTier)) + takerFee
+      amount + (await calculateTxBytesFee(vinsLength + selectedUtxos.length + 2, voutsLength, feeRateTier)) + takerFee
     ) {
       break
     }
   }
 
-  if (selectedAmount < amount) {
+  if (selectedAmount < amount + takerFee) {
     throw new InvalidArgumentError(`Not enough cardinal spendable funds.
 Address has:  ${satToBtc(selectedAmount)} BTC
 Needed:       ${satToBtc(amount)} BTC`)
