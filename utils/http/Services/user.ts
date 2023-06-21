@@ -14,4 +14,5 @@ export interface NFTItem {
   number: number
   listed: boolean
   order_status: number
+  collection_name: string
 }
