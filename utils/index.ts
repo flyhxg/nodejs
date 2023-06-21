@@ -1,5 +1,6 @@
 import { env } from './env'
 import BigNumber from 'bignumber.js'
+import { makerFeeBp, minFee, takerFeeBp } from './constants'
 
 export const NoOperation = () => {}
 
@@ -42,4 +43,8 @@ export function getImageUri(_url: string, _size?: number) {
   const size = _size || 256
   const url = `https://bananas.market/v1/img-compress?uri=${_url}&w=${size}&h=${size}`
   return url
+}
+
+export function isNeedFee(price: number) {
+  return (price * (makerFeeBp + takerFeeBp)) / 10000 > minFee
 }

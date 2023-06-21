@@ -1,7 +1,7 @@
 import * as bitcoin from 'bitcoinjs-lib'
 import { Psbt } from 'bitcoinjs-lib'
 import { IListingState } from '../lib/msigner'
-import { getTxHex, mempool } from './mempool'
+import { getTxHex } from './mempool'
 import { network } from './constants'
 import { toXOnly } from './transaction'
 
@@ -14,9 +14,6 @@ export async function generateUnsignedListingPSBTBase64(
   const [ordinalUtxoTxId, ordinalUtxoVout] = listing.seller.ordItem.output.split(':')
   const txId = listing.seller.ordItem.output.split(':')[0]
 
-  const {
-    bitcoin: { transactions },
-  } = mempool()
   const txHex = await getTxHex(txId)
   const tx = bitcoin.Transaction.fromHex(txHex)
 

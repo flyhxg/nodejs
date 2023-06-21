@@ -11,7 +11,7 @@ import { DialogType, useDialog } from '../app/context/DialogContext'
 import { getErrorMsg } from '../utils'
 import { useModal } from '../app/context/ModalContext'
 import PreparWalletModal from '../app/views/modal/PreparWalletModal'
-import { makerFeeBp, takerFeeBp } from '../utils/constants'
+import { launchpadMakerFeeBp, launchpadTakerFeeBp } from '../utils/constants'
 import { waitTxConfirmed } from '../utils/transaction'
 
 export enum BuyLoadingStage {
@@ -55,7 +55,7 @@ export default function useBuyLaunchpad(nftItem?: IOrdItem, _price?: number) {
         }
         const listing: IListingState = {
           seller: {
-            makerFeeBp,
+            makerFeeBp: launchpadMakerFeeBp,
             sellerOrdAddress: nftItem.owner,
             price: price,
             ordItem: nftItem,
@@ -63,10 +63,17 @@ export default function useBuyLaunchpad(nftItem?: IOrdItem, _price?: number) {
             tapInternalKey: '',
           },
         }
-        const paymentUTXOS = await selectPaymentUTXOs(sortedUtxoList, listing.seller.price, 4, 5, 'fastestFee')
+        const paymentUTXOS = await selectPaymentUTXOs(
+          sortedUtxoList,
+          listing.seller.price,
+          4,
+          5,
+          'fastestFee',
+          launchpadTakerFeeBp
+        )
 
         listing.buyer = {
-          takerFeeBp,
+          takerFeeBp: launchpadTakerFeeBp,
           buyerAddress: account,
           buyerTokenReceiveAddress: account,
           feeRateTier: 'fastestFee',
@@ -74,7 +81,7 @@ export default function useBuyLaunchpad(nftItem?: IOrdItem, _price?: number) {
           buyerPaymentUTXOs: paymentUTXOS,
         }
         setLoading(BuyLoadingStage.GeneratePSBT)
-        const { psbt } = await generateUnsignedBuyingPSBTBase64(listing)
+        const { psbt } = await generateUnsignedBuyingPSBTBase64(listing, launchpadTakerFeeBp, launchpadMakerFeeBp)
         setLoading(BuyLoadingStage.SignePSBT)
         const hex = await signPsbt(psbt.toHex())
         const base64 = Psbt.fromHex(hex as string, { network: testnet }).toBase64()

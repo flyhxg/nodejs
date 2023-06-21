@@ -11,7 +11,6 @@ import { DialogType, useDialog } from '../app/context/DialogContext'
 import { getErrorMsg } from '../utils'
 import { useModal } from '../app/context/ModalContext'
 import PreparWalletModal from '../app/views/modal/PreparWalletModal'
-import { makerFeeBp, takerFeeBp } from '../utils/constants'
 import { waitTxConfirmed } from '../utils/transaction'
 import { env } from '../utils/env'
 
@@ -27,7 +26,7 @@ export enum BuyLoadingStage {
   Done,
 }
 
-export default function useBuyPsbt(nftItem?: IOrdItem, price?: number) {
+export default function useBuyPsbt(nftItem: IOrdItem, price: number, takerFeeBp: number, makerFeeBp: number) {
   const { account, signPsbt } = useWallet()
   const [loading, setLoading] = useState<BuyLoadingStage>(BuyLoadingStage.NotStart)
   const { openDialog } = useDialog()
@@ -62,7 +61,14 @@ export default function useBuyPsbt(nftItem?: IOrdItem, price?: number) {
           tapInternalKey: '',
         },
       }
-      const paymentUTXOS = await selectPaymentUTXOs(sortedUtxoList, listing.seller.price, 4, 5, 'fastestFee')
+      const paymentUTXOS = await selectPaymentUTXOs(
+        sortedUtxoList,
+        listing.seller.price,
+        4,
+        5,
+        'fastestFee',
+        takerFeeBp
+      )
 
       listing.buyer = {
         takerFeeBp,
@@ -73,7 +79,7 @@ export default function useBuyPsbt(nftItem?: IOrdItem, price?: number) {
         buyerPaymentUTXOs: paymentUTXOS,
       }
       setLoading(BuyLoadingStage.GeneratePSBT)
-      const { psbt } = await generateUnsignedBuyingPSBTBase64(listing)
+      const { psbt } = await generateUnsignedBuyingPSBTBase64(listing, takerFeeBp, makerFeeBp)
       setLoading(BuyLoadingStage.SignePSBT)
       const hex = await signPsbt(psbt.toHex())
       const base64 = Psbt.fromHex(hex as string, { network: testnet }).toBase64()

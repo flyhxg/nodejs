@@ -5,9 +5,9 @@ import { generateUnsignedListingPSBTBase64 } from '../utils/SellerSigner'
 import { Psbt } from 'bitcoinjs-lib'
 import { testnet } from 'bitcoinjs-lib/src/networks'
 import { Services } from '../utils/http/Services'
-import { makerFeeBp } from '../utils/constants'
+import { makerFeeBp, takerFeeBp } from '../utils/constants'
 import { DialogType, useDialog } from '../app/context/DialogContext'
-import { getErrorMsg } from '../utils'
+import { getErrorMsg, isNeedFee } from '../utils'
 import { useRequest } from 'ahooks'
 import R from '../utils/http/request'
 import { env } from '../utils/env'
@@ -23,9 +23,11 @@ export default function useListPsbt(id: string) {
   const list = useCallback(
     async (price: number) => {
       if (!account || !item) return
+      const _makerFeeBp = isNeedFee(price) ? makerFeeBp : 0
+      const _takerFeeBp = isNeedFee(price) ? takerFeeBp : 0
       const listing: IListingState = {
         seller: {
-          makerFeeBp,
+          makerFeeBp: _makerFeeBp,
           sellerOrdAddress: account,
           price,
           ordItem: item,
@@ -50,7 +52,8 @@ export default function useListPsbt(id: string) {
           contentURI: item.contentURI,
           contentType: item.contentType,
           price,
-          makerFeeBp,
+          makerFeeBp: _makerFeeBp,
+          takerFeeBp: _takerFeeBp,
           address: account,
           signedListingPSBT: psbtBase64,
           orderType: 'order',

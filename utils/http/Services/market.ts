@@ -18,6 +18,7 @@ export const marketService = {
       contentType: string
       price: number
       makerFeeBp: number
+      takerFeeBp: number
       address: string
       signedListingPSBT: string
       orderType: string
@@ -83,6 +84,7 @@ export interface OrderDetail {
   sat_name: string
   price: number
   taker_fee: number
+  maker_fee: number
   attributes: { trait_type: string; value: string; status: string; percent: string }[] | null
   status: OrderStatus
   padding_tx_hash: string

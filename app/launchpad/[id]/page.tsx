@@ -11,8 +11,6 @@ import { XImage } from '../../views/common/XImage'
 import { getImageUri } from '../../../utils'
 import { notFound } from 'next/navigation'
 
-// const BuyBox = dynamic(() => import('./BuyBox'), { ssr: false })
-
 export default async function Page(props: { params: { id: string } }) {
   const data = await Services.launchpadService.launchpadDetail(+props.params.id, { cache: 'no-store' })
   if (!data) {

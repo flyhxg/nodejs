@@ -31,7 +31,11 @@ export default function TxInfoBox(props: { nftItem: IOrdItem }) {
     }
   )
   const price = order?.price || 0
-  const { buyPsbt, loading, loadingTx } = useBuyPsbt(props.nftItem, price)
+  const takerFeeBp = order?.taker_fee || 0
+  const makerFeeBp = order?.maker_fee || 0
+  const takerFee = (price * takerFeeBp) / 10000
+  const makerFee = (price * makerFeeBp) / 10000
+  const { buyPsbt, loading, loadingTx } = useBuyPsbt(props.nftItem, price, takerFeeBp, makerFeeBp)
   const { cancel, loading: cancelLoading } = useCancelListing()
   const isOwner = props.nftItem.owner === account
   const showConnect = !connected
@@ -44,10 +48,6 @@ export default function TxInfoBox(props: { nftItem: IOrdItem }) {
   const loadingHash = loadingTx || order?.padding_tx_hash || ''
 
   const { openModal } = useModal()
-  const _takerFee = (price * takerFeeBp) / 10000
-  const _makerFee = (price * makerFeeBp) / 10000
-  const takerFee = _takerFee >= minFee ? _takerFee : 0
-  const makerFee = _makerFee >= minFee ? _makerFee : 0
 
   return (
     <InfoBoxWrapper>

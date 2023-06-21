@@ -5,13 +5,12 @@ import {
   DUMMY_UTXO_MIN_VALUE,
   DUMMY_UTXO_VALUE,
   ORDINALS_POSTAGE_VALUE,
-  // PLATFORM_FEE_ADDRESS,
 } from '../lib/msigner/constant'
 import { getTxHex, mempool } from './mempool'
 import * as bitcoin from 'bitcoinjs-lib'
-import { makerFeeBp, minFee, network, takerFeeBp } from './constants'
-import { getSellerOrdOutputValue } from './SellerSigner'
 import { Psbt } from 'bitcoinjs-lib'
+import { minFee, network } from './constants'
+import { getSellerOrdOutputValue } from './SellerSigner'
 import { isP2SHAddress, mapUtxos, satToBtc, toXOnly } from './transaction'
 import { Services } from './http/Services'
 import { PLATFORM_FEE_ADDRESS } from './env'
@@ -38,7 +37,8 @@ export async function selectPaymentUTXOs(
   amount: number, // amount is expected total output (except tx fee)
   vinsLength: number,
   voutsLength: number,
-  feeRateTier: string
+  feeRateTier: string,
+  takerFeeBp: number
 ) {
   const selectedUtxos: utxo[] = []
   let selectedAmount = 0
@@ -146,7 +146,9 @@ async function doesUtxoContainInscription(utxo: AddressTxsUtxo): Promise<boolean
 }
 
 export async function generateUnsignedBuyingPSBTBase64(
-  listing: IListingState
+  listing: IListingState,
+  takerFeeBp: number,
+  makerFeeBp: number
 ): Promise<{ listing: IListingState; psbt: Psbt }> {
   const ecc = await import('tiny-secp256k1')
   bitcoin.initEccLib(ecc)
@@ -294,7 +296,7 @@ Price:            ${satToBtc(listing.seller.price)} BTC
 totalInput:       ${satToBtc(totalInput)} BTC
 totalOutput:      ${satToBtc(totalOutput)} BTC
 fee:              ${satToBtc(fee)} BTC
-platformFee:      ${satToBtc(fee)} BTC
+platformFee:      ${satToBtc(platformFeeValue)} BTC
 Required:         ${satToBtc(totalOutput + fee)} BTC
 Missing:          ${satToBtc(-changeValue)} BTC`
   }
