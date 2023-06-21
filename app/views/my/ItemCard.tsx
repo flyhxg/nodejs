@@ -16,7 +16,7 @@ export default function ItemCard(props: { item: NFTItem; onListed: () => void })
   const { openModal } = useModal()
   const isPending = props.item.order_status === OrderStatus.Pending
   return (
-    <Link href={`/detail/${props.item.id}`}>
+    <Link href={`/detail/${props.item.id}`} prefetch={false}>
       <CardWrapper>
         <CardImage src={getImageUri(props.item.content_uri)}>{props.item.listed && <OnSale>On Sale</OnSale>}</CardImage>
         <InfoWrapper>
