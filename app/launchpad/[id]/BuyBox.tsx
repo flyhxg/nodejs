@@ -46,6 +46,8 @@ export default function BuyBox(props: { item: LaunchpadItem }) {
   const publicPending = (launchpadStatus?.publicPendings || [])[0]?.status === OrderStatus.Pending
   const privateBuyed = (launchpadStatus?.privatePendings || [])[0]?.status === OrderStatus.Success
   const publicBuyed = (launchpadStatus?.publicPendings || [])[0]?.status === OrderStatus.Success
+  const isPrivateEnd = privateStage === Stage.ENDED || props.item.privateLimit <= 0
+  const isPublicEnd = publicStage === Stage.ENDED || props.item.publicLimit <= 0
 
   const canPrivate =
     launchpadStatus?.hasWhiteList && launchpadStatus.whiteListValid && !privatePending && privateStage === Stage.STARTED
@@ -72,10 +74,10 @@ export default function BuyBox(props: { item: LaunchpadItem }) {
         {privateStage === Stage.NOT_START && (
           <OrderTime>Start In: {durationTime(props.item.privateStartTime - now)}</OrderTime>
         )}
-        {privateStage === Stage.STARTED && (
+        {privateStage === Stage.STARTED && !isPrivateEnd && (
           <OrderTime>End In {durationTime(props.item.privateEndTime - now)}</OrderTime>
         )}
-        {privateStage === Stage.ENDED && <OrderTime>Ended</OrderTime>}
+        {isPrivateEnd && <OrderTime>Ended</OrderTime>}
       </OrderItem>
       <OrderItem active={type === BuyType.Public} onClick={() => setType(BuyType.Public)}>
         <Status isPublic active={type === BuyType.Public} />
@@ -85,8 +87,10 @@ export default function BuyBox(props: { item: LaunchpadItem }) {
         {publicStage === Stage.NOT_START && (
           <OrderTime>Start In: {durationTime(props.item.publicStartTime - now)}</OrderTime>
         )}
-        {publicStage === Stage.STARTED && <OrderTime>End In {durationTime(props.item.publicEndTime - now)}</OrderTime>}
-        {publicStage === Stage.ENDED && <OrderTime>Ended</OrderTime>}
+        {publicStage === Stage.STARTED && !isPublicEnd && (
+          <OrderTime>End In {durationTime(props.item.publicEndTime - now)}</OrderTime>
+        )}
+        {isPublicEnd && <OrderTime>Ended</OrderTime>}
       </OrderItem>
       <ButtonGroups>
         {showCheck ? (
