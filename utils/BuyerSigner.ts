@@ -52,10 +52,10 @@ export async function selectPaymentUTXOs(
     }
     selectedUtxos.push((await mapUtxos([_utxo]))[0])
     selectedAmount += _utxo.value
-
+    const takerFee = Math.floor((amount * takerFeeBp) / 10000)
     if (
       selectedAmount >=
-      amount + (await calculateTxBytesFee(vinsLength + selectedUtxos.length, voutsLength, feeRateTier))
+      amount + (await calculateTxBytesFee(vinsLength + selectedUtxos.length, voutsLength, feeRateTier)) + takerFee
     ) {
       break
     }
