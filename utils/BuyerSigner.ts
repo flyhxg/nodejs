@@ -119,7 +119,10 @@ export function calculateTxBytesFeeWithRate(
 }
 
 async function doesUtxoContainInscription(utxo: AddressTxsUtxo): Promise<boolean> {
-  return await Services.marketService.isInscriptionExist({ tx_id: utxo.txid, vout: utxo.vout })
+  return await Services.marketService.isInscriptionExist({ tx_id: utxo.txid, vout: utxo.vout }).then((res) => {
+    // cache
+    return res
+  })
   // If it's confirmed, we check the indexing db for that output
   // return false
   // if (utxo.status.confirmed) {
