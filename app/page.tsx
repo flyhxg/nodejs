@@ -6,10 +6,12 @@ import { CollectionGroup, LaunchpadGroup, Status } from './views/home/group'
 import { Services } from '../utils/http/Services'
 
 export default async function Page() {
-  const [{ items }, { items: collectionItems }] = await Promise.all([
+  const [{ items: _items }, { items: _collectionItems }] = await Promise.all([
     Services.launchpadService.getLaunchpadList({ pageNo: 1, pageSize: 10 }, { next: { revalidate: 30 } }),
     Services.projectService.getCollectionList({ page: 1, limit: 10 }, { next: { revalidate: 30 } }),
   ])
+  const items = _items || []
+  const collectionItems = _collectionItems || []
   return (
     <>
       <div className={s.pageWrapper}>
