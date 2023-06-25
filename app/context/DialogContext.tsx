@@ -110,6 +110,7 @@ const Desc = styled.p`
   word-break: break-all;
   font-size: 12px;
   color: #b9b9b9;
+  padding: 0 20px;
 `
 
 export function useDialog() {
