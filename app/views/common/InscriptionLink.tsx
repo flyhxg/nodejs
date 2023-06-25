@@ -14,7 +14,7 @@ export default function InscriptionLink(props: {
     : props.insId
 
   return (
-    <StyledLink target={'_blank'} href={`${env.mempoolAddress}/inscription/${props.insId}`} className={props.className}>
+    <StyledLink target={'_blank'} href={`${env.explorer}/inscription/${props.insId}`} className={props.className}>
       {insId}
     </StyledLink>
   )
