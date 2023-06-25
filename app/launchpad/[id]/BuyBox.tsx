@@ -17,7 +17,7 @@ import { Services } from '../../../utils/http/Services'
 import { BuyLoadingStage } from '../../../hooks/useBuyPsbt'
 import useBuyLaunchpad from '../../../hooks/useBuyLaunchpad'
 import { OrderStatus } from '../../../utils/type'
-import { useRouter } from 'next/navigation'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
 
 enum BuyType {
   Private,
@@ -26,6 +26,8 @@ enum BuyType {
 }
 
 export default function BuyBox(props: { item: LaunchpadItem }) {
+  const searchParams = useSearchParams()
+  const _type = searchParams.get('type')
   const { account } = useWallet()
   const { data: launchpadStatus, refresh } = useRequest(
     //@ts-ignore
@@ -52,7 +54,10 @@ export default function BuyBox(props: { item: LaunchpadItem }) {
   const canPrivate = launchpadStatus?.hasWhiteList && launchpadStatus.whiteListValid && !privatePending && !isPrivateEnd
   const canPublic = launchpadStatus?.publicValid && !publicPending && !isPublicEnd
 
-  const [type, setType] = useState(privateStage === Stage.STARTED ? BuyType.Private : BuyType.Public)
+  let defaultType = privateStage === Stage.STARTED ? BuyType.Private : BuyType.Public
+  if (_type === 'public') defaultType = BuyType.Public
+  if (_type === 'private') defaultType = BuyType.Private
+  const [type, setType] = useState<BuyType>(defaultType)
   const showCheck = (type === BuyType.Private && privateBuyed) || (type === BuyType.Public && publicBuyed)
 
   const { buyPsbt, loading, loadingTx } = useBuyLaunchpad(
@@ -95,13 +100,18 @@ export default function BuyBox(props: { item: LaunchpadItem }) {
         {showCheck ? (
           <StyledButton
             onClick={() => {
-              router.push('/mycollection')
+              router.push(`/mycollection?type=${type === BuyType.Public ? 'public' : 'private'}`)
             }}
           >
             Check NFT
           </StyledButton>
         ) : (
           <StyledButton
+            loadingText={
+              (type === BuyType.Private && privatePending) || (type === BuyType.Public && publicPending)
+                ? 'Transaction is confirming...'
+                : ''
+            }
             isLoading={
               (loading !== BuyLoadingStage.NotStart && loading !== BuyLoadingStage.Done) ||
               (type === BuyType.Private && privatePending) ||

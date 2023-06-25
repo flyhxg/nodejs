@@ -5,13 +5,20 @@ import styled from 'styled-components'
 import { Images } from '../../../utils/images'
 import { Keyframes } from '../../../utils/keyframes'
 
-export const XButton = forwardRef<HTMLButtonElement, ButtonHTMLAttributes<HTMLButtonElement> & { isLoading?: boolean }>(
-  (props, ref) => (
-    <StyledButton {...props} ref={ref}>
-      {props.isLoading ? <LoadingIcon /> : props.children}
-    </StyledButton>
-  )
-)
+export const XButton = forwardRef<
+  HTMLButtonElement,
+  ButtonHTMLAttributes<HTMLButtonElement> & { isLoading?: boolean; loadingText?: string }
+>((props, ref) => (
+  <StyledButton {...props} ref={ref}>
+    {props.isLoading ? (
+      <>
+        <LoadingIcon /> {props.loadingText}
+      </>
+    ) : (
+      props.children
+    )}
+  </StyledButton>
+))
 
 const StyledButton = styled.button<{ isLoading?: boolean }>`
   width: 200px;
