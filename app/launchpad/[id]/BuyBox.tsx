@@ -37,7 +37,9 @@ export default function BuyBox(props: { item: LaunchpadItem }) {
       ready: !!account,
     }
   )
-  const { data: launchpadItem } = useRequest(R(Services.launchpadService.getRandomLaunchpadItem, props.item.id))
+  const { data: launchpadItem } = useRequest(R(Services.launchpadService.getRandomLaunchpadItem, props.item.id), {
+    refreshDeps: [account],
+  })
   const { data: ordItem } = useRequest(R(Services.marketService.getOrdItem, launchpadItem?.inscriptionId || ''), {
     ready: !!launchpadItem,
   })
