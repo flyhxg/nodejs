@@ -102,7 +102,7 @@ export default function BuyBox(props: { item: LaunchpadItem }) {
         {showCheck ? (
           <StyledButton
             onClick={() => {
-              router.push(`/mycollection?type=${type === BuyType.Public ? 'public' : 'private'}`)
+              router.push(`/mycollection`)
             }}
           >
             Check NFT
@@ -126,7 +126,9 @@ export default function BuyBox(props: { item: LaunchpadItem }) {
             }
             onClick={async () => {
               const result = await buyPsbt(props.item.id, type === BuyType.Private)
-              if (result) !!result && location.reload()
+              if (result)
+                !!result &&
+                  router.replace(`${location.pathname}?type=${type === BuyType.Public ? 'public' : 'private'}`)
             }}
           >
             Buy
