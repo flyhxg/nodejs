@@ -14,7 +14,7 @@ const menus = [
   { label: 'RANKING', href: '#', comingSoon: true },
   // { label: 'LAUNCHPAD', href: '/launchpad', comingSoon: true },
   { label: 'INSCRIBE', href: '#', comingSoon: true },
-  { label: 'PTS [23]', href: '#', target: '_blank', comingSoon: true },
+  { label: 'AIRDROP', href: '#', target: '_blank', comingSoon: true },
 ]
 
 export default function Header() {
