@@ -26,7 +26,6 @@ enum BuyType {
 }
 
 export default function BuyBox(props: { item: LaunchpadItem }) {
-  console.log('props', props)
   const { account } = useWallet()
   const { data: launchpadStatus, refresh } = useRequest(
     //@ts-ignore

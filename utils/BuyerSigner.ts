@@ -35,6 +35,7 @@ export async function selectDummyUTXOs(utxos: AddressTxsUtxo[]): Promise<utxo[]>
 export async function selectPaymentUTXOs(
   utxos: AddressTxsUtxo[],
   amount: number, // amount is expected total output (except tx fee)
+  output: number,
   vinsLength: number,
   voutsLength: number,
   feeRateTier: string,
@@ -55,7 +56,12 @@ export async function selectPaymentUTXOs(
     selectedAmount += _utxo.value
     if (
       selectedAmount >=
-      amount + (await calculateTxBytesFee(vinsLength + selectedUtxos.length + 2, voutsLength, feeRateTier)) + takerFee
+      amount +
+        (await calculateTxBytesFee(vinsLength + selectedUtxos.length, voutsLength, feeRateTier)) +
+        takerFee +
+        DUMMY_UTXO_VALUE * 2 +
+        output +
+        ORDINALS_POSTAGE_VALUE
     ) {
       break
     }
@@ -210,7 +216,6 @@ export async function generateUnsignedBuyingPSBTBase64(
 
   const { sellerInput, sellerOutput } = await getSellerInputAndOutput(listing)
 
-  console.log('sellerInput', sellerInput, 'sellerOutput', sellerOutput, listing)
   // need to delete
   // sellerOutput.address = 'tb1qaha8rhgsq5z73nvckd53qym0t2jt4jjw3u5s55'
   // Add ordinal output

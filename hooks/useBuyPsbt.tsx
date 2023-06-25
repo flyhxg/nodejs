@@ -64,6 +64,7 @@ export default function useBuyPsbt(nftItem: IOrdItem, price: number, takerFeeBp:
       const paymentUTXOS = await selectPaymentUTXOs(
         sortedUtxoList,
         listing.seller.price,
+        nftItem.outputValue,
         4,
         5,
         'fastestFee',

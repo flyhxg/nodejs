@@ -20,7 +20,6 @@ import { Services } from '../../../utils/http/Services'
 import { OrderStatus } from '../../../utils/type'
 
 export default function TxInfoBox(props: { nftItem: IOrdItem }) {
-  console.log('props', props)
   const { account, active, connected } = useWallet()
 
   const { data: order } = useRequest(

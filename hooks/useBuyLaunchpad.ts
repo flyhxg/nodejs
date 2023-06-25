@@ -63,9 +63,11 @@ export default function useBuyLaunchpad(nftItem?: IOrdItem, _price?: number) {
             tapInternalKey: '',
           },
         }
+        console.log('dummyPayment', dummyUTXOS)
         const paymentUTXOS = await selectPaymentUTXOs(
           sortedUtxoList,
           listing.seller.price,
+          nftItem.outputValue,
           4,
           5,
           'fastestFee',
