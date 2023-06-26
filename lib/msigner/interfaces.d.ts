@@ -18,7 +18,7 @@ export interface ItemProvider {
 }
 export interface IOrdItem {
     id: string;
-    contentURI: string;
+    // contentURI: string;
     contentType: string;
     contentPreviewURI: string;
     sat: number;

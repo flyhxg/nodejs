@@ -22,7 +22,7 @@ export default async function Page(props: { params: { id: string } }) {
       <div className={s.wrapper}>
         <div className={s.left}>
           <XImage
-            src={getImageUri(nftItem.contentURI, 500)}
+            src={getImageUri(order.content_uri, 500)}
             alt={'cover'}
             style={{ width: 500, height: 500, display: 'inline-block' }}
           />
