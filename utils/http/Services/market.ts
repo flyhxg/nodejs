@@ -43,7 +43,7 @@ export const marketService = {
       const ordItem: IOrdItem = {
         id: res.id,
         contentType: res.content_type,
-        // contentURI: res.content_uri,
+        contentURI: getContentUrl(id),
         contentPreviewURI: getPreviewUrl(id),
         sat: res.sat,
         genesisTransaction: res.genesis_transaction,
