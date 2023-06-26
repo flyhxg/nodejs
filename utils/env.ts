@@ -4,7 +4,7 @@ export const isTest = process.env.NEXT_PUBLIC_ENV === 'test'
 
 interface EnvParams {
   network: 'testnet' | 'livenet'
-  chain: 'btc-testnet' | 'btc-livenet'
+  chain: 'btc-testnet' | 'btc-mainnet'
   mempoolHost: string
   mempoolAddress: string
   baseURL: string
@@ -16,7 +16,7 @@ const prod: EnvParams = {
   mempoolAddress: 'https://mempool.space',
   mempoolHost: 'mempool.space',
   baseURL: 'https://bananas.market',
-  chain: 'btc-livenet',
+  chain: 'btc-mainnet',
   explorer: 'https://ordinals.com',
 }
 const test: EnvParams = {
