@@ -60,7 +60,7 @@ export default function TxInfoBox(props: { nftItem: IOrdItem }) {
             <BtcIcon /> {formatSat(price)} BTC
           </InfoPrice>
         </PriceItem>
-        {takerFee > 0 && (
+        {takerFee > 0 && !isOwner && (
           <PriceItem>
             <span className={'title'}>Taker Fee:</span>
             <InfoPrice>
@@ -68,7 +68,7 @@ export default function TxInfoBox(props: { nftItem: IOrdItem }) {
             </InfoPrice>
           </PriceItem>
         )}
-        {makerFee > 0 && (
+        {makerFee > 0 && isOwner && (
           <PriceItem>
             <span className={'title'}>Maker Fee:</span>
             <InfoPrice>
@@ -79,7 +79,7 @@ export default function TxInfoBox(props: { nftItem: IOrdItem }) {
         <PriceItem>
           <span className={'title'}>Total:</span>
           <InfoPrice>
-            <BtcIcon /> {formatSat(price + (price * takerFeeBp) / 10000)} BTC
+            <BtcIcon /> {formatSat(price + (price * (isOwner ? -makerFeeBp : takerFeeBp)) / 10000)} BTC
           </InfoPrice>
         </PriceItem>
         <ButtonsGroup>
