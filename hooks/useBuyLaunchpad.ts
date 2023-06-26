@@ -5,13 +5,12 @@ import { generateUnsignedBuyingPSBTBase64, selectDummyUTXOs, selectPaymentUTXOs 
 import { IListingState, IOrdItem } from '../lib/msigner'
 import { DUMMY_UTXO_MAX_VALUE } from '../lib/msigner/constant'
 import { Psbt } from 'bitcoinjs-lib'
-import { testnet } from 'bitcoinjs-lib/src/networks'
 import { Services } from '../utils/http/Services'
 import { DialogType, useDialog } from '../app/context/DialogContext'
 import { getErrorMsg } from '../utils'
 import { useModal } from '../app/context/ModalContext'
 import PreparWalletModal from '../app/views/modal/PreparWalletModal'
-import { launchpadMakerFeeBp, launchpadTakerFeeBp } from '../utils/constants'
+import { launchpadMakerFeeBp, launchpadTakerFeeBp, network } from '../utils/constants'
 import { waitTxConfirmed } from '../utils/transaction'
 
 export enum BuyLoadingStage {
@@ -86,7 +85,7 @@ export default function useBuyLaunchpad(nftItem?: IOrdItem, _price?: number) {
         const { psbt } = await generateUnsignedBuyingPSBTBase64(listing, launchpadTakerFeeBp, launchpadMakerFeeBp)
         setLoading(BuyLoadingStage.SignePSBT)
         const hex = await signPsbt(psbt.toHex())
-        const base64 = Psbt.fromHex(hex as string, { network: testnet }).toBase64()
+        const base64 = Psbt.fromHex(hex as string, { network }).toBase64()
         setLoading(BuyLoadingStage.Merge)
         const data = await Services.launchpadService.buyLaunchpad({
           launchpadId: launchpadId,

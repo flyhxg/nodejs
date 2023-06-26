@@ -3,9 +3,8 @@ import { useWallet } from '../app/context/WalletContext'
 import { IListingState } from '../lib/msigner'
 import { generateUnsignedListingPSBTBase64 } from '../utils/SellerSigner'
 import { Psbt } from 'bitcoinjs-lib'
-import { testnet } from 'bitcoinjs-lib/src/networks'
 import { Services } from '../utils/http/Services'
-import { makerFeeBp, takerFeeBp } from '../utils/constants'
+import { makerFeeBp, network, takerFeeBp } from '../utils/constants'
 import { DialogType, useDialog } from '../app/context/DialogContext'
 import { getErrorMsg, isNeedFee } from '../utils'
 import { useRequest } from 'ahooks'
@@ -41,7 +40,7 @@ export default function useListPsbt(id: string) {
         setLoading(true)
         const { listing: listing1, psbt } = await generateUnsignedListingPSBTBase64(listing)
         const signedPsbt = await signPsbt(psbt.toHex())
-        const psbtBase64 = Psbt.fromHex(signedPsbt as string, { network: testnet }).toBase64()
+        const psbtBase64 = Psbt.fromHex(signedPsbt as string, { network }).toBase64()
         await Services.marketService.listOrder({
           chain: env.chain,
           inscriptionId: item.id,

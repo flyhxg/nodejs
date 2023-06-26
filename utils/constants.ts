@@ -1,6 +1,7 @@
 import * as bitcoin from 'bitcoinjs-lib'
+import { isTest } from './env'
 
-export const network = bitcoin.networks.testnet
+export const network = isTest ? bitcoin.networks.testnet : bitcoin.networks.bitcoin
 
 export const launchpadMakerFeeBp = 0
 export const launchpadTakerFeeBp = 0

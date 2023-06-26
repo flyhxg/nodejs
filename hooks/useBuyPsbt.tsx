@@ -5,7 +5,6 @@ import { generateUnsignedBuyingPSBTBase64, selectDummyUTXOs, selectPaymentUTXOs 
 import { IListingState, IOrdItem } from '../lib/msigner'
 import { DUMMY_UTXO_MAX_VALUE } from '../lib/msigner/constant'
 import { Psbt } from 'bitcoinjs-lib'
-import { testnet } from 'bitcoinjs-lib/src/networks'
 import { Services } from '../utils/http/Services'
 import { DialogType, useDialog } from '../app/context/DialogContext'
 import { getErrorMsg } from '../utils'
@@ -13,6 +12,7 @@ import { useModal } from '../app/context/ModalContext'
 import PreparWalletModal from '../app/views/modal/PreparWalletModal'
 import { waitTxConfirmed } from '../utils/transaction'
 import { env } from '../utils/env'
+import { network } from '../utils/constants'
 
 export enum BuyLoadingStage {
   NotStart,
@@ -83,7 +83,7 @@ export default function useBuyPsbt(nftItem: IOrdItem, price: number, takerFeeBp:
       const { psbt } = await generateUnsignedBuyingPSBTBase64(listing, takerFeeBp, makerFeeBp)
       setLoading(BuyLoadingStage.SignePSBT)
       const hex = await signPsbt(psbt.toHex())
-      const base64 = Psbt.fromHex(hex as string, { network: testnet }).toBase64()
+      const base64 = Psbt.fromHex(hex as string, { network }).toBase64()
       setLoading(BuyLoadingStage.Merge)
       const data = await Services.marketService.mergeOrder({
         chain: env.chain,
