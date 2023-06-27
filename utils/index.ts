@@ -48,3 +48,7 @@ export function getImageUri(_url: string, _size?: number) {
 export function isNeedFee(price: number) {
   return (price * (makerFeeBp + takerFeeBp)) / 10000 > minFee
 }
+
+export function shortenHash(txHash: string, shorten = 10) {
+  return txHash?.length > 20 ? txHash.slice(0, shorten) + '...' + txHash.slice(-shorten) : txHash
+}

@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { XButton } from '../../views/common/XButton'
 import { Images } from '../../../utils/images'
 import { LaunchpadItem } from '../../../utils/http/Services/launchpad'
-import { formatSat } from '../../../utils'
+import { formatSat, shortenHash } from '../../../utils'
 import { Stage, useStage } from '../../../hooks/useStage'
 import moment from 'moment'
 import { durationTime } from '../../../utils/time'
@@ -53,6 +53,8 @@ export default function BuyBox(props: { item: LaunchpadItem }) {
   const publicBuyed = (launchpadStatus?.publicPendings || [])[0]?.status === OrderStatus.Success
   const isPrivateEnd = privateStage === Stage.ENDED || props.item.privateLimit <= 0
   const isPublicEnd = publicStage === Stage.ENDED || props.item.publicLimit <= 0
+  const privatPendingHash = (launchpadStatus?.privatePendings || [])[0]?.txHash
+  const publicPendingHash = (launchpadStatus?.publicPendings || [])[0]?.txHash
 
   const canPrivate = launchpadStatus?.hasWhiteList && launchpadStatus.whiteListValid && !privatePending && !isPrivateEnd
   const canPublic = launchpadStatus?.publicValid && !publicPending && !isPublicEnd
@@ -112,7 +114,9 @@ export default function BuyBox(props: { item: LaunchpadItem }) {
           <StyledButton
             loadingText={
               (type === BuyType.Private && privatePending) || (type === BuyType.Public && publicPending)
-                ? 'Transaction is confirming...'
+                ? `Transaction is confirming...${shortenHash(
+                    type === BuyType.Private ? privatPendingHash : publicPendingHash
+                  )}`
                 : ''
             }
             isLoading={
