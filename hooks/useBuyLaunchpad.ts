@@ -62,7 +62,6 @@ export default function useBuyLaunchpad(nftItem?: IOrdItem, _price?: number) {
             tapInternalKey: '',
           },
         }
-        console.log('dummyPayment', dummyUTXOS)
         const paymentUTXOS = await selectPaymentUTXOs(
           sortedUtxoList,
           listing.seller.price,
@@ -99,7 +98,6 @@ export default function useBuyLaunchpad(nftItem?: IOrdItem, _price?: number) {
         await waitTxConfirmed(data)
         setLoading(BuyLoadingStage.Done)
         //waiting
-        console.log('data', data)
         return true
       } catch (e) {
         console.error(e)

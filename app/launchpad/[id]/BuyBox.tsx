@@ -56,8 +56,13 @@ export default function BuyBox(props: { item: LaunchpadItem }) {
   const privatPendingHash = (launchpadStatus?.privatePendings || [])[0]?.txHash
   const publicPendingHash = (launchpadStatus?.publicPendings || [])[0]?.txHash
 
-  const canPrivate = launchpadStatus?.hasWhiteList && launchpadStatus.whiteListValid && !privatePending && !isPrivateEnd
-  const canPublic = launchpadStatus?.publicValid && !publicPending && !isPublicEnd
+  const canPrivate =
+    launchpadStatus?.hasWhiteList &&
+    launchpadStatus.whiteListValid &&
+    !privatePending &&
+    !isPrivateEnd &&
+    privateStage === Stage.STARTED
+  const canPublic = launchpadStatus?.publicValid && !publicPending && !isPublicEnd && publicStage === Stage.STARTED
 
   let defaultType = privateStage === Stage.STARTED ? BuyType.Private : BuyType.Public
   if (_type === 'public') defaultType = BuyType.Public
