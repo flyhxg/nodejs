@@ -27,11 +27,11 @@ export default function FeeSelector(props: {
       const _fees = [
         {
           label: 'Low',
-          value: res.hourFee,
+          value: res.minimumFee,
         },
         {
           label: 'Medium',
-          value: res.halfHourFee,
+          value: res.hourFee,
         },
         {
           label: 'High',
