@@ -1,8 +1,8 @@
 import { AddressTxsUtxo } from '@mempool/mempool.js/lib/interfaces'
 import * as bitcoin from 'bitcoinjs-lib'
 import { network } from '../utils/constants'
-import { calculateTxBytesFeeWithRate, getFees } from '../utils/BuyerSigner'
-import { InvalidArgumentError, utxo, WitnessUtxo } from '../lib/msigner/interfaces'
+import { calculateTxBytesFeeWithRate } from '../utils/BuyerSigner'
+import { InvalidArgumentError, utxo } from '../lib/msigner/interfaces'
 import { DUMMY_UTXO_MIN_VALUE, DUMMY_UTXO_VALUE } from '../lib/msigner/constant'
 import { useCallback, useState } from 'react'
 import { useWallet } from '../app/context/WalletContext'
@@ -11,7 +11,7 @@ import { DialogType, useDialog } from '../app/context/DialogContext'
 import { getErrorMsg, sleep } from '../utils'
 import { mempool } from '../utils/mempool'
 
-export default function useCreateDummyUtxos() {
+export default function useCreateDummyUtxos(fee: number) {
   const { account, publicKey, signPsbt, pushPsbt } = useWallet()
   const [loading, setLoading] = useState(false)
   const { openDialog } = useDialog()
@@ -20,7 +20,7 @@ export default function useCreateDummyUtxos() {
       if (!account || !publicKey) return false
       try {
         setLoading(true)
-        const psbtHex = await generateUnsignedCreateDummyUtxoPSBTHex(account, publicKey, unqualifiedUtxos, 'fastestFee')
+        const psbtHex = await generateUnsignedCreateDummyUtxoPSBTHex(account, publicKey, unqualifiedUtxos, fee)
         const signedPsbt = await signPsbt(psbtHex)
         const tx = await pushPsbt(signedPsbt)
         let retry = 0
@@ -61,14 +61,14 @@ export async function generateUnsignedCreateDummyUtxoPSBTHex(
   address: string,
   buyerPublicKey: string | undefined,
   unqualifiedUtxos: AddressTxsUtxo[],
-  feeRateTier: string
+  fee: number
 ): Promise<string> {
   const ecc = await import('tiny-secp256k1')
   bitcoin.initEccLib(ecc)
   const psbt = new bitcoin.Psbt({ network })
   const [mappedUnqualifiedUtxos, recommendedFee]: [utxo[], number] = await Promise.all([
     mapUtxos(unqualifiedUtxos),
-    getFees(feeRateTier),
+    fee,
   ])
   // Loop the unqualified utxos until we have enough to create a dummy utxo
   let totalValue = 0

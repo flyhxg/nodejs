@@ -9,8 +9,9 @@ export default function PreparWalletModal(props: {
   onClose: () => void
   resolve: (val: boolean) => void
   unqualifiedUtxos: AddressTxsUtxo[]
+  fee: number
 }) {
-  const { create, loading } = useCreateDummyUtxos()
+  const { create, loading } = useCreateDummyUtxos(props.fee)
   return (
     <StyledModal
       open={props.open}

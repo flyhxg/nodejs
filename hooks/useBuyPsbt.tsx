@@ -26,7 +26,13 @@ export enum BuyLoadingStage {
   Done,
 }
 
-export default function useBuyPsbt(nftItem: IOrdItem, price: number, takerFeeBp: number, makerFeeBp: number) {
+export default function useBuyPsbt(
+  nftItem: IOrdItem,
+  price: number,
+  takerFeeBp: number,
+  makerFeeBp: number,
+  fee: number
+) {
   const { account, signPsbt } = useWallet()
   const [loading, setLoading] = useState<BuyLoadingStage>(BuyLoadingStage.NotStart)
   const { openDialog } = useDialog()
@@ -48,7 +54,7 @@ export default function useBuyPsbt(nftItem: IOrdItem, price: number, takerFeeBp:
         const unqualifiedUtxos = utxoList.filter((x) => x.value > DUMMY_UTXO_MAX_VALUE)
         setLoading(BuyLoadingStage.PrepareWallet)
         //@ts-ignore
-        const result = await openModal(PreparWalletModal, { unqualifiedUtxos })
+        const result = await openModal(PreparWalletModal, { unqualifiedUtxos, fee })
         return
       }
       const listing: IListingState = {
@@ -67,8 +73,8 @@ export default function useBuyPsbt(nftItem: IOrdItem, price: number, takerFeeBp:
         nftItem.outputValue,
         4,
         5,
-        'fastestFee',
-        takerFeeBp
+        takerFeeBp,
+        fee
       )
 
       listing.buyer = {
@@ -80,7 +86,7 @@ export default function useBuyPsbt(nftItem: IOrdItem, price: number, takerFeeBp:
         buyerPaymentUTXOs: paymentUTXOS,
       }
       setLoading(BuyLoadingStage.GeneratePSBT)
-      const { psbt } = await generateUnsignedBuyingPSBTBase64(listing, takerFeeBp, makerFeeBp)
+      const { psbt } = await generateUnsignedBuyingPSBTBase64(listing, takerFeeBp, makerFeeBp, fee)
       setLoading(BuyLoadingStage.SignePSBT)
       const hex = await signPsbt(psbt.toHex())
       const base64 = Psbt.fromHex(hex as string, { network }).toBase64()

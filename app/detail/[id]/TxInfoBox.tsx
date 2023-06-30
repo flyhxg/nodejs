@@ -17,6 +17,8 @@ import { useRequest } from 'ahooks'
 import R from '../../../utils/http/request'
 import { Services } from '../../../utils/http/Services'
 import { OrderStatus } from '../../../utils/type'
+import { useState } from 'react'
+import FeeSelector from '../../views/common/FeeSelector'
 
 export default function TxInfoBox(props: { nftItem: IOrdItem }) {
   const { account, active, connected } = useWallet()
@@ -33,7 +35,8 @@ export default function TxInfoBox(props: { nftItem: IOrdItem }) {
   const makerFeeBp = order?.maker_fee || 0
   const takerFee = (price * takerFeeBp) / 10000
   const makerFee = (price * makerFeeBp) / 10000
-  const { buyPsbt, loading, loadingTx } = useBuyPsbt(props.nftItem, price, takerFeeBp, makerFeeBp)
+  const [fee, setFee] = useState(0)
+  const { buyPsbt, loading, loadingTx } = useBuyPsbt(props.nftItem, price, takerFeeBp, makerFeeBp, fee)
   const { cancel, loading: cancelLoading } = useCancelListing()
   const isOwner = props.nftItem.owner === account
   const showConnect = !connected
@@ -81,6 +84,7 @@ export default function TxInfoBox(props: { nftItem: IOrdItem }) {
             <BtcIcon /> {formatSat(price + (price * (isOwner ? -makerFeeBp : takerFeeBp)) / 10000)} BTC
           </InfoPrice>
         </PriceItem>
+        <FeeSelector onChange={setFee} />
         <ButtonsGroup>
           {showBuy && (
             <NormalButton

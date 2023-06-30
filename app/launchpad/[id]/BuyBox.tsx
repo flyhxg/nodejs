@@ -18,6 +18,7 @@ import { BuyLoadingStage } from '../../../hooks/useBuyPsbt'
 import useBuyLaunchpad from '../../../hooks/useBuyLaunchpad'
 import { OrderStatus } from '../../../utils/type'
 import { useRouter, useSearchParams } from 'next/navigation'
+import FeeSelector from '../../views/common/FeeSelector'
 
 enum BuyType {
   Private,
@@ -27,6 +28,7 @@ enum BuyType {
 
 export default function BuyBox(props: { item: LaunchpadItem }) {
   console.log('props', props)
+
   const searchParams = useSearchParams()
   const _type = searchParams.get('type')
   const { account } = useWallet()
@@ -69,8 +71,10 @@ export default function BuyBox(props: { item: LaunchpadItem }) {
   if (_type === 'private') defaultType = BuyType.Private
   const [type, setType] = useState<BuyType>(defaultType)
   const showCheck = (type === BuyType.Private && privateBuyed) || (type === BuyType.Public && publicBuyed)
+  const [fee, setFee] = useState(0)
 
   const { buyPsbt, loading, loadingTx } = useBuyLaunchpad(
+    fee,
     ordItem,
     type === BuyType.Private ? props.item.privatePrice : props.item.publicPrice
   )
@@ -106,6 +110,7 @@ export default function BuyBox(props: { item: LaunchpadItem }) {
         )}
         {isPublicEnd && <OrderTime>Ended</OrderTime>}
       </OrderItem>
+      <FeeSelector onChange={setFee} />
       <ButtonGroups>
         {showCheck ? (
           <StyledButton
@@ -209,7 +214,7 @@ const BtcIcon = styled(Image).attrs({
 const ButtonGroups = styled.div`
   height: 40px;
   ${commonStyles.flexBetween};
-  margin-top: 34px;
+  margin-top: 17px;
 `
 
 const StyledButton = styled(XButton)`

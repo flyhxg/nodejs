@@ -38,8 +38,8 @@ export async function selectPaymentUTXOs(
   output: number,
   vinsLength: number,
   voutsLength: number,
-  feeRateTier: string,
-  takerFeeBp: number
+  takerFeeBp: number,
+  fee: number
 ) {
   const selectedUtxos: utxo[] = []
   let selectedAmount = 0
@@ -57,7 +57,7 @@ export async function selectPaymentUTXOs(
     selectedAmount += _utxo.value
     needed =
       amount +
-      (await calculateTxBytesFee(vinsLength + selectedUtxos.length, voutsLength, feeRateTier)) +
+      (await calculateTxBytesFee(vinsLength + selectedUtxos.length, voutsLength, fee)) +
       takerFee +
       DUMMY_UTXO_VALUE * 2 +
       output +
@@ -79,11 +79,11 @@ Needed:       ${satToBtc(amount)} BTC`)
 export async function calculateTxBytesFee(
   vinsLength: number,
   voutsLength: number,
-  feeRateTier: string,
+  fee: number,
   includeChangeOutput: 0 | 1 = 1
 ) {
-  const recommendedFeeRate = await getFees(feeRateTier)
-  return calculateTxBytesFeeWithRate(vinsLength, voutsLength, recommendedFeeRate, includeChangeOutput)
+  // const recommendedFeeRate = await getFees(feeRateTier)
+  return calculateTxBytesFeeWithRate(vinsLength, voutsLength, fee, includeChangeOutput)
 }
 
 export async function getFees(feeRateTier: string) {
@@ -157,7 +157,8 @@ async function doesUtxoContainInscription(utxo: AddressTxsUtxo): Promise<boolean
 export async function generateUnsignedBuyingPSBTBase64(
   listing: IListingState,
   takerFeeBp: number,
-  makerFeeBp: number
+  makerFeeBp: number,
+  _fee: number
 ): Promise<{ listing: IListingState; psbt: Psbt }> {
   const ecc = await import('tiny-secp256k1')
   bitcoin.initEccLib(ecc)
@@ -292,7 +293,7 @@ export async function generateUnsignedBuyingPSBTBase64(
   const fee = await calculateTxBytesFee(
     psbt.txInputs.length,
     psbt.txOutputs.length, // already taken care of the exchange output bytes calculation
-    listing.buyer.feeRateTier
+    _fee
   )
 
   const totalOutput = psbt.txOutputs.reduce((partialSum, a) => partialSum + a.value, 0)

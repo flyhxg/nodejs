@@ -25,7 +25,7 @@ export enum BuyLoadingStage {
   Done,
 }
 
-export default function useBuyLaunchpad(nftItem?: IOrdItem, _price?: number) {
+export default function useBuyLaunchpad(fee: number, nftItem?: IOrdItem, _price?: number) {
   const { account, signPsbt } = useWallet()
   const [loading, setLoading] = useState<BuyLoadingStage>(BuyLoadingStage.NotStart)
   const { openDialog } = useDialog()
@@ -49,7 +49,7 @@ export default function useBuyLaunchpad(nftItem?: IOrdItem, _price?: number) {
           const unqualifiedUtxos = utxoList.filter((x) => x.value > DUMMY_UTXO_MAX_VALUE)
           setLoading(BuyLoadingStage.PrepareWallet)
           //@ts-ignore
-          const result = await openModal(PreparWalletModal, { unqualifiedUtxos })
+          const result = await openModal(PreparWalletModal, { unqualifiedUtxos, fee })
           return false
         }
         const listing: IListingState = {
@@ -68,8 +68,8 @@ export default function useBuyLaunchpad(nftItem?: IOrdItem, _price?: number) {
           nftItem.outputValue,
           4,
           5,
-          'fastestFee',
-          launchpadTakerFeeBp
+          launchpadTakerFeeBp,
+          fee
         )
 
         listing.buyer = {
@@ -81,7 +81,7 @@ export default function useBuyLaunchpad(nftItem?: IOrdItem, _price?: number) {
           buyerPaymentUTXOs: paymentUTXOS,
         }
         setLoading(BuyLoadingStage.GeneratePSBT)
-        const { psbt } = await generateUnsignedBuyingPSBTBase64(listing, launchpadTakerFeeBp, launchpadMakerFeeBp)
+        const { psbt } = await generateUnsignedBuyingPSBTBase64(listing, launchpadTakerFeeBp, launchpadMakerFeeBp, fee)
         setLoading(BuyLoadingStage.SignePSBT)
         const hex = await signPsbt(psbt.toHex())
         const base64 = Psbt.fromHex(hex as string, { network }).toBase64()
@@ -107,7 +107,7 @@ export default function useBuyLaunchpad(nftItem?: IOrdItem, _price?: number) {
         setLoading(BuyLoadingStage.NotStart)
       }
     },
-    [account, _price, nftItem]
+    [account, _price, nftItem, fee]
   )
   return { buyPsbt, loading, loadingTx }
 }
