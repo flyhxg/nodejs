@@ -20,7 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={pixelFont.className}>
       <head>
-        <Script src={'/js/mempool.js'} />
+        <Script src={'/js/mempool.js'} strategy={'beforeInteractive'} />
         <GoogleAnalyze id={'G-XKJRE222G9'} />
       </head>
       <body>
