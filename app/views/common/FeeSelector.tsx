@@ -51,7 +51,7 @@ export default function FeeSelector(props: {
         <SelectItem key={fee.label} selected={fee === selected} onClick={() => setSelected(fee)}>
           <span>{fee.label}</span>
           <span>
-            {fee.value} Sats/VB ~${calPrice(10000, rate)}
+            {fee.value} Sats/VB ~${calPrice(10000, rate, fee.value)}
           </span>
         </SelectItem>
       ))}
@@ -59,8 +59,8 @@ export default function FeeSelector(props: {
   )
 }
 
-function calPrice(sat: number, rate: number) {
-  return ((rate / 100_000_000) * sat).toFixed(2)
+function calPrice(sat: number, rate: number, amount: number) {
+  return ((rate / 100_000_000) * sat * amount).toFixed(2)
 }
 
 const SelectWrapper = styled.div`
