@@ -48,7 +48,7 @@ export default function FeeSelector(props: {
   return (
     <SelectWrapper>
       {fees.map((fee) => (
-        <SelectItem selected={fee === selected} onClick={() => setSelected(fee)}>
+        <SelectItem key={fee.label} selected={fee === selected} onClick={() => setSelected(fee)}>
           <span>{fee.label}</span>
           <span>
             {fee.value} Sats/VB ~${calPrice(10000, rate)}
