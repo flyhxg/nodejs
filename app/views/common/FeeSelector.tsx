@@ -27,11 +27,11 @@ export default function FeeSelector(props: {
       const _fees = [
         {
           label: 'Low',
-          value: res.minimumFee,
+          value: res.hourFee,
         },
         {
           label: 'Medium',
-          value: res.hourFee,
+          value: res.halfHourFee,
         },
         {
           label: 'High',
@@ -51,7 +51,7 @@ export default function FeeSelector(props: {
         <SelectItem key={fee.label} selected={fee === selected} onClick={() => setSelected(fee)}>
           <span>{fee.label}</span>
           <span>
-            {fee.value} Sats/VB ~${calPrice(10000, rate, fee.value)}
+            {fee.value} Sats/VB ~${calPrice(1000, rate, fee.value)}
           </span>
         </SelectItem>
       ))}
