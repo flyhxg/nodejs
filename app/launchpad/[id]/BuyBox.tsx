@@ -27,8 +27,6 @@ enum BuyType {
 }
 
 export default function BuyBox(props: { item: LaunchpadItem }) {
-  console.log('props', props)
-
   const searchParams = useSearchParams()
   const _type = searchParams.get('type')
   const { account } = useWallet()

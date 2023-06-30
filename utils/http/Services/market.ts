@@ -66,6 +66,9 @@ export const marketService = {
     fetch(`https://api.hiro.so/ordinals/v1/inscriptions/${id}`, config).then((res) =>
       res.json()
     ) as Promise<InscriptionItem>,
+  getUsdRate: getHttpService<{ coin_id: string; price: number }, { coin_id: 'bitcoin' }>(
+    '/api/coin/usd-conversion-rate'
+  ),
 }
 
 export interface OrderDetail {

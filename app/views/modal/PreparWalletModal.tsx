@@ -12,6 +12,7 @@ export default function PreparWalletModal(props: {
   fee: number
 }) {
   const { create, loading } = useCreateDummyUtxos(props.fee)
+
   return (
     <StyledModal
       open={props.open}

@@ -43,7 +43,7 @@ export default function useCreateDummyUtxos(fee: number) {
         setLoading(false)
       }
     },
-    [account, signPsbt, publicKey]
+    [account, signPsbt, publicKey, fee]
   )
   return { create, loading }
 }

@@ -103,7 +103,6 @@ export default function useBuyPsbt(
       await waitTxConfirmed(data)
       setLoading(BuyLoadingStage.Done)
       //waiting
-      console.log('data', data)
       return true
     } catch (e) {
       console.error(e)
@@ -112,6 +111,6 @@ export default function useBuyPsbt(
     } finally {
       setLoading(BuyLoadingStage.NotStart)
     }
-  }, [account, price, nftItem])
+  }, [account, price, nftItem, fee])
   return { buyPsbt, loading, loadingTx }
 }

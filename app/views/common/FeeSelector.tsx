@@ -2,6 +2,10 @@ import styled, { css } from 'styled-components'
 import { commonStyles } from '../../../utils/commonStyles'
 import { CSSProperties, useEffect, useState } from 'react'
 import { mempool } from '../../../utils/mempool'
+import { useRequest } from 'ahooks'
+import { Services } from '../../../utils/http/Services'
+import R from '../../../utils/http/request'
+import BigNumber from 'bignumber.js'
 
 interface FeeSelectItem {
   label: string
@@ -15,6 +19,8 @@ export default function FeeSelector(props: {
 }) {
   const [fees, setFees] = useState<FeeSelectItem[]>([])
   const [selected, setSelected] = useState<FeeSelectItem | null>(null)
+  const { data } = useRequest(R(Services.marketService.getUsdRate, { coin_id: 'bitcoin' }))
+  const rate = data?.price || 0
   useEffect(() => {
     const { bitcoin } = mempool()
     bitcoin.fees.getFeesRecommended().then((res) => {
@@ -36,16 +42,25 @@ export default function FeeSelector(props: {
       setSelected(_fees[0])
     })
   }, [])
+  useEffect(() => {
+    props.onChange(selected?.value || 0)
+  }, [selected])
   return (
     <SelectWrapper>
       {fees.map((fee) => (
         <SelectItem selected={fee === selected} onClick={() => setSelected(fee)}>
           <span>{fee.label}</span>
-          <span>{fee.value} Sats/VB ~$4.12</span>
+          <span>
+            {fee.value} Sats/VB ~${calPrice(10000, rate)}
+          </span>
         </SelectItem>
       ))}
     </SelectWrapper>
   )
+}
+
+function calPrice(sat: number, rate: number) {
+  return ((rate / 100_000_000) * sat).toFixed(2)
 }
 
 const SelectWrapper = styled.div`
