@@ -139,8 +139,8 @@ export default function WalletContextProvider(props: { children?: ReactNode }) {
     <WalletContext.Provider
       value={{
         connected,
-        // account: address,
-        account: 'bc1pkg8pgtgqxsmkt44yx2v8f5cyal4g0pqd7sz5vjnekq0uh0lr7akqmv0s92',
+        account: address,
+        // account: 'bc1pkg8pgtgqxsmkt44yx2v8f5cyal4g0pqd7sz5vjnekq0uh0lr7akqmv0s92',
         balance,
         active,
         signPsbt,
