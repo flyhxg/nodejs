@@ -1,12 +1,12 @@
-import s from './page.module.scss'
-import TxInfoBox from './TxInfoBox'
-import AttrInfoBox from './AttrInfoBox'
-import Activities from './Activities'
-import Footer from '../../views/footer'
-import { Services } from '../../../utils/http/Services'
-import { getImageUri } from '../../../utils'
-import { XImage } from '../../views/common/XImage'
 import { notFound } from 'next/navigation'
+import { getImageUri } from '../../../utils'
+import { Services } from '../../../utils/http/Services'
+import { XImage } from '../../views/common/XImage'
+import Footer from '../../views/footer'
+import Activities from './Activities'
+import AttrInfoBox from './AttrInfoBox'
+import TxInfoBox from './TxInfoBox'
+import s from './page.module.scss'
 
 export default async function Page(props: { params: { id: string } }) {
   const id = props.params.id

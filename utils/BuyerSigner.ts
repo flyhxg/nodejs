@@ -70,7 +70,7 @@ export async function selectPaymentUTXOs(
   if (selectedAmount < needed) {
     throw new InvalidArgumentError(`Not enough cardinal spendable funds.
 Address has:  ${satToBtc(selectedAmount)} BTC
-Needed:       ${satToBtc(amount)} BTC`)
+Needed:       ${satToBtc(needed)} BTC`)
   }
 
   return selectedUtxos
