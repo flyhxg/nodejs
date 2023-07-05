@@ -118,11 +118,19 @@ export function calculateTxBytesFeeWithRate(
   return fee
 }
 
+const _doesCache: {
+  [key: string]: boolean | Promise<boolean>
+} = {}
+
 async function doesUtxoContainInscription(utxo: AddressTxsUtxo): Promise<boolean> {
-  return await Services.marketService.isInscriptionExist({ tx_id: utxo.txid, vout: utxo.vout }).then((res) => {
-    // cache
-    return res
-  })
+  const key = `${utxo.txid}:${utxo.vout}`
+  if (!_doesCache[key]) {
+    _doesCache[key] = Services.marketService.isInscriptionExist({ tx_id: utxo.txid, vout: utxo.vout }).then((res) => {
+      _doesCache[key] = res
+      return res
+    })
+  }
+  return Promise.resolve(_doesCache[key])
   // If it's confirmed, we check the indexing db for that output
   // return false
   // if (utxo.status.confirmed) {
