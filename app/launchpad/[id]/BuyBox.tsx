@@ -19,6 +19,8 @@ import useBuyLaunchpad from '../../../hooks/useBuyLaunchpad'
 import { OrderStatus } from '../../../utils/type'
 import { useRouter, useSearchParams } from 'next/navigation'
 import FeeSelector from '../../views/common/FeeSelector'
+import Loading from '../../views/common/Loading'
+import TxHashLink from '../../views/common/TxHashLink'
 
 enum BuyType {
   Private,
@@ -118,6 +120,16 @@ export default function BuyBox(props: { item: LaunchpadItem }) {
           >
             Check NFT
           </StyledButton>
+        ) : (type === BuyType.Private && privatePending) || (type === BuyType.Public && publicPending) ? (
+          <LoadingText>
+            <Loading size={24} style={{ marginRight: 16 }} />
+            Trading on the chain hash:
+            <TxHashLink
+              style={{ color: 'white' }}
+              txid={type === BuyType.Private ? privatPendingHash : publicPendingHash}
+              shorten={10}
+            />
+          </LoadingText>
         ) : (
           <StyledButton
             loadingText={
@@ -228,4 +240,14 @@ const OrderTime = styled.span`
   position: absolute;
   top: 12px;
   right: 23px;
+`
+
+const LoadingText = styled.p`
+  margin-top: 29px;
+  line-height: 24px;
+  font-size: 16px;
+  color: #fff;
+  width: 100%;
+  text-align: center;
+  ${commonStyles.flexCenter}
 `
