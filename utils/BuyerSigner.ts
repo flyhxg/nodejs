@@ -12,8 +12,8 @@ import { Psbt } from 'bitcoinjs-lib'
 import { minFee, network } from './constants'
 import { getSellerOrdOutputValue } from './SellerSigner'
 import { isP2SHAddress, mapUtxos, satToBtc, toXOnly } from './transaction'
-import { Services } from './http/Services'
 import { PLATFORM_FEE_ADDRESS } from './env'
+import moment from 'moment'
 
 export async function selectDummyUTXOs(utxos: AddressTxsUtxo[]): Promise<utxo[]> {
   const result: utxo[] = []
@@ -122,45 +122,106 @@ const _doesCache: {
   [key: string]: boolean | Promise<boolean>
 } = {}
 
-async function doesUtxoContainInscription(utxo: AddressTxsUtxo): Promise<boolean> {
+export async function doesUtxoContainInscription(utxo: AddressTxsUtxo): Promise<boolean> {
   const key = `${utxo.txid}:${utxo.vout}`
   if (!_doesCache[key]) {
-    _doesCache[key] = Services.marketService.isInscriptionExist({ tx_id: utxo.txid, vout: utxo.vout }).then((res) => {
-      _doesCache[key] = res
-      return res
+    _doesCache[key] = getInscriptions().then((res) => {
+      const contained = res.find((_) => _.output === `${utxo.txid}:${utxo.vout}`)
+      _doesCache[key] = !!contained
+      return !!contained
     })
+    // _doesCache[key] = axios
+    //   .get('https://api.hiro.so/ordinals/v1/inscriptions', { params: { output: `${utxo.txid}:${utxo.vout}` } })
+    //   .then((res) => {
+    //     _doesCache[key] = res?.data.total > 0
+    //     return res?.data.total > 0
+    //   })
   }
   return Promise.resolve(_doesCache[key])
-  // If it's confirmed, we check the indexing db for that output
-  // return false
-  // if (utxo.status.confirmed) {
-  //   try {
-  //     return (await itemProvider.getTokenByOutput(`${utxo.txid}:${utxo.vout}`)) !== null
-  //   } catch (err) {
-  //     return true // if error, we pretend that the utxo contains an inscription for safety
-  //   }
-  // }
-  //
-  // // if it's not confirmed, we search the input script for the inscription
-  // const tx = await FullnodeRPC.getrawtransactionVerbose(utxo.txid)
-  // let foundInscription = false
-  // for (const input of tx.vin) {
-  //   if ((await FullnodeRPC.getrawtransactionVerbose(input.txid)).confirmations === 0) {
-  //     return true // to error on the safer side, and treat this as possible to have a inscription
-  //   }
-  //   const previousOutput = `${input.txid}:${input.vout}`
-  //   try {
-  //     if ((await itemProvider.getTokenByOutput(previousOutput)) !== null) {
-  //       foundInscription = true
-  //       return foundInscription
-  //     }
-  //   } catch (err) {
-  //     return true // if error, we pretend that the utxo contains an inscription for safety
-  //   }
-  // }
-  //
-  // return foundInscription
 }
+
+interface Inscription {
+  address: string
+  content: string
+  contentBody: string
+  contentLength: number
+  contentType: string
+  genesisTransaction: string
+  inscriptionId: string
+  inscriptionNumber: number
+  location: string
+  offset: number
+  output: string
+  outputValue: number
+  preview: string
+  timestamp: number
+}
+
+const inscriptionsCache: {
+  inscriptions: Promise<Inscription[]> | Inscription[]
+  lastUpdate: number
+} = {
+  inscriptions: [],
+  lastUpdate: 0,
+}
+
+async function getInscriptions(): Promise<Inscription[]> {
+  const unitsat = window.unisat
+  const now = moment().unix()
+  if (!unitsat) return []
+  if (inscriptionsCache.lastUpdate + 20 < now) {
+    inscriptionsCache.inscriptions = unitsat.getInscriptions().then((res: any) => {
+      inscriptionsCache.inscriptions = res.list as Inscription[]
+      return res.list as Inscription[]
+    })
+    inscriptionsCache.lastUpdate = now
+  }
+  return inscriptionsCache.inscriptions
+}
+
+// const _doesCache: {
+//   [key: string]: boolean | Promise<boolean>
+// } = {}
+
+// async function doesUtxoContainInscription(utxo: AddressTxsUtxo): Promise<boolean> {
+//   const key = `${utxo.txid}:${utxo.vout}`
+//   if (!_doesCache[key]) {
+//     _doesCache[key] = Services.marketService.isInscriptionExist({ tx_id: utxo.txid, vout: utxo.vout }).then((res) => {
+//       _doesCache[key] = res
+//       return res
+//     })
+//   }
+//   return Promise.resolve(_doesCache[key])
+//   // If it's confirmed, we check the indexing db for that output
+//   // return false
+//   // if (utxo.status.confirmed) {
+//   //   try {
+//   //     return (await itemProvider.getTokenByOutput(`${utxo.txid}:${utxo.vout}`)) !== null
+//   //   } catch (err) {
+//   //     return true // if error, we pretend that the utxo contains an inscription for safety
+//   //   }
+//   // }
+//   //
+//   // // if it's not confirmed, we search the input script for the inscription
+//   // const tx = await FullnodeRPC.getrawtransactionVerbose(utxo.txid)
+//   // let foundInscription = false
+//   // for (const input of tx.vin) {
+//   //   if ((await FullnodeRPC.getrawtransactionVerbose(input.txid)).confirmations === 0) {
+//   //     return true // to error on the safer side, and treat this as possible to have a inscription
+//   //   }
+//   //   const previousOutput = `${input.txid}:${input.vout}`
+//   //   try {
+//   //     if ((await itemProvider.getTokenByOutput(previousOutput)) !== null) {
+//   //       foundInscription = true
+//   //       return foundInscription
+//   //     }
+//   //   } catch (err) {
+//   //     return true // if error, we pretend that the utxo contains an inscription for safety
+//   //   }
+//   // }
+//   //
+//   // return foundInscription
+// }
 
 export async function generateUnsignedBuyingPSBTBase64(
   listing: IListingState,
