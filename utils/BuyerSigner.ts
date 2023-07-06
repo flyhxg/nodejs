@@ -165,18 +165,47 @@ const inscriptionsCache: {
   lastUpdate: 0,
 }
 
+// async function getInscriptions(): Promise<Inscription[]> {
+//   const unitsat = window.unisat
+//   const now = moment().unix()
+//   if (!unitsat) return []
+//   if (inscriptionsCache.lastUpdate + 20 < now) {
+//     inscriptionsCache.inscriptions = unitsat.getInscriptions().then((res: any) => {
+//       inscriptionsCache.inscriptions = res.list as Inscription[]
+//       return res.list as Inscription[]
+//     })
+//     inscriptionsCache.lastUpdate = now
+//   }
+//   return inscriptionsCache.inscriptions
+// }
+
 async function getInscriptions(): Promise<Inscription[]> {
   const unitsat = window.unisat
   const now = moment().unix()
   if (!unitsat) return []
   if (inscriptionsCache.lastUpdate + 20 < now) {
-    inscriptionsCache.inscriptions = unitsat.getInscriptions().then((res: any) => {
-      inscriptionsCache.inscriptions = res.list as Inscription[]
-      return res.list as Inscription[]
+    inscriptionsCache.inscriptions = queryInscriptions().then((res) => {
+      inscriptionsCache.inscriptions = res
+      return res as Inscription[]
     })
     inscriptionsCache.lastUpdate = now
   }
   return inscriptionsCache.inscriptions
+}
+
+async function queryInscriptions() {
+  const unitsat = window.unisat
+  if (!unitsat) return []
+  let cursor = 0
+  const limit = 100
+  const inscriptions: Inscription[] = []
+  while (true) {
+    const res = await unitsat.getInscriptions(cursor, limit)
+    inscriptions.push(...res.list)
+    if (res.list.length < limit) break
+    cursor += limit
+  }
+  return inscriptions
 }
 
 // const _doesCache: {
