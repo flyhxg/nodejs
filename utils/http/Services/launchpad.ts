@@ -68,6 +68,13 @@ export interface LaunchpadItem {
   isPublicEnd: boolean
   whitelist_rule: string
   about: string
+  status: LaunchpadStatus
+}
+
+export enum LaunchpadStatus {
+  None,
+  Active = 1,
+  ComingSoon = 2,
 }
 
 export interface RandomLaunchpadItem {

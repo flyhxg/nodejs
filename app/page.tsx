@@ -2,8 +2,9 @@ import Image from 'next/image'
 import { Images } from '../utils/images'
 import s from './page.module.scss'
 import Footer from './views/footer'
-import { CollectionGroup, LaunchpadGroup, Status } from './views/home/group'
+import { CollectionGroup, LaunchpadGroup } from './views/home/group'
 import { Services } from '../utils/http/Services'
+import { LaunchpadStatus } from '../utils/http/Services/launchpad'
 
 export default async function Page() {
   const [{ items: _items }, { items: _collectionItems }] = await Promise.all([
@@ -39,7 +40,7 @@ export default async function Page() {
               name: x.Name,
               logo: x.Logo,
               id: x.Id,
-              status: Status.Live,
+              status: LaunchpadStatus.Active,
               desc: 'View Collection',
             }))}
           />

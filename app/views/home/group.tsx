@@ -1,7 +1,7 @@
 import { Images } from '../../../utils/images'
 import s from './group.module.scss'
 import Link from 'next/link'
-import { LaunchpadItem } from '../../../utils/http/Services/launchpad'
+import { LaunchpadItem, LaunchpadStatus } from '../../../utils/http/Services/launchpad'
 import { XImage } from '../common/XImage'
 import { getImageUri } from '../../../utils'
 
@@ -12,7 +12,7 @@ export function LaunchpadGroup(props: { title: string; items: LaunchpadItem[] })
     empty = new Array(emptyPad).fill({
       name: '',
       desc: '',
-      status: Status.ComingSoon,
+      status: LaunchpadStatus.None,
       id: '',
     })
   }
@@ -25,7 +25,7 @@ export function LaunchpadGroup(props: { title: string; items: LaunchpadItem[] })
           item={{
             name: item.name,
             desc: item.description,
-            status: Status.Live,
+            status: item.status,
             id: item.id,
             logo: getImageUri(item.logo),
           }}
@@ -71,7 +71,7 @@ export function CollectionGroup(props: { title: string; type: string; items: Gro
     empty = new Array(emptyPad).fill({
       name: '',
       desc: '',
-      status: Status.ComingSoon,
+      status: LaunchpadStatus.None,
       id: 3,
       logo: '',
     })
@@ -103,22 +103,22 @@ export function CollectionGroup(props: { title: string; type: string; items: Gro
 export interface GroupItem {
   name: string
   desc: string
-  status: Status
+  status: LaunchpadStatus
   id: number
   logo: string
 }
 
-export enum Status {
-  Live,
-  UpComing,
-  ComingSoon,
-}
+// export enum Status {
+//   Live,
+//   UpComing,
+//   ComingSoon,
+// }
 
 function Item(props: { item: GroupItem; type: string }) {
   const dom = (
     <div className={s.itemCard}>
       <div className={s.imageWrapper}>
-        {props.item.status === Status.ComingSoon ? (
+        {props.item.status === LaunchpadStatus.None ? (
           <XImage alt="Coming soon" src={Images.HOME.COOMING_SOON_SVG} />
         ) : (
           <XImage className={s.image} alt="cover" src={props.item.logo} />
@@ -128,11 +128,11 @@ function Item(props: { item: GroupItem; type: string }) {
         <h3>{props.item.name}</h3>
         {props.type !== 'launchpad' && <p>{props.item.desc}</p>}
       </div>
-      {props.item.status === Status.Live && <span className={s.status}>Live</span>}
-      {props.item.status === Status.UpComing && <span className={s.status}>Up Coming</span>}
+      {props.item.status === LaunchpadStatus.Active && <span className={s.status}>Live</span>}
+      {props.item.status === LaunchpadStatus.ComingSoon && <span className={s.status}>Up Coming</span>}
     </div>
   )
-  if (props.item.status === Status.Live) {
+  if (props.item.status === LaunchpadStatus.Active) {
     return <Link href={`/${props.type}/${props.item.id}`}>{dom}</Link>
   }
   return dom
