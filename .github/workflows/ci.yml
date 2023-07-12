@@ -1,6 +1,6 @@
 name: GitHub Actions Build and Deploy Demo
 on:
-  pull_request::
+  pull_request:
     branches:
       - main
 jobs:
