@@ -37,8 +37,8 @@ export function LoadingFrame(props: { size: number; top?: number; style?: CSSPro
   )
 }
 const FrameWrapper = styled.div<{ top?: number }>`
-  width: 100%;
-  height: 100%;
+  width: 50%;
+  height: 50%;
   position: relative;
   ${(props) =>
     props.top
