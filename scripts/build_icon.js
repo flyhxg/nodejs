@@ -1,5 +1,7 @@
 const fs = require('fs')
+
 const path = require('path')
+
 
 function buildIcon() {
   const iconPath = path.resolve(__dirname, '../public/images/icons')
