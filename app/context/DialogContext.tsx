@@ -73,6 +73,10 @@ export default function DialogProvider({ children }: { children: any }) {
   )
 }
 
+
+
+
+
 export const StyledModal = styled(Modal)`
   background: #2e2e2e !important;
   width: 306px !important;
